@@ -17,6 +17,8 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
+  // Served from https://lesley-spec.github.io/one-program-1/ on GitHub Pages
+  base: '/one-program-1/',
   plugins: [
     figmaAssetResolver(),
     // The React and Tailwind plugins are both required for Make, even if
