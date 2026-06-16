@@ -1,0 +1,549 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+  /* Font Families */
+  --font-family: 'Sarabun', sans-serif;
+  --font-family-code: 'Roboto Mono', monospace;
+  
+  /* Font Sizes */
+  --text-4xl: 2.5rem; /* 40px - h1 */
+  --text-xl: 1.5rem; /* 24px - h2 */
+  --text-lg: 1.125rem; /* 18px - h3 */
+  --text-base: 0.875rem; /* 14px - h4, p */
+  --text-sm: 0.75rem; /* 12px - label */
+  
+  /* Font Weights */
+  --font-weight-medium: 600;
+  --font-weight-normal: 400;
+  
+  /* ========================================
+     COLORS - BRAND
+     ======================================== */
+  --brand-red: #F5333F;
+  --brand-neutral: #000000;
+  --brand-gray: #A9B4BD;
+  
+  /* ========================================
+     COLORS - BACKGROUND
+     ======================================== */
+  --background-default: #FFFFFF;
+  --background-subdued: #F9FBFF;
+  --background-disabled: #F0F1F3;
+  --background-hover: #EDF1F9;
+  --background-invert: #25282F;
+  --background-dimmed: #F0F1F3;
+  --background-overlay: rgba(0, 0, 0, 0.2);
+  --background-on-surface: #FFFFFF;
+  
+  /* ========================================
+     COLORS - BORDER
+     ======================================== */
+  --border-default: #E0E9F0;
+  --border-interactive: #8A959D;
+  --border-disabled: #F0F1F3;
+  --border-focus: #006ECA;
+  --border-error: #C81426;
+  --border-accent: #0077DB;
+  
+  /* ========================================
+     COLORS - TEXT
+     ======================================== */
+  --text-default: #25282F;
+  --text-subdued: #8A959D;
+  --text-disabled: #CACFD3;
+  --text-interactive: #0077DB;
+  --text-interactive-hover: #006ECA;
+  --text-error: #C81426;
+  --text-invert: #FFFFFF;
+  
+  /* ========================================
+     COLORS - ICON
+     ======================================== */
+  --icon-default: #8A959D;
+  --icon-subdued: #CACFD3;
+  --icon-interactive: #0077DB;
+  --icon-interactive-hover: #006ECA;
+  --icon-disabled: #E0E9F0;
+  --icon-invert: #FFFFFF;
+  --icon-error: #C81426;
+  --icon-success: #065F46;
+  
+  /* ========================================
+     COLORS - INTERACTIVE
+     ======================================== */
+  --interactive-default: #0077DB;
+  --interactive-hover: #006ECA;
+  --interactive-pressed: #005AAA;
+  --interactive-disabled: #D2D7E1;
+  
+  /* ========================================
+     COLORS - SEMANTIC
+     ======================================== */
+  --success-default: #065F46;
+  --success-bg: #D1FAE5;
+  --success-border: #10B981;
+  
+  --error-default: #C81426;
+  --error-bg: #FFDEDE;
+  --error-border: #F87171;
+  
+  --warning-default: #92400E;
+  --warning-bg: #FEF3C7;
+  --warning-border: #FCD34D;
+  
+  --info-default: #0077DB;
+  --info-bg: #DBEAFE;
+  --info-border: #60A5FA;
+  
+  /* ========================================
+     COLORS - SOCIAL
+     ======================================== */
+  --social-x: #000000;
+  --social-facebook: #1877F2;
+  --social-youtube: #F51C0D;
+  --social-twitch: #6441A4;
+  --social-tiktok: #000000;
+  --social-snapchat: #FFFC00;
+  --social-pinterest: #F0002A;
+  --social-linkedin: #2867B2;
+  --social-whatsapp: #25D366;
+  --social-line: #06C755;
+  --social-wechat: #7BB32E;
+  --social-bestbuy: #0046BE;
+  
+  /* ========================================
+     COLORS - SURFACE
+     ======================================== */
+  --surface-default: #FFFFFF;
+  --surface-subdued: #F9FBFF;
+  --surface-hover: #EDF1F9;
+  --surface-pressed: #E0E9F0;
+  --surface-disabled: #F0F1F3;
+  
+  /* ========================================
+     SEMANTIC ALIASES (for existing code)
+     ======================================== */
+  --background: #FFFFFF;
+  --foreground: #25282F;
+  --card: #FFFFFF;
+  --card-foreground: #25282F;
+  --popover: rgba(0, 0, 0, 0);
+  --popover-foreground: #25282F;
+  --primary: #25282F;
+  --primary-foreground: #FFFFFF;
+  --secondary: #FFFFFF;
+  --secondary-foreground: #25282F;
+  --muted: #F0F1F3;
+  --muted-foreground: #606672;
+  --accent: #0077DB;
+  --accent-foreground: #FFFFFF;
+  --destructive: #FFDEDE;
+  --destructive-foreground: #550D1E;
+  --border: #CACFD3;
+  --input: rgba(0, 0, 0, 0);
+  --input-background: rgba(0, 0, 0, 0);
+  --ring: #006ECA;
+  
+  /* ========================================
+     ELEVATION & SHADOWS
+     ======================================== */
+  --elevation-xs: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  --elevation-sm: 0px 1px 3px rgba(0, 0, 0, 0.12);
+  --elevation-md: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  --elevation-lg: 0px 10px 15px rgba(0, 0, 0, 0.1);
+  --elevation-xl: 0px 20px 25px rgba(0, 0, 0, 0.15);
+  
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius: 8px; /* default */
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-button: 9999px; /* fully rounded */
+  --radius-checkbox: 3px;
+  
+  /* ========================================
+     SPACING
+     ======================================== */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-base: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+  
+  /* ========================================
+     BORDER WIDTHS
+     ======================================== */
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 3px;
+  
+  /* ========================================
+     CHARTS
+     ======================================== */
+  --chart-1: #006ECA;
+  --chart-2: #121212;
+  --chart-3: #757575;
+  --chart-4: #A7A7A7;
+  --chart-5: #F0F0F0;
+  
+  /* ========================================
+     SIDEBAR
+     ======================================== */
+  --sidebar: #EDF1F9;
+  --sidebar-foreground: #25282F;
+  --sidebar-primary: #25282F;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #D6EBFF;
+  --sidebar-accent-foreground: #1D66DE;
+  --sidebar-border: #CACFD3;
+  --sidebar-ring: #0077DB;
+  --sidebar-panel: #F9FBFF;
+  --sidebar-icon-active: #1D66DE;
+  --sidebar-icon-active-bg: #D6EBFF;
+
+  /* ========================================
+     NAVIGATION
+     ======================================== */
+  --color-navigation-top-nav-background-default: #EDF1F9;
+  
+  /* ========================================
+     BUTTONS
+     ======================================== */
+  --button-primary: #0077DB;
+  --button-primary-foreground: #FFFFFF;
+  --button-primary-hover: #005AAA;
+  --button-disabled: #D2D7E1;
+  --button-disabled-foreground: #A0A5AF;
+  --button-focus-ring: #121212;
+  --button-focus-ring-offset: 2px;
+  
+  /* ========================================
+     COMPONENT-SPECIFIC
+     ======================================== */
+  --finance-widget: #D8E2EC;
+  --badge-count: #BF1044;
+  --action-icon-bg: #D5EBFF;
+  --loading-skeleton: #EDF1F9;
+  --dropshadow-default: rgba(255, 255, 255, 0);
+  
+  /* ========================================
+     STATUS COLORS
+     ======================================== */
+  --positive: #065F46;
+  --positive-bg: #D1FAE5;
+  --negative: #B91C1C;
+  --negative-bg: #FEE2E2;
+  --caution: #92400E;
+  --caution-bg: #FEF3C7;
+  
+  /* ========================================
+     TIER BADGES
+     ======================================== */
+  --tier-gold-bg: #FEF3C7;
+  --tier-gold-text: #92400E;
+  --tier-silver-bg: var(--muted);
+  --tier-silver-text: var(--foreground);
+  --tier-bronze-bg: #FED7AA;
+  --tier-bronze-text: #9A3412;
+  --tier-new-bg: #D1FAE5;
+  --tier-new-text: #065F46;
+  
+  /* ========================================
+     AI FEATURES
+     ======================================== */
+  --ai-background: #F5F0FF;
+  --ai-foreground: #4B3296;
+  --ai-border: #C8B4FF;
+  --ai-accent: #8A63D2;
+}
+
+.dark {
+  /* ========================================
+     COLORS - BRAND (same in dark mode)
+     ======================================== */
+  --brand-red: #F5333F;
+  --brand-neutral: #FFFFFF;
+  --brand-gray: #A9B4BD;
+  
+  /* ========================================
+     COLORS - BACKGROUND
+     ======================================== */
+  --background-default: #18191D;
+  --background-subdued: #25282F;
+  --background-disabled: #212329;
+  --background-hover: #323742;
+  --background-invert: #FFFFFF;
+  --background-dimmed: #2F3138;
+  --background-overlay: rgba(0, 0, 0, 0.7);
+  --background-on-surface: #212329;
+  
+  /* ========================================
+     COLORS - BORDER
+     ======================================== */
+  --border-default: #323742;
+  --border-interactive: #606672;
+  --border-disabled: #2F3138;
+  --border-focus: #0077DB;
+  --border-error: #EF4444;
+  --border-accent: #0077DB;
+  
+  /* ========================================
+     COLORS - TEXT
+     ======================================== */
+  --text-default: #FFFFFF;
+  --text-subdued: #A9B4BD;
+  --text-disabled: #606672;
+  --text-interactive: #60A5FA;
+  --text-interactive-hover: #93C5FD;
+  --text-error: #EF4444;
+  --text-invert: #18191D;
+  
+  /* ========================================
+     COLORS - ICON
+     ======================================== */
+  --icon-default: #A9B4BD;
+  --icon-subdued: #606672;
+  --icon-interactive: #60A5FA;
+  --icon-interactive-hover: #93C5FD;
+  --icon-disabled: #323742;
+  --icon-invert: #18191D;
+  --icon-error: #EF4444;
+  --icon-success: #4ADE80;
+  
+  /* ========================================
+     COLORS - INTERACTIVE
+     ======================================== */
+  --interactive-default: #0077DB;
+  --interactive-hover: #1E82DC;
+  --interactive-pressed: #005AAA;
+  --interactive-disabled: #3C414B;
+  
+  /* ========================================
+     COLORS - SEMANTIC
+     ======================================== */
+  --success-default: #4ADE80;
+  --success-bg: #143C28;
+  --success-border: #10B981;
+  
+  --error-default: #EF4444;
+  --error-bg: #461414;
+  --error-border: #F87171;
+  
+  --warning-default: #FBBF24;
+  --warning-bg: #3C280A;
+  --warning-border: #FCD34D;
+  
+  --info-default: #0077DB;
+  --info-bg: #0C2340;
+  --info-border: #60A5FA;
+  
+  /* ========================================
+     COLORS - SURFACE
+     ======================================== */
+  --surface-default: #212329;
+  --surface-subdued: #25282F;
+  --surface-hover: #323742;
+  --surface-pressed: #3C414B;
+  --surface-disabled: #2F3138;
+  
+  /* ========================================
+     SEMANTIC ALIASES (for existing code)
+     ======================================== */
+  --background: #121212;
+  --foreground: #FFFFFF;
+  --card: #121212;
+  --card-foreground: #FFFFFF;
+  --popover: #121212;
+  --popover-foreground: #FFFFFF;
+  --primary: #FFFFFF;
+  --primary-foreground: #121212;
+  --secondary: #F0F0F0;
+  --secondary-foreground: #121212;
+  --muted: #A7A7A7;
+  --muted-foreground: #F0F0F0;
+  --accent: #006ECA;
+  --accent-foreground: #FFFFFF;
+  --destructive: #C81426;
+  --destructive-foreground: #FFDEDE;
+  --border: #949494;
+  --input: rgba(0, 0, 0, 0);
+  --ring: #006ECA;
+  
+  /* ========================================
+     CHARTS
+     ======================================== */
+  --chart-1: #006ECA;
+  --chart-2: #FFFFFF;
+  --chart-3: #A7A7A7;
+  --chart-4: #949494;
+  --chart-5: #F0F0F0;
+  
+  /* ========================================
+     SIDEBAR
+     ======================================== */
+  --sidebar: #121212;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #006ECA;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F0F0F0;
+  --sidebar-accent-foreground: #121212;
+  --sidebar-border: #949494;
+  --sidebar-ring: #006ECA;
+  --sidebar-panel: #1E1E1E;
+  --sidebar-icon-active: #64A0FF;
+  --sidebar-icon-active-bg: #283C5A;
+
+  /* ========================================
+     NAVIGATION
+     ======================================== */
+  --color-navigation-top-nav-background-default: #323742;
+  
+  /* ========================================
+     BUTTONS
+     ======================================== */
+  --button-primary: #006ECA;
+  --button-primary-foreground: #FFFFFF;
+  --button-primary-hover: #1E82DC;
+  --button-disabled: #3C414B;
+  --button-disabled-foreground: #6E737D;
+  --button-focus-ring: #FFFFFF;
+  --button-focus-ring-offset: 2px;
+  
+  /* ========================================
+     COMPONENT-SPECIFIC
+     ======================================== */
+  --finance-widget: #323741;
+  --badge-count: #BF1044;
+  --action-icon-bg: #283C5A;
+  --loading-skeleton: #323742;
+  --dropshadow-default: rgba(255, 255, 255, 0);
+  
+  /* ========================================
+     STATUS COLORS
+     ======================================== */
+  --positive: #4ADE80;
+  --positive-bg: #143C28;
+  --negative: #F87171;
+  --negative-bg: #461414;
+  --caution: #FBBF24;
+  --caution-bg: #3C280A;
+  
+  /* ========================================
+     TIER BADGES
+     ======================================== */
+  --tier-gold-bg: #3C280A;
+  --tier-gold-text: #FBBF24;
+  --tier-silver-bg: var(--muted);
+  --tier-silver-text: var(--foreground);
+  --tier-bronze-bg: #3C1E0A;
+  --tier-bronze-text: #FB923C;
+  --tier-new-bg: #143C28;
+  --tier-new-text: #4ADE80;
+  
+  /* ========================================
+     AI FEATURES
+     ======================================== */
+  --ai-background: #281E3C;
+  --ai-foreground: #C8B4FF;
+  --ai-border: #645096;
+  --ai-accent: #A078E6;
+}
+
+@theme inline {
+  /* ========================================
+     TAILWIND V4 COLOR MAPPINGS
+     ======================================== */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  
+  /* ========================================
+     RADIUS MAPPINGS
+     ======================================== */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-button: var(--radius-button);
+  --radius-checkbox: var(--radius-checkbox);
+  
+  /* ========================================
+     SHADOW MAPPINGS
+     ======================================== */
+  --drop-shadow-sm: var(--elevation-sm);
+  
+  /* ========================================
+     SIDEBAR MAPPINGS
+     ======================================== */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* ========================================
+     AI MAPPINGS
+     ======================================== */
+  --color-ai-background: var(--ai-background);
+  --color-ai-foreground: var(--ai-foreground);
+  --color-ai-border: var(--ai-border);
+  --color-ai-accent: var(--ai-accent);
+
+  /* ========================================
+     BUTTON TOKEN MAPPINGS
+     ======================================== */
+  --color-button-primary: var(--button-primary);
+  --color-button-primary-foreground: var(--button-primary-foreground);
+  --color-button-primary-hover: var(--button-primary-hover);
+  --color-button-disabled: var(--button-disabled);
+  --color-button-disabled-foreground: var(--button-disabled-foreground);
+  --color-button-focus-ring: var(--button-focus-ring);
+
+  /* ========================================
+     SEMANTIC STATUS TOKEN MAPPINGS
+     ======================================== */
+  --color-positive: var(--positive);
+  --color-positive-bg: var(--positive-bg);
+  --color-negative: var(--negative);
+  --color-negative-bg: var(--negative-bg);
+  --color-caution: var(--caution);
+  --color-caution-bg: var(--caution-bg);
+}

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impact.com — Affiliate Creator Manager Personas</title>
+<!-- Google Fonts (matches the Brand UI design system) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ── DESIGN TOKENS — Impact.com design system ── */
+  :root {
+    --background: #FFFFFF;
+    --background-subdued: #F9FBFF;
+    --foreground: #25282F;
+    --muted: #F0F1F3;
+    --muted-foreground: #606672;
+    --accent: #0077DB;
+    --accent-hover: #006ECA;
+
+    --border-default: #E0E9F0;
+    --border-strong: #CACFD3;
+
+    --text-default: #25282F;
+    --text-subdued: #8A959D;
+    --text-disabled: #CACFD3;
+
+    --surface-hover: #EDF1F9;
+
+    /* Persona accent palettes — distinct but on-brand */
+    --aisha-bg: #D6EBFF;
+    --aisha-fg: #1D66DE;
+    --aisha-accent: #0077DB;
+    --aisha-accent-hover: #006ECA;
+
+    --priya-bg: #CFF7F0;
+    --priya-fg: #047857;
+    --priya-accent: #0EA5A4;
+    --priya-accent-hover: #0E7C7B;
+
+    --marcus-bg: #EDE4FF;
+    --marcus-fg: #4B3296;
+    --marcus-accent: #8A63D2;
+    --marcus-accent-hover: #6B47B0;
+
+    --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0px 1px 3px rgba(0, 0, 0, 0.08);
+
+    --radius-sm: 4px;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --radius-button: 9999px;
+
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--background-subdued);
+    color: var(--text-default);
+    padding: 48px 32px;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    max-width: 1100px;
+    margin: 0 auto 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--foreground);
+  }
+  .logo img {
+    height: 24px;
+    width: auto;
+    display: block;
+  }
+  .logo-dot { color: var(--accent); }
+  .back-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    background: var(--background);
+    transition: var(--transition-fast);
+  }
+  .back-link:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .page-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.4px;
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--text-subdued);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── GRID ── */
+  .personas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--background);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-default);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  /* ── CARD HEADER ── */
+  .card-top {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border-default);
+    position: relative;
+  }
+  .card-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .accent-aisha  { background: linear-gradient(90deg, var(--aisha-accent),  #4E9AE8); }
+  .accent-priya  { background: linear-gradient(90deg, var(--priya-accent),  #3FCBC1); }
+  .accent-marcus { background: linear-gradient(90deg, var(--marcus-accent), #B59CE6); }
+
+  .avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .avatar-aisha  { background: var(--aisha-bg); }
+  .avatar-priya  { background: var(--priya-bg); }
+  .avatar-marcus { background: var(--marcus-bg); }
+
+  .persona-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.2px;
+    margin-bottom: 3px;
+  }
+  .persona-title {
+    font-size: 12px;
+    color: var(--text-subdued);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .brand-aisha  { background: var(--aisha-bg);  color: var(--aisha-fg); }
+  .brand-priya  { background: var(--priya-bg);  color: var(--priya-fg); }
+  .brand-marcus { background: var(--marcus-bg); color: var(--marcus-fg); }
+
+  .meta-row {
+    display: flex;
+    gap: 18px;
+    margin-top: 16px;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.2px;
+  }
+  .meta-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-subdued);
+  }
+
+  /* ── CARD BODY ── */
+  .card-body {
+    padding: 20px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-subdued);
+    margin-bottom: 8px;
+  }
+
+  /* ── QUOTE ── */
+  .quote {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-default);
+    line-height: 1.6;
+    padding-left: 12px;
+    border-left: 3px solid var(--border-default);
+  }
+  .quote-aisha  { border-left-color: var(--aisha-accent); }
+  .quote-priya  { border-left-color: var(--priya-accent); }
+  .quote-marcus { border-left-color: var(--marcus-accent); }
+
+  /* ── JOBS ── */
+  .jobs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .job-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-default);
+    font-weight: 500;
+  }
+  .job-icon {
+    font-size: 13px;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* ── PAIN POINTS ── */
+  .pain-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pain-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-default);
+    line-height: 1.4;
+  }
+  .pain-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .dot-aisha  { background: var(--aisha-accent); }
+  .dot-priya  { background: var(--priya-accent); }
+  .dot-marcus { background: var(--marcus-accent); }
+
+  /* ── MOTIVATIONS ── */
+  .motivation-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-aisha  { background: var(--aisha-bg);  color: var(--aisha-fg); }
+  .tag-priya  { background: var(--priya-bg);  color: var(--priya-fg); }
+  .tag-marcus { background: var(--marcus-bg); color: var(--marcus-fg); }
+
+  /* ── CARD FOOTER ── */
+  .card-footer {
+    padding: 16px 24px;
+    background: var(--background-subdued);
+    border-top: 1px solid var(--border-default);
+  }
+  .footer-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-subdued);
+    margin-bottom: 6px;
+  }
+  .impact-need {
+    font-size: 12px;
+    color: var(--text-default);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 900px) {
+    .personas-grid { grid-template-columns: 1fr; }
+    .topbar { flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="logo" href="affiliate-creator-manager-wireframe.html" aria-label="impact.com dashboard"><img src="assets/impact-logo.svg" alt="impact.com" width="70" height="24"></a>
+  <a class="back-link" href="affiliate-creator-manager-wireframe.html">← Back to Dashboard</a>
+</div>
+
+<div class="page-header">
+  <div class="page-eyebrow">impact.com · Brand UI Redesign</div>
+  <div class="page-title">Affiliate Creator Manager</div>
+  <div class="page-subtitle">Three personas grounding the jobs-to-be-done redesign. Each represents a real pattern of how affiliate and creator managers operate across different brand sizes and verticals.</div>
+</div>
+
+<div class="personas-grid">
+
+  <!-- ── PERSONA 1: AISHA ── -->
+  <div class="card">
+    <div class="card-top">
+      <div class="card-accent accent-aisha"></div>
+      <div class="avatar-row">
+        <div class="avatar avatar-aisha">👩🏾</div>
+        <div>
+          <div class="persona-name">Aisha Thompson</div>
+          <div class="persona-title">Senior Affiliate &amp; Creator<br>Partnerships Manager</div>
+        </div>
+      </div>
+      <div class="brand-badge brand-aisha">🛒 Walmart — Age 34</div>
+      <div class="meta-row">
+        <div class="meta-item">
+          <div class="meta-value">148</div>
+          <div class="meta-label">Partners</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">34</div>
+          <div class="meta-label">Creators</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">5+</div>
+          <div class="meta-label">Programs</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">Daily</div>
+          <div class="meta-label">Login</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div>
+        <div class="section-label">In her own words</div>
+        <div class="quote quote-aisha">“I know something’s wrong before I even open the platform — I just can’t find where the problem is fast enough.”</div>
+      </div>
+
+      <div>
+        <div class="section-label">Primary Jobs</div>
+        <div class="jobs-list">
+          <div class="job-item"><span class="job-icon">⚡</span> Daily portfolio scan across all programs</div>
+          <div class="job-item"><span class="job-icon">📅</span> Partner check-in prep</div>
+          <div class="job-item"><span class="job-icon">🎬</span> Creator campaign monitoring</div>
+          <div class="job-item"><span class="job-icon">🔍</span> Identifying at-risk partners early</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Pain Points</div>
+        <div class="pain-list">
+          <div class="pain-item"><div class="pain-dot dot-aisha"></div>Has to toggle between programs — loses context every time</div>
+          <div class="pain-item"><div class="pain-dot dot-aisha"></div>Misses performance dips until they’re already problems</div>
+          <div class="pain-item"><div class="pain-dot dot-aisha"></div>No unified view across her affiliate + creator portfolio</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Motivations</div>
+        <div class="motivation-tags">
+          <span class="tag tag-aisha">Hit quarterly revenue</span>
+          <span class="tag tag-aisha">Retain top partners</span>
+          <span class="tag tag-aisha">Spot dips early</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="footer-label">What impact.com needs to do for Aisha</div>
+      <div class="impact-need">Give her a unified daily scan view across all programs — no toggling, proactive alerts surfaced before she has to look.</div>
+    </div>
+  </div>
+
+  <!-- ── PERSONA 2: PRIYA ── -->
+  <div class="card">
+    <div class="card-top">
+      <div class="card-accent accent-priya"></div>
+      <div class="avatar-row">
+        <div class="avatar avatar-priya">👩🏽</div>
+        <div>
+          <div class="persona-name">Priya Nguyen</div>
+          <div class="persona-title">Creator &amp; Affiliate<br>Partnerships Lead</div>
+        </div>
+      </div>
+      <div class="brand-badge brand-priya">🐾 Chewy — Age 28</div>
+      <div class="meta-row">
+        <div class="meta-item">
+          <div class="meta-value">62</div>
+          <div class="meta-label">Partners</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">80+</div>
+          <div class="meta-label">Creators</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">2</div>
+          <div class="meta-label">Programs</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">Always</div>
+          <div class="meta-label">Login</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div>
+        <div class="section-label">In her own words</div>
+        <div class="quote quote-priya">“I shouldn’t have to go to two different places just because one partner is an affiliate and another posts on TikTok. My job is the same.”</div>
+      </div>
+
+      <div>
+        <div class="section-label">Primary Jobs</div>
+        <div class="jobs-list">
+          <div class="job-item"><span class="job-icon">🔍</span> Recruit new affiliate &amp; creator partners</div>
+          <div class="job-item"><span class="job-icon">📈</span> Monitor creator content performance</div>
+          <div class="job-item"><span class="job-icon">🎁</span> Spot and lock in rising talent fast</div>
+          <div class="job-item"><span class="job-icon">✉️</span> Manage outreach and invite pipeline</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Pain Points</div>
+        <div class="pain-list">
+          <div class="pain-item"><div class="pain-dot dot-priya"></div>Affiliate and creator workflows feel like two separate products</div>
+          <div class="pain-item"><div class="pain-dot dot-priya"></div>No proactive partner recommendations — has to hunt manually</div>
+          <div class="pain-item"><div class="pain-dot dot-priya"></div>Loses deals to competitors because discovery is too slow</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Motivations</div>
+        <div class="motivation-tags">
+          <span class="tag tag-priya">Grow creator roster</span>
+          <span class="tag tag-priya">Max content ROI</span>
+          <span class="tag tag-priya">First to rising talent</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="footer-label">What impact.com needs to do for Priya</div>
+      <div class="impact-need">Merge affiliate and creator into one unified workflow. Surface proactive partner recommendations with fit scores so she can recruit before competitors do.</div>
+    </div>
+  </div>
+
+  <!-- ── PERSONA 3: MARCUS ── -->
+  <div class="card">
+    <div class="card-top">
+      <div class="card-accent accent-marcus"></div>
+      <div class="avatar-row">
+        <div class="avatar avatar-marcus">👨🏽</div>
+        <div>
+          <div class="persona-name">Marcus Delgado</div>
+          <div class="persona-title">Affiliate Program Manager</div>
+        </div>
+      </div>
+      <div class="brand-badge brand-marcus">💄 Fenty Beauty — Age 31</div>
+      <div class="meta-row">
+        <div class="meta-item">
+          <div class="meta-value">94</div>
+          <div class="meta-label">Partners</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">20</div>
+          <div class="meta-label">VIP Partners</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">Weekly</div>
+          <div class="meta-label">Review</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">Bi-wkly</div>
+          <div class="meta-label">Check-ins</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div>
+        <div class="section-label">In his own words</div>
+        <div class="quote quote-marcus">“I spend 45 minutes pulling data before every partner call. By the time I’m ready, I’m already behind on everything else.”</div>
+      </div>
+
+      <div>
+        <div class="section-label">Primary Jobs</div>
+        <div class="jobs-list">
+          <div class="job-item"><span class="job-icon">📅</span> Prepare for bi-weekly partner check-ins</div>
+          <div class="job-item"><span class="job-icon">📊</span> Weekly portfolio performance review (Mondays)</div>
+          <div class="job-item"><span class="job-icon">🤝</span> Nurture and retain top 20 VIP partners</div>
+          <div class="job-item"><span class="job-icon">🎁</span> Issue bonuses to high performers</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Pain Points</div>
+        <div class="pain-list">
+          <div class="pain-item"><div class="pain-dot dot-marcus"></div>Check-in prep is fully manual — pulls data from multiple screens</div>
+          <div class="pain-item"><div class="pain-dot dot-marcus"></div>No single partner performance brief he can walk into a call with</div>
+          <div class="pain-item"><div class="pain-dot dot-marcus"></div>Has to remember to issue bonuses — no proactive prompts</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Motivations</div>
+        <div class="motivation-tags">
+          <span class="tag tag-marcus">Retain top partners</span>
+          <span class="tag tag-marcus">Grow revenue</span>
+          <span class="tag tag-marcus">Run tight check-ins</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="footer-label">What impact.com needs to do for Marcus</div>
+      <div class="impact-need">Auto-generate a partner check-in brief when a calendar event is detected. Surface bonus recommendations proactively so he never misses rewarding a top performer.</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

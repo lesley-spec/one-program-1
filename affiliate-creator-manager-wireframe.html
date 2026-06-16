@@ -1,0 +1,3964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impact.com — Affiliate Creator Manager Dashboard</title>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ── DESIGN TOKENS — Impact.com design system ── */
+  :root {
+    /* Core palette */
+    --background: #FFFFFF;
+    --background-subdued: #F9FBFF;
+    --foreground: #25282F;
+    --muted: #F0F1F3;
+    --muted-foreground: #606672;
+    --accent: #0077DB;
+    --accent-hover: #006ECA;
+    --accent-pressed: #005AAA;
+
+    /* Borders */
+    --border-default: #E0E9F0;
+    --border-strong: #CACFD3;
+
+    /* Text */
+    --text-default: #25282F;
+    --text-subdued: #8A959D;
+    --text-disabled: #CACFD3;
+    --text-interactive: #0077DB;
+
+    /* Surface */
+    --surface-default: #FFFFFF;
+    --surface-subdued: #F9FBFF;
+    --surface-hover: #EDF1F9;
+
+    /* Sidebar */
+    --sidebar: #EDF1F9;
+    --sidebar-panel: #F9FBFF;
+    --sidebar-accent: #D6EBFF;
+    --sidebar-accent-foreground: #1D66DE;
+    --sidebar-foreground: #25282F;
+
+    /* Buttons */
+    --button-primary: #0077DB;
+    --button-primary-hover: #005AAA;
+    --button-primary-foreground: #FFFFFF;
+
+    /* Status / Semantic */
+    --positive: #065F46;
+    --positive-bg: #D1FAE5;
+    --negative: #B91C1C;
+    --negative-bg: #FEE2E2;
+    --caution: #92400E;
+    --caution-bg: #FEF3C7;
+    --info-default: #0077DB;
+    --info-bg: #DBEAFE;
+
+    /* AI palette (priority banner) */
+    --ai-background: #F5F0FF;
+    --ai-foreground: #4B3296;
+    --ai-border: #C8B4FF;
+    --ai-accent: #8A63D2;
+
+    /* Shadows */
+    --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0px 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0px 4px 6px rgba(0, 0, 0, 0.08);
+    --shadow-xl: 0px 20px 25px rgba(0, 0, 0, 0.15);
+
+    /* Radii */
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 24px;
+    --radius-button: 9999px;
+
+    /* Motion */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Layout */
+    --header-height: 64px;
+    --sidebar-width: 252px;
+
+    /* ── BACKWARD-COMPAT ALIASES ──
+       Inline styles in markup and runtime CSS strings in JS code
+       still reference the original variable names; map them through. */
+    --brand-primary: var(--accent);
+    --brand-primary-hover: var(--button-primary-hover);
+    --brand-primary-light: var(--sidebar-accent);
+    --brand-primary-shadow: rgba(0, 119, 219, 0.18);
+
+    --bg-main: var(--background-subdued);
+    --bg-card: var(--background);
+    --border-color: var(--border-default);
+
+    --text-primary: var(--text-default);
+    --text-secondary: var(--text-default);
+    --text-muted: var(--text-subdued);
+    --text-light: var(--text-disabled);
+
+    --success: var(--positive);
+    --success-bg: var(--positive-bg);
+    --success-text: var(--positive);
+
+    --error: var(--negative);
+    --error-bg: var(--negative-bg);
+    --error-text: var(--negative);
+
+    --warning: var(--caution);
+    --warning-bg: var(--caution-bg);
+    --warning-text: var(--caution);
+
+    --info: var(--info-default);
+    --info-bg: #DBEAFE;
+    --info-text: var(--info-default);
+  }
+
+  /* ── GLOBAL RESET ── */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg-main);
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Sarabun', sans-serif;
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  button, input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+  }
+
+  /* ── CUSTOM SCROLLBARS ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
+
+  /* ── TOP NAV ── */
+  .topnav {
+    background: var(--background);
+    border-bottom: 1px solid var(--border-default);
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--foreground);
+    height: 28px;
+  }
+  .logo img {
+    height: 24px;
+    width: auto;
+    display: block;
+  }
+  .logo-dot { color: var(--accent); }
+
+  .topnav-links {
+    display: flex;
+    gap: 4px;
+    margin-left: 12px;
+  }
+  .topnav-link {
+    padding: 8px 16px;
+    border-radius: var(--radius-button);
+    color: var(--foreground);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-decoration: none;
+  }
+  .topnav-link:hover { background: var(--surface-hover); color: var(--foreground); }
+  .topnav-link.active {
+    background: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+    font-weight: 600;
+  }
+
+  /* Persona Selector Dropdown in Nav */
+  .persona-selector-container {
+    margin-left: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .persona-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-subdued);
+    letter-spacing: 0.5px;
+  }
+  .persona-select {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    padding: 6px 30px 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--foreground);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2325282F' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    transition: var(--transition-fast);
+  }
+  .persona-select:hover {
+    border-color: var(--accent);
+    background-color: var(--surface-hover);
+  }
+
+  .topnav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .notif-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: var(--foreground);
+    font-size: 16px;
+    transition: var(--transition-fast);
+  }
+  .notif-btn:hover { background: var(--surface-hover); color: var(--foreground); }
+  .notif-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    background: #BF1044;
+    border-radius: 50%;
+    border: 2px solid var(--background);
+  }
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .avatar:hover { background: var(--accent-hover); }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: flex;
+    min-height: calc(100vh - var(--header-height));
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-panel);
+    border-right: 1px solid var(--border-default);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .sidebar-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-subdued);
+    padding: 14px 14px 6px;
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    height: 40px;
+    border-radius: var(--radius-button);
+    cursor: pointer;
+    color: var(--sidebar-foreground);
+    font-weight: 500;
+    font-size: 14px;
+    transition: var(--transition-fast);
+    position: relative;
+  }
+  .sidebar-item:hover { background: var(--surface-hover); color: var(--foreground); }
+  .sidebar-item.active {
+    background: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+    font-weight: 600;
+  }
+
+  .sidebar-item.focus-highlight {
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+
+  .sidebar-icon { font-size: 15px; width: 18px; text-align: center; }
+  .sidebar-badge {
+    margin-left: auto;
+    background: #BF1044;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+  .page-subtitle { font-size: 14px; color: var(--text-subdued); margin-top: 4px; }
+  .page-header-actions { display: flex; gap: 10px; }
+
+  /* ── CONTEXT BANNER (PRIORITY JOB SURFACE) ──
+     Implements the 4-tone Alert pattern from the Brand UI Styleguide V2
+     (Figma node 32202:1279 — Info / Warning / Critical / Success).
+     Tinted background + matching text color + circular tone-coloured icon. */
+  .context-banner {
+    /* Tone defaults to Info; per-tone vars are overridden by data-tone below */
+    --tone-bg: #F0F1F3;          /* color/background/background-dimmed */
+    --tone-text: #25282F;        /* color/text/text-default */
+    --tone-icon-bg: #0077DB;     /* color/info/icon-info */
+    --tone-icon-fg: #FFFFFF;
+    --tone-border: rgba(0, 0, 0, 0.04);
+
+    background: var(--tone-bg);
+    border: 1px solid var(--tone-border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    color: var(--tone-text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    transition: var(--transition-normal);
+  }
+  .context-banner[data-tone="info"]     { --tone-bg: #F0F1F3; --tone-text: #25282F; --tone-icon-bg: #0077DB; }
+  .context-banner[data-tone="success"]  { --tone-bg: #B6FFC9; --tone-text: #275143; --tone-icon-bg: #10B981; }
+  .context-banner[data-tone="warning"]  { --tone-bg: #FFF2CF; --tone-text: #655521; --tone-icon-bg: #F59E0B; }
+  .context-banner[data-tone="critical"] { --tone-bg: #FED8E3; --tone-text: #BF1044; --tone-icon-bg: #BF1044; }
+
+  .context-banner-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex: 1;
+  }
+  .context-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--tone-icon-bg);
+    color: var(--tone-icon-fg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .context-icon svg { width: 16px; height: 16px; display: block; }
+
+  .context-ai-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: var(--ai-background);
+    border: 1px solid var(--ai-border);
+    color: var(--ai-foreground);
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .context-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--tone-text);
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+  }
+  .context-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tone-text);
+    letter-spacing: -0.05px;
+    line-height: 1.4;
+  }
+  .context-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Action buttons inside the banner pick up the tone for emphasis */
+  .context-banner .btn-white {
+    background: #FFFFFF;
+    color: var(--tone-text);
+    border: 1px solid var(--tone-border);
+  }
+  .context-banner .btn-white:hover { box-shadow: var(--shadow-md); color: var(--tone-text); }
+  .context-banner .btn-ghost-white {
+    background: transparent;
+    border: 1px solid var(--tone-text);
+    color: var(--tone-text);
+    opacity: 0.85;
+  }
+  .context-banner .btn-ghost-white:hover { opacity: 1; background: rgba(255, 255, 255, 0.4); }
+
+  /* ── GRID SYSTEM ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+  /* ── PERSONA HERO ── */
+  .persona-hero {
+    margin-bottom: 24px;
+  }
+  .persona-hero[hidden] { display: none; }
+
+  /* Check-in brief hero (Marcus) */
+  .brief-hero {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .brief-hero-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-default);
+    background: var(--background-subdued);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .brief-hero-title-area { display: flex; align-items: center; gap: 14px; }
+  .brief-hero-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius);
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .brief-hero-title { font-size: 16px; font-weight: 700; color: var(--foreground); }
+  .brief-hero-sub { font-size: 12px; color: var(--text-subdued); margin-top: 2px; }
+  .brief-hero-body { padding: 20px 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 32px; }
+  .brief-metric { display: flex; flex-direction: column; gap: 4px; }
+  .brief-metric-label { font-size: 11px; font-weight: 600; color: var(--text-subdued); text-transform: uppercase; letter-spacing: 0.5px; }
+  .brief-metric-value { font-size: 18px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+  .brief-metric-note { font-size: 12px; color: var(--text-subdued); }
+  .brief-metric-note.warn { color: var(--caution); font-weight: 600; }
+  .brief-metric-note.bad { color: var(--negative); font-weight: 600; }
+  .brief-actions {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-default);
+    background: var(--background-subdued);
+  }
+  .brief-actions-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-subdued);
+    margin-bottom: 10px;
+  }
+  .brief-actions-list { display: flex; flex-direction: column; gap: 8px; }
+  .brief-action-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    font-size: 13px;
+    color: var(--foreground);
+    transition: var(--transition-fast);
+  }
+  .brief-action-item:hover { border-color: var(--accent); }
+  .brief-action-emoji { font-size: 16px; flex-shrink: 0; }
+  .brief-action-text { flex: 1; }
+
+  /* Recruit hero (Priya) */
+  .recruit-hero {
+    background: linear-gradient(135deg, var(--background) 0%, var(--surface-hover) 100%);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .recruit-hero-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 16px;
+  }
+  .recruit-hero-title { font-size: 18px; font-weight: 700; color: var(--foreground); margin-bottom: 4px; }
+  .recruit-hero-sub { font-size: 13px; color: var(--text-subdued); }
+  .recruit-hero-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .recruit-hero-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: var(--transition-normal);
+  }
+  .recruit-hero-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .recruit-hero-top { display: flex; align-items: center; gap: 12px; }
+  .recruit-hero-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius);
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .recruit-hero-name { font-size: 15px; font-weight: 700; color: var(--foreground); }
+  .recruit-hero-meta { font-size: 11px; color: var(--text-subdued); margin-top: 2px; }
+  .recruit-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .recruit-hero-stat {
+    background: var(--background-subdued);
+    border-radius: var(--radius-sm);
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .recruit-hero-stat-value { font-size: 16px; font-weight: 700; color: var(--foreground); }
+  .recruit-hero-stat-label { font-size: 9px; color: var(--text-subdued); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+  .recruit-hero-stat-fit { background: var(--positive-bg); }
+  .recruit-hero-stat-fit .recruit-hero-stat-value { color: var(--positive); }
+  .recruit-hero-card .btn-primary { width: 100%; }
+
+  /* Scan hero (Aisha) — slim anomaly summary above stats */
+  .scan-hero {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .scan-hero-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius);
+    background: var(--negative-bg);
+    color: var(--negative);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .scan-hero-content { flex: 1; }
+  .scan-hero-title { font-size: 14px; font-weight: 700; color: var(--foreground); margin-bottom: 2px; }
+  .scan-hero-desc { font-size: 12px; color: var(--text-subdued); }
+  .scan-hero-cta { flex-shrink: 0; }
+
+  /* ── DATA-FOCUS COMPOSITION ──
+     Each persona has a distinct hero. When a hero is active for a focus,
+     the duplicate small widget and the generic banner are demoted. */
+  /* Marcus — Check-in Prep hero replaces the banner */
+  .main[data-focus="checkin"] #context-banner { display: none; }
+  /* Priya — Recruit hero replaces the inline "Suggested to Recruit" card */
+  .main[data-focus="recruit"] #card-recruit { display: none; }
+  /* Aisha — Scan hero is a thin anomaly summary; banner still shows below */
+
+  /* ── DATA-VARIANT TOGGLE ──
+     v1 = jobs-to-be-done layout (default). v2 = Application Platform layout. */
+  .main[data-variant="v1"] .v2-only { display: none; }
+  .main[data-variant="v2"] .v1-only { display: none; }
+
+  /* ── V2 DASHBOARD ── */
+  #v2-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* — V2 metric pill strip — */
+  .pill-strip {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 4px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: stretch;
+  }
+  .pill-cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: var(--transition-fast);
+  }
+  .pill-cell:hover { background: var(--surface-hover); }
+  .pill-cell + .pill-cell::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 1px;
+    background: var(--border-default);
+  }
+  .pill-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .pill-text { flex: 1; min-width: 0; }
+  .pill-value { font-size: 18px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+  .pill-label {
+    font-size: 12px;
+    color: var(--text-subdued);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .pill-arrow {
+    color: var(--text-subdued);
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: transform var(--transition-fast);
+  }
+  .pill-cell:hover .pill-arrow { transform: translateX(2px); color: var(--accent); }
+
+  /* — V2 task card — */
+  .task-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .task-card-header {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--background);
+  }
+  .task-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .task-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-default);
+    transition: var(--transition-fast);
+  }
+  .task-row:hover { background: var(--background-subdued); }
+  .task-row-content { flex: 1; min-width: 0; }
+  .task-row-title { font-size: 14px; font-weight: 600; color: var(--foreground); margin-bottom: 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .task-row-meta {
+    font-size: 12px;
+    color: var(--text-subdued);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .task-row-meta-icon {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+  .task-row-action { flex-shrink: 0; }
+  .task-row-badge {
+    background: var(--negative-bg);
+    color: var(--negative);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .task-row-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-top: 1px solid var(--border-default);
+    background: var(--background-subdued);
+    font-size: 13px;
+  }
+  .task-row-footer a {
+    color: var(--text-interactive);
+    text-decoration: underline;
+    font-weight: 500;
+  }
+
+  /* — V2 Program Health 3-up — */
+  .program-health {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .ph-cell {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border-right: 1px solid var(--border-default);
+  }
+  .ph-cell:last-child { border-right: none; }
+  .ph-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+  .ph-value { font-size: 24px; font-weight: 700; color: var(--foreground); letter-spacing: -0.3px; }
+  .ph-goal {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-subdued);
+  }
+  .ph-goal-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--muted);
+    border-radius: 9999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .ph-goal-current {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 9999px;
+  }
+  .ph-goal-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-subdued);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .ph-minichart {
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding-top: 6px;
+  }
+  .ph-bar {
+    flex: 1;
+    background: var(--accent);
+    border-radius: 3px 3px 0 0;
+    min-height: 6px;
+    opacity: 0.85;
+    transition: var(--transition-fast);
+  }
+  .ph-bar.alt { background: #C81426; }
+  .ph-bar:hover { opacity: 1; transform: scaleY(1.04); }
+  .ph-legend {
+    display: flex;
+    gap: 16px;
+    font-size: 11px;
+    color: var(--text-subdued);
+  }
+  .ph-legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* — V2 activity feed — */
+  .activity-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .feed-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+  }
+  .feed-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .feed-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: 12px;
+  }
+  .feed-meta { font-size: 12px; color: var(--text-subdued); }
+
+  /* feed-goal-win */
+  .feed-goal-win {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--background) 0%, var(--background-subdued) 100%);
+  }
+  .feed-goal-win::after {
+    content: '🎉';
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+    opacity: 0.25;
+    pointer-events: none;
+  }
+  .feed-goal-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 14px;
+  }
+  .feed-goal-stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.3px;
+  }
+  .feed-goal-stat-label { font-size: 12px; color: var(--text-subdued); margin-top: 2px; }
+
+  /* feed-brand-roundup */
+  .feed-brand-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .feed-brand-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 8px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    transition: var(--transition-fast);
+  }
+  .feed-brand-tile:hover { border-color: var(--accent); box-shadow: var(--shadow-md); }
+  .feed-brand-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius);
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .feed-brand-rev { font-size: 13px; font-weight: 700; color: var(--foreground); }
+  .feed-brand-name { font-size: 11px; color: var(--text-subdued); text-align: center; }
+
+  /* feed-trending-content */
+  .feed-trending {
+    display: grid;
+    grid-template-columns: 220px 1fr auto;
+    gap: 20px;
+    align-items: center;
+  }
+  .feed-trending-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--sidebar-accent), var(--surface-hover));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+  }
+  .feed-trending-headline {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--foreground);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .feed-trending-link {
+    font-size: 12px;
+    color: var(--text-subdued);
+    word-break: break-all;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .feed-trending-clicks {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--positive);
+    background: var(--positive-bg);
+    border-radius: 9999px;
+    padding: 4px 10px;
+  }
+
+  /* feed-partner-recs */
+  .feed-partner-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .feed-partner-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    background: var(--background-subdued);
+  }
+  .feed-partner-top { display: flex; align-items: center; gap: 10px; }
+  .feed-partner-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .feed-partner-name { font-size: 13px; font-weight: 700; color: var(--foreground); }
+  .feed-partner-role { font-size: 11px; color: var(--text-subdued); }
+  .feed-partner-clicks { font-size: 13px; font-weight: 700; color: var(--foreground); }
+  .feed-partner-clicks .delta { font-size: 11px; font-weight: 600; color: var(--positive); margin-left: 6px; }
+  .feed-partner-rec {
+    font-size: 11px;
+    color: var(--text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-weight: 600;
+  }
+  .feed-partner-card .btn-primary { width: 100%; }
+  .feed-partner-card .btn-secondary { width: 100%; }
+
+  /* feed-year-compare */
+  .feed-compare {
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  .feed-compare-callout {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .feed-compare-callout .big {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--positive);
+    letter-spacing: -0.5px;
+  }
+  .feed-compare-callout .sub {
+    font-size: 12px;
+    color: var(--text-subdued);
+  }
+  .feed-compare-chart {
+    height: 120px;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    padding-top: 8px;
+    position: relative;
+  }
+  .feed-compare-bar {
+    flex: 1;
+    background: var(--accent);
+    opacity: 0.4;
+    border-radius: 3px 3px 0 0;
+    min-height: 4px;
+    transition: var(--transition-fast);
+  }
+  .feed-compare-bar.this-year { opacity: 1; }
+  .feed-compare-line {
+    height: 120px;
+    position: relative;
+    padding-top: 8px;
+  }
+  .feed-compare-line svg { width: 100%; height: 100%; }
+  .feed-compare-mini-legend {
+    display: flex;
+    gap: 16px;
+    font-size: 11px;
+    color: var(--text-subdued);
+    margin-top: 6px;
+  }
+
+  /* — V2 match-score grid (brand + creator) — */
+  .match-grid {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+  }
+  .match-grid-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .match-grid-title { font-size: 14px; font-weight: 700; color: var(--foreground); }
+  .match-grid-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  .match-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 14px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    transition: var(--transition-fast);
+    cursor: pointer;
+  }
+  .match-tile:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .match-tile-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius);
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    overflow: hidden;
+  }
+  .match-grid-creator .match-tile-thumb {
+    border-radius: 50%;
+  }
+  .match-tile-name { font-size: 13px; font-weight: 600; color: var(--foreground); }
+  .match-tile-meta {
+    font-size: 11px;
+    color: var(--text-subdued);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .match-tile-size {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 6px;
+    height: 14px;
+    background: var(--foreground);
+    color: var(--background);
+    font-size: 9px;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+  .match-tile-score {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--positive);
+    background: var(--positive-bg);
+    border-radius: 9999px;
+    padding: 3px 10px;
+  }
+
+  /* — V2 promo banner — */
+  .promo-banner-v2 {
+    background: linear-gradient(135deg, var(--ai-background) 0%, #E6DAFF 100%);
+    border: 1px solid var(--ai-border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .promo-banner-v2-text { max-width: 540px; }
+  .promo-banner-v2-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ai-foreground);
+    margin-bottom: 4px;
+  }
+  .promo-banner-v2-desc {
+    font-size: 13px;
+    color: var(--ai-foreground);
+    opacity: 0.85;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .promo-banner-v2-circles {
+    display: flex;
+    gap: -8px;
+    align-items: center;
+  }
+  .promo-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-left: -14px;
+    box-shadow: var(--shadow-md);
+  }
+  .promo-circle:first-child { margin-left: 0; }
+
+  /* ── STAT CARDS ── */
+  .stat-card {
+    background: var(--background);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border-default);
+    transition: var(--transition-normal);
+  }
+  .stat-card:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-subdued);
+    margin-bottom: 8px;
+  }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.4px;
+    margin-bottom: 6px;
+  }
+  .stat-delta {
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .delta-up { color: var(--positive); }
+  .delta-down { color: var(--negative); }
+  .stat-sub { color: var(--text-subdued); font-weight: 400; }
+
+  /* ── CARDS & SECTIONS ── */
+  .section { margin-bottom: 32px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-pill {
+    background: var(--muted);
+    border: 1px solid var(--border-default);
+    color: var(--muted-foreground);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 10px;
+    border-radius: 9999px;
+  }
+  .see-all {
+    font-size: 13px;
+    color: var(--text-interactive);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: var(--transition-fast);
+    text-decoration: underline;
+  }
+  .see-all:hover { color: var(--accent-hover); }
+
+  .card {
+    background: var(--background);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-default);
+    overflow: hidden;
+    transition: var(--transition-normal);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-md);
+  }
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--background);
+  }
+  .card-body { padding: 12px 20px 20px; }
+
+  /* ── ALERTS TRIAGE ROWS ── */
+  .alert-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-default);
+    transition: var(--transition-fast);
+  }
+  .alert-row:last-child { border-bottom: none; }
+  .alert-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .alert-icon-red { background: var(--negative-bg); }
+  .alert-icon-orange { background: var(--caution-bg); }
+  .alert-icon-green { background: var(--positive-bg); }
+  .alert-icon-blue { background: var(--info-bg); }
+
+  .alert-content { flex: 1; }
+  .alert-title { font-size: 14px; font-weight: 600; color: var(--foreground); margin-bottom: 2px; }
+  .alert-desc { font-size: 12px; color: var(--text-subdued); line-height: 1.4; }
+  .alert-action { flex-shrink: 0; margin-left: 12px; }
+
+  /* ── UPCOMING CHECKINS ── */
+  .checkin-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: var(--transition-normal);
+  }
+  .checkin-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+  }
+  .checkin-date {
+    text-align: center;
+    background: var(--sidebar-accent);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    flex-shrink: 0;
+  }
+  .checkin-month { font-size: 10px; font-weight: 700; color: var(--sidebar-accent-foreground); text-transform: uppercase; letter-spacing: 0.5px; }
+  .checkin-day { font-size: 20px; font-weight: 700; color: var(--sidebar-accent-foreground); line-height: 1; margin-top: 2px; }
+  .checkin-info { flex: 1; min-width: 0; }
+  .checkin-name { font-size: 14px; font-weight: 600; color: var(--foreground); margin-bottom: 4px; }
+  .checkin-meta { font-size: 12px; color: var(--text-subdued); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .checkin-actions { display: flex; gap: 8px; }
+
+  /* ── TOP PARTNERS ── */
+  .partner-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .partner-row:last-child { border-bottom: none; }
+  .partner-logo {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius);
+    background: var(--surface-subdued);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .partner-info { flex: 1; min-width: 0; }
+  .partner-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--foreground);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .partner-meta { font-size: 12px; color: var(--text-subdued); }
+  .partner-revenue { text-align: right; flex-shrink: 0; margin-right: 12px; }
+  .partner-rev-value { font-size: 14px; font-weight: 600; color: var(--foreground); }
+  .partner-rev-delta { font-size: 12px; font-weight: 600; }
+
+  /* Tags */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    flex-shrink: 0;
+  }
+  .tag-green { background: var(--positive-bg); color: var(--positive); }
+  .tag-red { background: var(--negative-bg); color: var(--negative); }
+  .tag-orange { background: var(--caution-bg); color: var(--caution); }
+  .tag-blue { background: var(--info-bg); color: var(--info-default); }
+  .tag-gray { background: var(--muted); color: var(--muted-foreground); }
+
+  /* ── SUGGESTED TO RECRUIT ── */
+  .recruit-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: var(--transition-normal);
+  }
+  .recruit-card:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .recruit-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius);
+    background: var(--surface-subdued);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .recruit-name { font-size: 14px; font-weight: 600; color: var(--foreground); margin-bottom: 2px; }
+  .recruit-meta { font-size: 12px; color: var(--text-subdued); }
+  .recruit-stats { display: flex; gap: 20px; margin-top: 8px; }
+  .recruit-stat-value { font-size: 14px; font-weight: 600; color: var(--foreground); }
+  .recruit-stat-label { font-size: 10px; color: var(--text-subdued); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ── PROGRESS BARS ── */
+  .progress-track {
+    height: 6px;
+    background: var(--muted);
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: var(--accent);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── BUTTON STYLES ── */
+  .btn-primary {
+    background: var(--button-primary);
+    color: var(--button-primary-foreground);
+    border: 1px solid var(--button-primary);
+    padding: 8px 18px;
+    border-radius: var(--radius-button);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .btn-primary:hover {
+    background: var(--button-primary-hover);
+    border-color: var(--button-primary-hover);
+  }
+  .btn-primary:active { background: var(--accent-pressed); }
+
+  .btn-secondary {
+    background: var(--muted);
+    color: var(--foreground);
+    border: 1px solid var(--muted);
+    padding: 8px 18px;
+    border-radius: var(--radius-button);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .btn-secondary:hover {
+    background: var(--surface-hover);
+    border-color: var(--surface-hover);
+    color: var(--foreground);
+  }
+
+  .btn-white {
+    background: #fff;
+    border: 1px solid transparent;
+    color: var(--ai-accent);
+    padding: 8px 18px;
+    border-radius: var(--radius-button);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+  }
+  .btn-white:hover {
+    box-shadow: var(--shadow-md);
+    color: var(--ai-foreground);
+  }
+
+  .btn-ghost-white {
+    background: rgba(75, 50, 150, 0.08);
+    border: 1px solid var(--ai-border);
+    color: var(--ai-foreground);
+    padding: 8px 18px;
+    border-radius: var(--radius-button);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .btn-ghost-white:hover {
+    background: rgba(75, 50, 150, 0.14);
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-subdued);
+    transition: var(--transition-fast);
+  }
+  .btn-icon:hover {
+    background: var(--negative-bg);
+    color: var(--negative);
+    border-color: var(--negative-bg);
+  }
+
+  /* ── CREATOR CAMPAIGNS TABLE ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--muted);
+    border-radius: var(--radius-button);
+    padding: 4px;
+    margin-bottom: 16px;
+    align-self: flex-start;
+  }
+  .tab {
+    padding: 6px 16px;
+    border-radius: var(--radius-button);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--muted-foreground);
+    transition: var(--transition-fast);
+  }
+  .tab:hover { color: var(--foreground); }
+  .tab.active {
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+  }
+
+  .campaigns-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .campaigns-table th {
+    padding: 12px 18px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-subdued);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    background: var(--background-subdued);
+    border-bottom: 1px solid var(--border-default);
+  }
+  .campaigns-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-default);
+    color: var(--foreground);
+    vertical-align: middle;
+  }
+  .campaigns-table tr:last-child td { border-bottom: none; }
+  .campaigns-table tr { transition: var(--transition-fast); }
+  .campaigns-table tr:hover td { background: var(--surface-hover); }
+
+  /* ── ROLE CONFIRM MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 22, 33, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    width: 440px;
+    box-shadow: var(--shadow-xl);
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .modal-overlay.active .modal {
+    transform: scale(1);
+  }
+  .modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .modal-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  .modal-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .modal-option {
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .modal-option:hover {
+    border-color: #CBD5E1;
+    background: var(--bg-main);
+  }
+  .modal-option.selected {
+    border-color: var(--brand-primary);
+    background: var(--brand-primary-light);
+  }
+  .modal-option-icon {
+    font-size: 22px;
+    width: 38px;
+    height: 38px;
+    background: #FFF;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .modal-option.selected .modal-option-icon {
+    background: var(--brand-primary);
+    color: #fff;
+  }
+  .modal-option-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+  .modal-option-desc { font-size: 11px; color: var(--text-muted); }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* ── INTERACTIVE SIDE BRIEF DRAWER ── */
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 22, 33, 0.2);
+    backdrop-filter: blur(2px);
+    z-index: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .drawer-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 480px;
+    background: var(--bg-card);
+    box-shadow: -10px 0 40px rgba(15, 22, 33, 0.12);
+    z-index: 501;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border-color);
+  }
+  .drawer-overlay.active .drawer {
+    transform: translateX(0);
+  }
+  .drawer-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border-default);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    background: var(--background-subdued);
+  }
+  .drawer-title-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .drawer-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: #FFF;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .drawer-partner-name { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
+  .drawer-partner-meta { font-size: 11px; color: var(--text-muted); }
+  
+  .drawer-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: var(--transition-fast);
+  }
+  .drawer-close:hover {
+    background: var(--bg-main);
+    color: var(--text-primary);
+  }
+
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Drawer Mini Chart */
+  .drawer-chart-container {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+  }
+  .drawer-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .drawer-chart-title { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+  
+  .drawer-chart-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 120px;
+    padding-top: 15px;
+    position: relative;
+    border-bottom: 1px solid var(--border-default);
+  }
+  /* Chart Bar CSS */
+  .chart-bar-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .chart-bar {
+    width: 24px;
+    background: rgba(0, 119, 219, 0.18);
+    border-radius: 4px 4px 0 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+  }
+  .chart-bar:hover {
+    background: var(--accent);
+    transform: scaleY(1.05);
+  }
+  .chart-bar.highlight {
+    background: var(--accent);
+  }
+  .chart-bar-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .chart-bar-tooltip {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    background: var(--text-primary);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 6px;
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: var(--shadow-md);
+    z-index: 10;
+  }
+  .chart-bar-wrapper:hover .chart-bar-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Checklist Component */
+  .drawer-checklist { display: flex; flex-direction: column; gap: 10px; }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    transition: var(--transition-fast);
+  }
+  .checklist-item:hover { background: var(--surface-hover); }
+  .checklist-checkbox {
+    margin-top: 2px;
+    accent-color: var(--brand-primary);
+    width: 14px;
+    height: 14px;
+  }
+  .checklist-label { font-size: 12px; color: var(--text-secondary); }
+  .checklist-item.checked .checklist-label {
+    text-decoration: line-through;
+    color: var(--text-light);
+  }
+
+  /* Notes Board */
+  .drawer-notes-section { display: flex; flex-direction: column; gap: 12px; }
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 160px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .note-bubble {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+  }
+  .note-time { font-size: 9px; color: var(--text-light); margin-bottom: 4px; font-weight: 600; }
+  .note-text { color: var(--text-secondary); }
+
+  .notes-input-area { display: flex; gap: 8px; }
+  .notes-textarea {
+    flex: 1;
+    height: 34px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    font-size: 12px;
+    resize: none;
+    background: #FFF;
+    transition: var(--transition-fast);
+  }
+  .notes-textarea:focus {
+    border-color: var(--brand-primary);
+  }
+
+  /* Drawer Terms Card */
+  .drawer-terms-card {
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 16px;
+    background: var(--background-subdued);
+  }
+  .drawer-term-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .drawer-term-row:last-child { margin-bottom: 0; }
+  .drawer-term-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+  .drawer-term-input {
+    width: 80px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  /* ── INLINE TOAST NOTIFICATIONS ── */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .toast {
+    background: var(--text-primary);
+    color: #FFF;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .toast.active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .toast-icon { font-size: 16px; }
+
+</style>
+</head>
+<body>
+
+<!-- ── ROLE SELECT CONFIRM MODAL ── -->
+<div class="modal-overlay" id="modal-role-confirm">
+  <div class="modal">
+    <div style="font-size:32px;margin-bottom:12px;">👋</div>
+    <div class="modal-title">What is your primary focus this week?</div>
+    <div class="modal-desc">We will adapt the dashboard surfaces and prioritize your jobs-to-be-done.</div>
+    <div class="modal-options">
+      <div class="modal-option selected" onclick="selectRoleOption(this, 'aisha')">
+        <div class="modal-option-icon">🤝</div>
+        <div>
+          <div class="modal-option-title">Affiliate Creator Manager</div>
+          <div class="modal-option-desc">Manage check-ins, recruit partners, issue bonuses</div>
+        </div>
+      </div>
+      <div class="modal-option" onclick="selectRoleOption(this, 'priya')">
+        <div class="modal-option-icon">🎯</div>
+        <div>
+          <div class="modal-option-title">Creator & Campaign Lead</div>
+          <div class="modal-option-desc">Recruitment focus, review drafts, creator campaigns</div>
+        </div>
+      </div>
+      <div class="modal-option" onclick="selectRoleOption(this, 'marcus')">
+        <div class="modal-option-icon">📊</div>
+        <div>
+          <div class="modal-option-title">Affiliate Program Lead</div>
+          <div class="modal-option-desc">Meticulous relationship monitoring, check-ins, reviews</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeRoleConfirmModal()">Not now</button>
+      <button class="btn-primary" onclick="confirmRoleSelection()">Confirm Focus</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── INLINE GIVE BONUS MODAL ── -->
+<div class="modal-overlay" id="modal-give-bonus">
+  <div class="modal" style="width: 400px;">
+    <div style="font-size:28px;margin-bottom:12px;">🎁</div>
+    <div class="modal-title">Issue Partner Incentive Bonus</div>
+    <div class="modal-desc" id="bonus-modal-partner-desc">Select incentive type and enter amount for partner.</div>
+    
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px;">
+      <div>
+        <label style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:6px;">Bonus Amount (USD)</label>
+        <div style="position:relative;">
+          <span style="position:absolute;left:12px;top:8px;font-weight:700;color:var(--text-primary);">$</span>
+          <input type="number" id="bonus-amount-input" value="500" style="width:100%;border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:8px 12px 8px 26px;font-weight:700;font-size:14px;color:var(--text-primary);">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:6px;">Incentive Type</label>
+        <select id="bonus-type-select" style="width:100%;border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:8px 12px;font-weight:600;color:var(--text-secondary);background:#fff;">
+          <option value="welcome">Welcome Bonus (Onboarding)</option>
+          <option value="performance" selected>Performance Milestone Reward</option>
+          <option value="campaign">Creator Campaign Bonus</option>
+          <option value="flat">Flat Relationship Retention Fee</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:6px;">Notes / Reason</label>
+        <textarea id="bonus-reason-input" placeholder="e.g. Exceeded Q2 revenue goals / Welcome fee" style="width:100%;height:60px;border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;resize:none;"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeBonusModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitIncentiveBonus()">Issue Incentive</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── INTERACTIVE SLIDE-OUT DRAWER ── -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()">
+  <div class="drawer" id="drawer" onclick="event.stopPropagation()">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <div class="drawer-logo" id="drawer-partner-logo">🏠</div>
+        <div>
+          <div class="drawer-partner-name" id="drawer-partner-name">HomeGoods Network</div>
+          <div class="drawer-partner-meta" id="drawer-partner-meta">Affiliate • Home & Living</div>
+        </div>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Section 1: Performance Spark/Bar Chart -->
+      <div class="drawer-chart-container">
+        <div class="drawer-chart-header">
+          <div class="drawer-chart-title">Revenue Trend (Last 6 Months)</div>
+          <span class="tag tag-green" id="drawer-partner-status">Healthy</span>
+        </div>
+        <div class="drawer-chart-bars" id="drawer-chart-bars">
+          <!-- Dynamically Rendered Bars -->
+        </div>
+      </div>
+
+      <!-- Section 2: Checklist (Job 5) -->
+      <div>
+        <h4 style="font-size:12px;margin-bottom:10px;text-transform:uppercase;color:var(--text-light);letter-spacing:0.5px;">Check-in Prep Checklist</h4>
+        <div class="drawer-checklist" id="drawer-checklist">
+          <!-- Dynamically Rendered Tasks -->
+        </div>
+      </div>
+
+      <!-- Section 3: Notes logging (Job 3/5) -->
+      <div class="drawer-notes-section">
+        <h4 style="font-size:12px;text-transform:uppercase;color:var(--text-light);letter-spacing:0.5px;">Relationship Log & Notes</h4>
+        <div class="notes-list" id="drawer-notes-list">
+          <!-- Dynamic Notes -->
+        </div>
+        <div class="notes-input-area">
+          <input type="text" class="notes-textarea" id="drawer-note-input" placeholder="Type a discussion note or action item..." onkeydown="if(event.key==='Enter') saveCheckinNote()">
+          <button class="btn-primary" onclick="saveCheckinNote()" style="padding: 7px 12px;">Add</button>
+        </div>
+      </div>
+
+      <!-- Section 4: Terms Configurator -->
+      <div class="drawer-terms-card">
+        <h4 style="font-size:12px;margin-bottom:12px;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px;">Adjust Partnership Terms</h4>
+        <div class="drawer-term-row">
+          <span class="drawer-term-label">Commission Rate</span>
+          <div>
+            <input type="text" class="drawer-term-input" id="drawer-term-commission" value="8.0%">
+          </div>
+        </div>
+        <div class="drawer-term-row">
+          <span class="drawer-term-label">Payout Frequency</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text-primary);">Net 30</span>
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;gap:8px;">
+          <button class="btn-secondary" onclick="triggerDrawerBonus()" style="padding:6px 12px;">Give Bonus</button>
+          <button class="btn-primary" onclick="saveDrawerTerms()" style="padding:6px 12px;">Update Terms</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST CONTAINER ── -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ── TOP NAVIGATION ── -->
+<nav class="topnav">
+  <a class="logo" href="#" aria-label="impact.com home"><img src="assets/impact-logo.svg" alt="impact.com" width="70" height="24"></a>
+  
+  <div class="topnav-links">
+    <a class="topnav-link active" href="#">Home</a>
+    <a class="topnav-link" href="#">Partners</a>
+    <a class="topnav-link" href="#">Creators</a>
+    <a class="topnav-link" href="#">Campaigns</a>
+    <a class="topnav-link" href="#">Reports</a>
+  </div>
+
+  <!-- Persona Switcher -->
+  <div class="persona-selector-container">
+    <a class="topnav-link" href="affiliate-creator-manager-personas.html" target="_blank" rel="noopener" style="margin-right:4px;">👥 View Personas</a>
+    <span class="persona-label">Persona Profile:</span>
+    <select class="persona-select" id="persona-select" onchange="switchPersona(this.value)">
+      <optgroup label="Aisha Thompson (Walmart Brand)">
+        <option value="aisha-v1">Aisha — v1</option>
+        <option value="aisha-v2">Aisha — v2</option>
+      </optgroup>
+      <optgroup label="Priya Nguyen (Chewy Brand)">
+        <option value="priya-v1">Priya — v1</option>
+        <option value="priya-v2">Priya — v2</option>
+      </optgroup>
+      <optgroup label="Marcus Delgado (Fenty Beauty Brand)">
+        <option value="marcus-v1">Marcus — v1</option>
+        <option value="marcus-v2">Marcus — v2</option>
+      </optgroup>
+    </select>
+  </div>
+
+  <div class="topnav-right">
+    <button class="notif-btn">
+      🔔<span class="notif-badge" id="notif-badge"></span>
+    </button>
+    <div class="avatar" id="nav-avatar" onclick="openRoleConfirmModal()">AT</div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-section-label">My Focus Jobs</div>
+    <div class="sidebar-item active" onclick="showToast('Loading Portfolio Dashboard...', 'info')">
+      <span class="sidebar-icon">🏠</span> Dashboard
+    </div>
+    <div class="sidebar-item" id="nav-job-checkin" onclick="focusJob('checkin')">
+      <span class="sidebar-icon">📅</span> Check-in Prep 
+      <span class="sidebar-badge" id="badge-checkins">2</span>
+    </div>
+    <div class="sidebar-item" id="nav-job-scan" onclick="focusJob('scan')">
+      <span class="sidebar-icon">⚡</span> Daily Scan
+      <span class="sidebar-badge" id="badge-alerts">4</span>
+    </div>
+    <div class="sidebar-item" id="nav-job-recruit" onclick="focusJob('recruit')">
+      <span class="sidebar-icon">🔍</span> Recruit Partners
+    </div>
+    <div class="sidebar-item" id="nav-job-campaigns" onclick="focusJob('campaigns')">
+      <span class="sidebar-icon">🎬</span> Creator Campaigns
+    </div>
+
+    <div class="sidebar-section-label">Manage Console</div>
+    <div class="sidebar-item" onclick="showToast('Loading Partners database...', 'info')">
+      <span class="sidebar-icon">👥</span> All Partners
+    </div>
+    <div class="sidebar-item" onclick="showToast('Loading Onboarding checklists...', 'info')">
+      <span class="sidebar-icon">✨</span> Onboarding
+    </div>
+    <div class="sidebar-item" onclick="showToast('Loading Incentives manager...', 'info')">
+      <span class="sidebar-icon">🎁</span> Bonuses & Incentives
+    </div>
+
+    <div class="sidebar-section-label">Active Programs</div>
+    <div class="sidebar-item" id="sidebar-prog-aff">
+      <span class="sidebar-icon">🏷</span> Walmart Affiliates
+    </div>
+    <div class="sidebar-item" id="sidebar-prog-cre">
+      <span class="sidebar-icon">📦</span> Walmart Creators
+    </div>
+    <div class="sidebar-item" style="color:var(--brand-primary);font-weight:700;" onclick="showToast('Integrate new platform account...', 'info')">
+      <span class="sidebar-icon">＋</span> Add Program
+    </div>
+  </aside>
+
+  <!-- ── MAIN PANEL ── -->
+  <main class="main" id="main-content" data-focus="scan">
+
+    <!-- PAGE TITLE HEADER -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title" id="page-title">Good morning, Aisha 👋</h1>
+        <div class="page-subtitle" id="page-subtitle">You have a partner check-in with HomeGoods Network on Friday — here's what you need.</div>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn-secondary" onclick="showToast('Syncing Google / Outlook Calendars...', 'info')">📅 View Calendar</button>
+        <button class="btn-primary" onclick="focusJob('recruit')">＋ Recruit Partner</button>
+      </div>
+    </div>
+
+    <!-- ── V1 DASHBOARD (Jobs-to-be-done flavor) ── -->
+    <div class="v1-only">
+
+    <!-- DYNAMIC ADAPTIVE JOB BANNER (tone driven from persona data — info / success / warning / critical) -->
+    <div class="context-banner" id="context-banner" data-tone="info">
+      <div class="context-banner-left">
+        <div class="context-icon" id="context-banner-icon" aria-hidden="true"></div>
+        <div>
+          <div class="context-label"><span class="context-ai-pill">✨ AI</span><span id="context-banner-label">Upcoming — Friday Jun 20</span></div>
+          <div class="context-title" id="context-banner-title">Partner Check-in: HomeGoods Network — Revenue is up 18% but clicks are lagging. Review before your call.</div>
+        </div>
+      </div>
+      <div class="context-actions">
+        <button class="btn-ghost-white" onclick="dismissPriorityBanner()">Dismiss</button>
+        <button class="btn-white" id="context-banner-btn" onclick="openDrawer('HomeGoods Network')">Prep Check-in Brief →</button>
+      </div>
+    </div>
+
+    <!-- PERSONA HERO — swapped per persona by renderPersonaHero() -->
+    <div class="persona-hero" id="persona-hero" hidden></div>
+
+    <!-- STATISTICS SCOREBOARD -->
+    <div class="section">
+      <div class="grid-4">
+        <div class="stat-card">
+          <div class="stat-label">Total Revenue (MTD)</div>
+          <div class="stat-value" id="stat-revenue">$2.42M</div>
+          <div class="stat-delta delta-up" id="stat-revenue-delta">↑ 12% <span class="stat-sub">vs last month</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Partners</div>
+          <div class="stat-value" id="stat-partners">148</div>
+          <div class="stat-delta delta-up" id="stat-partners-delta">↑ 6 <span class="stat-sub">this month</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="stat-creators-label">Active Creators</div>
+          <div class="stat-value" id="stat-creators">34</div>
+          <div class="stat-delta" id="stat-creators-delta">↓ 2 <span class="stat-sub">churned this week</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="stat-goal-label">Revenue Goal (Q3)</div>
+          <div class="stat-value" id="stat-goal-val">64%</div>
+          <div class="progress-track">
+            <div class="progress-fill" id="stat-goal-fill" style="width:64%"></div>
+          </div>
+          <div class="stat-delta" style="margin-top:6px;" id="stat-goal-sub">
+            <span class="stat-sub">$3.8M of $6M target</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WIDGET COLUMN GRID -->
+    <div class="section">
+      <div class="grid-2">
+
+        <!-- ALERTS TRIAGE BOARD -->
+        <div class="card" id="card-alerts">
+          <div class="card-header">
+            <div class="section-title">🚨 Needs Attention <span class="section-pill" id="badge-alerts-panel">4 alerts</span></div>
+            <button class="see-all" onclick="focusJob('scan')">Full Scan</button>
+          </div>
+          <div class="card-body" id="alerts-container">
+            <!-- Rendered Dynamically -->
+          </div>
+        </div>
+
+        <!-- UPCOMING CALENDAR CHECKINS -->
+        <div class="card" id="card-checkins">
+          <div class="card-header">
+            <div class="section-title">📅 Upcoming Partner Check-ins</div>
+            <button class="see-all" onclick="focusJob('checkin')">View calendar</button>
+          </div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:12px;" id="checkins-container">
+            <!-- Rendered Dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RECRUIT SUGGESTIONS + TOP PERFORMANCE SCAN -->
+    <div class="section">
+      <div class="grid-2">
+
+        <!-- TOP PARTNERS -->
+        <div class="card" id="card-top-partners">
+          <div class="card-header">
+            <div class="section-title">🏆 Top Performing Partners <span class="section-pill">MTD</span></div>
+            <button class="see-all" onclick="showToast('Viewing full database database of active relationships...', 'info')">See all</button>
+          </div>
+          <div class="card-body" id="partners-container">
+            <!-- Rendered Dynamically -->
+          </div>
+        </div>
+
+        <!-- RECRUITMENT MARKETPLACE SUGGESTIONS -->
+        <div class="card" id="card-recruit">
+          <div class="card-header">
+            <div class="section-title">🔍 Suggested Partners to Recruit</div>
+            <button class="see-all" onclick="focusJob('recruit')">Marketplace</button>
+          </div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:12px;" id="recruit-container">
+            <!-- Rendered Dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CREATOR CAMPAIGN TRACKER -->
+    <div class="section" id="card-campaigns">
+      <div class="section-header">
+        <div class="section-title">🎬 Creator Campaigns <span class="section-pill" id="campaigns-count">4 active</span></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-secondary" onclick="showToast('Filtering campaigns...', 'info')">Filter</button>
+          <button class="btn-primary" onclick="showToast('Creating new creator campaign workflow...', 'success')">＋ New Campaign</button>
+        </div>
+      </div>
+      
+      <div class="tabs">
+        <div class="tab active" onclick="filterCampaigns(this, 'all')">All</div>
+        <div class="tab" onclick="filterCampaigns(this, 'live')">Live</div>
+        <div class="tab" onclick="filterCampaigns(this, 'pending')">Pending Content</div>
+        <div class="tab" onclick="filterCampaigns(this, 'ended')">Completed</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-body" style="padding:0; overflow-x: auto;">
+          <table class="campaigns-table">
+            <thead>
+              <tr>
+                <th>Campaign Name</th>
+                <th>Creators</th>
+                <th>Revenue</th>
+                <th>Conversions</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="campaigns-table-body">
+              <!-- Rendered Dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    </div><!-- /.v1-only -->
+
+    <!-- ── V2 DASHBOARD (Application Platform flavor) — populated by renderV2Dashboard() -->
+    <section class="v2-only" id="v2-dashboard"></section>
+
+  </main>
+</div>
+
+<!-- ── JAVASCRIPT STATE ENGINE & CONTROLLER ── -->
+<script>
+  // ── APP DATA & STATE STORE ──
+  const AppState = {
+    selectedPersona: 'aisha',
+    variant: 'v1',
+    isBannerDismissed: false,
+    
+    // In-memory data store for relationship logs/notes (Job 3/5)
+    notes: {
+      'HomeGoods Network': [
+        { time: 'Jun 12, 2026 at 10:15 AM', text: 'Sarah confirmed pricing updates for Q3 campaign drafts.' },
+        { time: 'Jun 08, 2026 at 2:30 PM', text: 'CSM reported click drops on home improvement categories. Flagged for review.' }
+      ],
+      'TechDeals Pro': [
+        { time: 'Jun 10, 2026 at 11:00 AM', text: 'Affiliate reported code expirations. We need to check discount codes.' }
+      ],
+      'GlowUpMakeup': [
+        { time: 'Jun 14, 2026 at 4:20 PM', text: 'Discussed discount code renewals. Conversion rates dropped after coupon expired.' }
+      ],
+      'BudgetFinds Blog': [
+        { time: 'Jun 11, 2026 at 9:00 AM', text: 'Quarterly alignment: discussed CTR improvements.' }
+      ]
+    },
+
+    // To-Do list state for partner prep checklist (Job 5)
+    checklist: {
+      'HomeGoods Network': [
+        { label: 'Check Q3 contract rates', checked: true },
+        { label: 'Analyze click drop in Home Decor categories', checked: false },
+        { label: 'Verify tracking links redirection stability', checked: false },
+        { label: 'Formulate proposal for welcome bonus structure', checked: false }
+      ],
+      'TechDeals Pro': [
+        { label: 'Verify pixel firing logs', checked: false },
+        { label: 'Inspect affiliate promo code parameters', checked: false },
+        { label: 'Prepare performance brief for executive sync', checked: false }
+      ],
+      'BudgetFinds Blog': [
+        { label: 'Pull traffic sources report', checked: true },
+        { label: 'Compare commission structure vs competitor', checked: false },
+        { label: 'Verify product catalog feed syncing status', checked: false }
+      ]
+    },
+
+    // Current metrics that change dynamically based on actions
+    stats: {
+      aisha: { revenue: 2420500, partners: 148, creators: 34, target: 3800000, maxTarget: 6000000 },
+      priya: { revenue: 850200, partners: 62, creators: 80, target: 850200, maxTarget: 2000000 },
+      marcus: { revenue: 1250000, partners: 94, creators: 20, target: 1250000, maxTarget: 1500000 }
+    },
+
+    // Full datasets for the three personas
+    personas: {
+      aisha: {
+        greeting: "Good morning, Aisha 👋",
+        subtitle: "3 alerts need your attention this morning — TechDeals Pro revenue down 34%.",
+        programAffiliate: "Walmart Affiliates",
+        programCreator: "Walmart Creators",
+        avatar: "AT",
+        sidebarFocus: "scan", // prioritizes Daily Scan (Job 4)
+
+        // Priority banner details (Job 5) — styleguide tone: info (upcoming/informational)
+        banner: {
+          tone: "info",
+          label: "Upcoming — Friday Jun 20",
+          title: "Partner Check-in: HomeGoods Network — Revenue is up 18% but clicks are lagging. Review before your call.",
+          partnerName: "HomeGoods Network"
+        },
+
+        // Daily-scan anomaly spotlight (above stats)
+        scanHero: {
+          icon: "🚨",
+          title: "Anomaly spotlight — TechDeals Pro",
+          desc: "Revenue ↓34% this week. Conversion rate fell from 4.2% to 2.7%. Possible tracking issue.",
+          ctaText: "Open Brief →",
+          ctaAction: "openDrawer('TechDeals Pro')"
+        },
+
+        // Persona-specific 3rd KPI tile (Daily Scan emphasises alerts)
+        kpi3: {
+          label: "Alerts Today",
+          value: "4",
+          deltaHtml: "<span style=\"color:var(--negative);font-weight:600;\">2 urgent</span> <span class=\"stat-sub\">· 2 informational</span>"
+        },
+
+        stats: {
+          revenue: "$2.42M",
+          revDelta: "↑ 12% <span class=\"stat-sub\">vs last month</span>",
+          partners: "148",
+          partDelta: "↑ 6 <span class=\"stat-sub\">this month</span>",
+          creators: "34",
+          creDelta: "↓ 2 <span class=\"stat-sub\">churned this week</span>",
+          goalVal: "64%",
+          goalSub: "$3.8M MTD of $6M target"
+        },
+
+        // Attention alerts (Job 4)
+        alerts: [
+          { id: 'a-1', code: 'techdeals', type: 'red', icon: '📉', title: 'TechDeals Pro — Revenue down 34% this week', desc: 'Conversion rate dropped from 4.2% to 2.7% — possible tracking issue.', actionText: 'Review Brief', action: "openDrawer('TechDeals Pro')" },
+          { id: 'a-2', code: 'styleblogger', type: 'orange', icon: '⏰', title: 'StyleBlogger Network — 14 days inactive', desc: 'Last click tracked Jun 1 — no content posted since.', actionText: 'Log Note', action: "openDrawer('StyleBlogger Network')" },
+          { id: 'a-3', code: 'momlife', type: 'green', icon: '⭐', title: 'MomLifeCreator — Hitting 2x target', desc: 'Best performing creator this month — reward with a bonus.', actionText: 'Give Bonus', action: "openBonusModal('MomLifeCreator')" },
+          { id: 'a-4', code: 'onboarding', type: 'blue', icon: '🆕', title: '3 partners awaiting onboarding', desc: 'Accepted invite but tracking not yet confirmed.', actionText: 'Onboard', action: "showToast('Redirecting to Onboarding Console...', 'info')" }
+        ],
+
+        checkins: [
+          { partner: 'HomeGoods Network', time: 'Friday Jun 20 • Sarah Chen (CSM)', meta: 'Revenue ↑18% • Clicks lagging', dateM: 'JUN', dateD: '20' },
+          { partner: 'BudgetFinds Blog', time: 'Tuesday Jun 24 • Self-initiated', meta: 'Quarterly review • Revenue ↓8% — needs attention', dateM: 'JUN', dateD: '24' },
+          { partner: 'TrendSettersCo', time: 'Friday Jul 3 • CSM', meta: 'Monthly check-in • On track', dateM: 'JUL', dateD: '03' }
+        ],
+
+        recruit: [
+          { id: 'r-1', avatar: '🛋', name: 'CozyHomeFinds', meta: 'Home & Living • 280K followers', eng: '4.8%', epc: '$12', fit: '92%' },
+          { id: 'r-2', avatar: '🍳', name: 'KitchenWithKayla', meta: 'Food & Kitchen • 510K followers', eng: '3.9%', epc: '$9', fit: '88%' },
+          { id: 'r-3', avatar: '🎮', name: 'GadgetGuru', meta: 'Electronics • 1.2M followers', eng: '2.2%', epc: '$18', fit: '85%' }
+        ],
+
+        topPartners: [
+          { logo: '🏠', name: 'HomeGoods Network', meta: 'Affiliate • Home & Living', rev: '$184K', delta: '↑ 18%', tagType: 'green', tagText: 'Healthy' },
+          { logo: '🌿', name: 'EcoLiving Blog', meta: 'Creator • Sustainability', rev: '$141K', delta: '↑ 9%', tagType: 'green', tagText: 'Healthy' },
+          { logo: '💻', name: 'TechDeals Pro', meta: 'Affiliate • Electronics', rev: '$98K', delta: '↓ 34%', tagType: 'red', tagText: 'At Risk' },
+          { logo: '👶', name: 'MomLifeCreator', meta: 'Creator • Family & Kids', rev: '$76K', delta: '↑ 2x target', tagType: 'orange', tagText: 'Bonus Ready' },
+          { logo: '✈️', name: 'Budget Travel Hub', meta: 'Affiliate • Travel', rev: '$63K', delta: '↑ 5%', tagType: 'green', tagText: 'Healthy' }
+        ],
+
+        campaigns: [
+          { name: 'Summer Home Refresh', date: 'Jun 1 — Jul 31', creators: '12 active', rev: '$94K', revDelta: '↑22%', conv: '1,840', tagType: 'green', tagText: 'Live' },
+          { name: 'Back to School Tech', date: 'Jul 15 — Aug 31', creators: '8 confirmed', rev: '—', revDelta: '', conv: 'Pending', tagType: 'blue', tagText: 'Upcoming' },
+          { name: 'Grocery Deals Weekly', date: 'Ongoing', creators: '6 active', rev: '$210K', revDelta: '↓5%', conv: '4,290', tagType: 'orange', tagText: 'Needs Review' },
+          { name: 'Pet Supplies Flash Sale', date: 'Jun 10 — Jun 14', creators: '4 creators', rev: '$38K', revDelta: '', conv: '820', tagType: 'gray', tagText: 'Ended' }
+        ],
+
+        // V2 dashboard (Application Platform flavor) — anomaly-aware program health
+        v2: {
+          layout: ['pillStrip', 'tasks', 'programHealth', 'activityFeed', 'brandGrid', 'promo'],
+          pills: [
+            { icon: '👥', value: '148', label: 'Active Partners' },
+            { icon: '📥', value: '12', label: 'Applications' },
+            { icon: '📨', value: '5', label: 'Proposals' },
+            { icon: '📊', value: '4', label: 'Reports' }
+          ],
+          tasks: {
+            title: 'What needs your attention today',
+            rows: [
+              { title: 'Investigate TechDeals Pro revenue drop', meta: '↓34% this week · conversion 4.2% → 2.7%', metaIcon: '⚠️', badge: 'Urgent', ctaText: 'Review', ctaAction: "openDrawer('TechDeals Pro')" },
+              { title: 'Review StyleBlogger Network — 14 days inactive', meta: '14 days inactive', metaIcon: '⏰', ctaText: 'Reach out', ctaAction: "openDrawer('StyleBlogger Network')" },
+              { title: 'Issue bonus: MomLifeCreator hit 2x target', meta: '+$76K · best performing creator', metaIcon: '⭐', ctaText: 'Give Bonus', ctaAction: "openBonusModal('MomLifeCreator')" },
+              { title: '3 partners awaiting onboarding', meta: '3 accepted invites · tracking pending', metaIcon: '🆕', ctaText: 'Onboard', ctaAction: "showToast('Redirecting to Onboarding Console...', 'info')" }
+            ],
+            footerLeft: 'Showing 4 of 12 open tasks',
+            footerLink: 'Show all 12 tasks'
+          },
+          programHealth: [
+            { title: 'Revenue', value: '$2.42M', goalCurrent: '$2.42M', goalTarget: '$2.8M Goal', goalPct: 86, bars: [55, 70, 60, 80, 95, 110, 105, 120], legend: [{ label: 'Last Month', color: 'var(--text-disabled)' }, { label: 'This Month', color: 'var(--accent)' }] },
+            { title: 'Actions', value: '11,834', goalCurrent: '11,834', goalTarget: '14K Goal', goalPct: 84, bars: [40, 55, 50, 65, 80, 95, 100, 105], legend: [{ label: 'Last Month', color: 'var(--text-disabled)' }, { label: 'This Month', color: 'var(--accent)' }] },
+            { title: 'New Partners', value: '6', goalCurrent: '6', goalTarget: '10 MTD', goalPct: 60, bars: [10, 20, 25, 30, 45, 55, 65, 75], legend: [{ label: 'Marketplace', color: 'var(--text-disabled)' }, { label: 'Proposals Sent', color: 'var(--accent)' }] }
+          ],
+          activityFeed: [
+            { type: 'yearCompare', eyebrow: '📈 Year over year', title: "You're up 50% on actions this year", calloutBig: '50%', calloutSub: 'increase in total actions', chartThis: 547173, chartLast: 364782 },
+            { type: 'brandRoundup', eyebrow: '🎉 Top performers MTD', title: 'Top 5 partners worth doubling down on', brands: [
+              { logo: '🏠', name: 'HomeGoods Network', rev: '$184K' },
+              { logo: '🌿', name: 'EcoLiving Blog', rev: '$141K' },
+              { logo: '✈️', name: 'Budget Travel Hub', rev: '$63K' },
+              { logo: '👶', name: 'MomLifeCreator', rev: '$76K' },
+              { logo: '🎮', name: 'GadgetGuru', rev: '$54K' }
+            ] }
+          ],
+          brandGrid: {
+            flavor: 'brand',
+            title: 'Content review partners worth working with',
+            tiles: [
+              { logo: '🏠', name: 'HomeGoods Network', size: 'L', score: '92% match' },
+              { logo: '🌿', name: 'EcoLiving Blog', size: 'L', score: '88% match' },
+              { logo: '✈️', name: 'Budget Travel Hub', size: 'M', score: '85% match' },
+              { logo: '💻', name: 'TechDeals Pro', size: 'L', score: '76% match' },
+              { logo: '🎮', name: 'GadgetGuru', size: 'M', score: '74% match' }
+            ]
+          },
+          promo: {
+            title: 'Increase productivity with automated workflows',
+            desc: 'Let Impact spot anomalies, prep partner briefs, and surface bonuses for your top performers — all in the background.',
+            ctaText: 'Learn More',
+            ctaAction: "showToast('Opening automation playbook...', 'info')"
+          }
+        }
+      },
+
+      priya: {
+        greeting: "Good afternoon, Priya 👋",
+        subtitle: "Your recruit funnel is up 15%. Three pet creators just accepted — onboard them next.",
+        programAffiliate: "Chewy Influencers",
+        programCreator: "Chewy Creators",
+        avatar: "PN",
+        sidebarFocus: "recruit", // prioritizes Recruit (Job 1)
+
+        // Recruitment pipeline — styleguide tone: success (invites accepted, positive momentum)
+        banner: {
+          tone: "success",
+          label: "Recruitment Pipeline",
+          title: "3 pet lifestyle influencers just accepted invites. Issue onboarding kits to launch campaigns.",
+          partnerName: "DogMomDuo"
+        },
+
+        // Promoted recruit hero (Job 1) — surfaces fit-scored partner suggestions
+        recruitHero: {
+          title: "🔍 Suggested Partners to Recruit",
+          subtitle: "Based on your Chewy program gaps and top performer patterns."
+        },
+
+        // Persona-specific 3rd KPI tile (Recruit emphasises open invites)
+        kpi3: {
+          label: "Open Invites",
+          value: "9",
+          deltaHtml: "<span style=\"color:var(--positive);font-weight:600;\">↑ 3 accepted</span> <span class=\"stat-sub\">in last 24h</span>"
+        },
+
+        stats: {
+          revenue: "$850.2K",
+          revDelta: "↑ 25% <span class=\"stat-sub\">vs last month</span>",
+          partners: "62",
+          partDelta: "↑ 14 <span class=\"stat-sub\">this month</span>",
+          creators: "80",
+          creDelta: "↑ 12 <span class=\"stat-sub\">active today</span>",
+          goalVal: "42%",
+          goalSub: "$850K MTD of $2M target"
+        },
+
+        alerts: [
+          { id: 'p-1', code: 'dogmom', type: 'red', icon: '📉', title: 'DogMomDuo — Tracking Link Inactive', desc: 'Accepted invite 3 days ago but no test clicks registered yet.', actionText: 'Onboard Link', action: "openDrawer('DogMomDuo')" },
+          { id: 'p-2', code: 'golden', type: 'orange', icon: '🎬', title: 'GoldenRetrieverDaily — Content Draft', desc: 'Draft video for "Chewy Box Unboxing" is pending review.', actionText: 'Review Draft', action: "showToast('Opening video review workflow...', 'info')" },
+          { id: 'p-3', code: 'catnap', type: 'green', icon: '⭐', title: 'CatNapCatnips — High EPC Spike', desc: 'EPC rose to $24.50 this week — reward with a bonus.', actionText: 'Give Bonus', action: "openBonusModal('CatNapCatnips')" },
+          { id: 'p-4', code: 'contracts', type: 'blue', icon: '🆕', title: '4 pending contracts in queue', desc: 'Creator agreements signed, awaiting counter-signature.', actionText: 'Approve', action: "showToast('Approving pending agreements...', 'success')" }
+        ],
+
+        checkins: [
+          { partner: 'PawsitiveVibes Blog', time: 'Monday Jun 22 • Agency sync', meta: 'Creators ↑40% • Engagement peak', dateM: 'JUN', dateD: '22' },
+          { partner: 'FelineFriendly Co', time: 'Thursday Jun 25 • Quarterly sync', meta: 'Revenue ↓5% — review metrics', dateM: 'JUN', dateD: '25' },
+          { partner: 'BarkBoxers Network', time: 'Wednesday Jul 1 • CSM sync', meta: 'Monthly review • On track', dateM: 'JUL', dateD: '01' }
+        ],
+
+        recruit: [
+          { id: 'r-4', avatar: '🐕', name: 'BarkingLotReviews', meta: 'Pets & Dogs • 340K followers', eng: '5.2%', epc: '$14', fit: '95%' },
+          { id: 'r-5', avatar: '🐈', name: 'MeowLifestyle', meta: 'Pets & Cats • 180K followers', eng: '6.1%', epc: '$11', fit: '90%' },
+          { id: 'r-6', avatar: '🦜', name: 'PetParentingTips', meta: 'Family & Pets • 720K followers', eng: '3.1%', epc: '$8', fit: '86%' }
+        ],
+
+        topPartners: [
+          { logo: '🐕', name: 'BarkingLotReviews', meta: 'Creator • Pets & Dogs', rev: '$64K', delta: '↑ 45%', tagType: 'green', tagText: 'Healthy' },
+          { logo: '🐈', name: 'MeowLifestyle', meta: 'Creator • Pets & Cats', rev: '$48K', delta: '↑ 28%', tagType: 'green', tagText: 'Healthy' },
+          { logo: '🐾', name: 'DogMomDuo', meta: 'Creator • Pet Lifestyle', rev: '$32K', delta: '—', tagType: 'blue', tagText: 'Onboarding' },
+          { logo: '🐱', name: 'CatNapCatnips', meta: 'Creator • Cats & Toys', rev: '$29K', delta: '↑ 2.2x target', tagType: 'orange', tagText: 'Bonus Ready' },
+          { logo: '🦴', name: 'FurryFamily Blog', meta: 'Affiliate • Pet Care', rev: '$18K', delta: '↓ 4%', tagType: 'green', tagText: 'Healthy' }
+        ],
+
+        campaigns: [
+          { name: 'Chewy Box Unboxing', date: 'Jun 1 — Jul 15', creators: '28 active', rev: '$182K', revDelta: '↑35%', conv: '5,420', tagType: 'green', tagText: 'Live' },
+          { name: 'Summer Pet Wellness', date: 'Jun 25 — Aug 10', creators: '15 confirmed', rev: '—', revDelta: '', conv: 'Pending', tagType: 'blue', tagText: 'Upcoming' },
+          { name: 'Cat Toy Try-out', date: 'Ongoing', creators: '12 active', rev: '$88K', revDelta: '↑8%', conv: '2,110', tagType: 'green', tagText: 'Live' },
+          { name: 'Puppy Chow Launch', date: 'May 1 — May 31', creators: '20 creators', rev: '$110K', revDelta: '', conv: '3,420', tagType: 'gray', tagText: 'Ended' }
+        ],
+
+        // V2 dashboard — recruit-flavored discovery view
+        v2: {
+          layout: ['pillStrip', 'tasks', 'creatorGrid', 'activityFeed', 'brandGrid', 'promo'],
+          pills: [
+            { icon: '🎯', value: '92', label: 'Quality Audience' },
+            { icon: '📥', value: '43', label: 'Applications' },
+            { icon: '📨', value: '7', label: 'Proposals' },
+            { icon: '📊', value: '3', label: 'Reports' }
+          ],
+          tasks: {
+            title: 'Recruitment funnel — next actions',
+            rows: [
+              { title: 'Approve 3 pet creator agreements', meta: '3 awaiting counter-signature', metaIcon: '✍️', badge: 'New', ctaText: 'Review', ctaAction: "showToast('Opening agreements queue...', 'info')" },
+              { title: 'Review GoldenRetrieverDaily content draft', meta: '"Chewy Box Unboxing" video', metaIcon: '🎬', ctaText: 'Review Draft', ctaAction: "showToast('Opening video review workflow...', 'info')" },
+              { title: 'Issue bonus — CatNapCatnips EPC spike', meta: 'EPC rose to $24.50 this week', metaIcon: '⭐', ctaText: 'Give Bonus', ctaAction: "openBonusModal('CatNapCatnips')" },
+              { title: 'Fix DogMomDuo tracking link', meta: 'Invite accepted 3 days ago, no clicks', metaIcon: '🛠', ctaText: 'Onboard Link', ctaAction: "openDrawer('DogMomDuo')" }
+            ],
+            footerLeft: 'Showing 4 of 9 open tasks',
+            footerLink: 'Show all 9 tasks'
+          },
+          programHealth: [],
+          creatorGrid: {
+            flavor: 'creator',
+            title: "Creators recommended for Mother's Day campaign",
+            tiles: [
+              { logo: '🐕', name: 'BarkingLotReviews', size: 'L', score: '95% match' },
+              { logo: '🐈', name: 'MeowLifestyle', size: 'M', score: '90% match' },
+              { logo: '🐾', name: 'DogMomDuo', size: 'M', score: '88% match' },
+              { logo: '🐱', name: 'CatNapCatnips', size: 'S', score: '86% match' },
+              { logo: '🦴', name: 'FurryFamily Blog', size: 'M', score: '82% match' }
+            ]
+          },
+          activityFeed: [
+            { type: 'trendingContent', eyebrow: '🔥 BarkingLotReviews is trending', thumbEmoji: '🐕', headline: 'Inside the new Chewy autoship: 5 hacks every pet parent should know', link: 'barkinglotreviews.com/chewy-autoship-hacks', clicks: '2,140 clicks in the last hour', ctaText: 'View Performance', ctaAction: "openDrawer('BarkingLotReviews')" },
+            { type: 'partnerRecs', eyebrow: '🤝 These partners are going long', title: "Here's how to kick them off", partners: [
+              { logo: '🐕', name: 'BarkingLotReviews', role: 'Pet Lifestyle Creator', clicks: '5,420', delta: '↑45%', rec: 'Recommended: Send product catalog', ctaText: 'Send Product Catalog', ctaAction: "showToast('Sending Chewy product catalog to BarkingLotReviews...', 'success')" },
+              { logo: '🐈', name: 'MeowLifestyle', role: 'Cat Lifestyle Creator', clicks: '3,210', delta: '↑28%', rec: 'Recommended: Invite to campaign', ctaText: 'Invite to Campaign', ctaAction: "showToast('Inviting MeowLifestyle to Mother\\'s Day campaign...', 'success')" },
+              { logo: '🐱', name: 'CatNapCatnips', role: 'Loyalty Partner', clicks: '2,015', delta: '↑2.2x target', rec: 'Recommended: Send promo code', ctaText: 'Send Promo Code', ctaAction: "showToast('Generating exclusive promo code for CatNapCatnips...', 'success')" }
+            ] }
+          ],
+          brandGrid: {
+            flavor: 'brand',
+            title: 'Content / Review partners you should work with',
+            tiles: [
+              { logo: '🐶', name: 'PuppyMomLife', size: 'L', score: '92% match' },
+              { logo: '🐱', name: 'CatCorner', size: 'M', score: '88% match' },
+              { logo: '🦮', name: 'DogTrainingPro', size: 'M', score: '84% match' },
+              { logo: '🦜', name: 'PetParentingTips', size: 'L', score: '80% match' },
+              { logo: '🐾', name: 'PawsitiveVibes', size: 'M', score: '77% match' }
+            ]
+          },
+          promo: {
+            title: 'Increase productivity with automated workflows',
+            desc: 'Auto-score new applicants, send custom outreach, and lock in rising creators before competitors notice.',
+            ctaText: 'Learn More',
+            ctaAction: "showToast('Opening recruitment automation guide...', 'info')"
+          }
+        }
+      },
+
+      marcus: {
+        greeting: "Good morning, Marcus 👋",
+        subtitle: "Check-in with BudgetFinds Blog today. Auto-generated brief is ready below.",
+        programAffiliate: "Fenty Affiliates",
+        programCreator: "Fenty Influencers",
+        avatar: "MD",
+        sidebarFocus: "checkin", // prioritizes Check-in Prep (Job 5)
+
+        // Check-in alert — styleguide tone: warning (revenue dipped, needs review)
+        banner: {
+          tone: "warning",
+          label: "Check-in Alert — Today",
+          title: "Upcoming sync with BudgetFinds Blog. Revenue has dipped 8% this month due to cart conversions. Review brief.",
+          partnerName: "BudgetFinds Blog"
+        },
+
+        // Auto-surfaced check-in brief hero (Job 5)
+        checkinBrief: {
+          partner: "BudgetFinds Blog",
+          logo: "📖",
+          meta: "Affiliate · Beauty Blog · Bi-weekly cadence",
+          label: "📋 Upcoming Today · Self-initiated check-in",
+          tagType: "orange",
+          tagText: "Needs Review",
+          metrics: [
+            { label: "Revenue MTD",     value: "$74K",  note: "↓ 18% vs last month",   tone: "bad"  },
+            { label: "Conversion Rate", value: "2.4%", note: "was 3.1% — flagged",     tone: "warn" },
+            { label: "Clicks MTD",      value: "31,800", note: "↓ 9% — investigate",   tone: "warn" },
+            { label: "Top Content",     value: "Summer Lip Plumper",  note: "1,820 clicks" },
+            { label: "Last Check-in",   value: "May 28", note: "Discussed Q2 targets" },
+            { label: "Contract Renewal", value: "Aug 15", note: "Renewal window opens Jul 1" }
+          ],
+          actions: [
+            { emoji: "🔍", text: "Investigate click drop — possible expired coupon codes" },
+            { emoji: "💬", text: "Discuss creative refresh for summer collection" },
+            { emoji: "🎁", text: "Offer 10% performance bonus if Q3 target hit by Aug 1" },
+            { emoji: "📋", text: "Pre-fill renewal proposal — contract due Aug 15" }
+          ]
+        },
+
+        // Persona-specific 3rd KPI tile (Check-in cadence emphasis)
+        kpi3: {
+          label: "Upcoming Check-ins",
+          value: "3",
+          deltaHtml: "<span style=\"color:var(--caution);font-weight:600;\">1 today</span> <span class=\"stat-sub\">· 2 this week</span>"
+        },
+
+        stats: {
+          revenue: "$1.25M",
+          revDelta: "↑ 8% <span class=\"stat-sub\">vs last month</span>",
+          partners: "94",
+          partDelta: "↑ 2 <span class=\"stat-sub\">this month</span>",
+          creators: "20",
+          creDelta: "<span class=\"stat-sub\">VIP Partners · weekly cadence</span>",
+          goalVal: "78%",
+          goalSub: "$1.2M MTD of $1.5M target"
+        },
+
+        alerts: [
+          { id: 'm-1', code: 'glowup', type: 'red', icon: '📉', title: 'GlowUpMakeup — Revenue down 18%', desc: 'Conversion rate fell due to expired coupon tags. Action needed.', actionText: 'Verify Code', action: "openDrawer('GlowUpMakeup')" },
+          { id: 'm-2', code: 'beautyreview', type: 'orange', icon: '🚨', title: 'BeautyReviewChannel — High return rate', desc: '12% product return rate flagged on orders. Review assertions.', actionText: 'Inspect Brief', action: "openDrawer('BeautyCompare')" },
+          { id: 'm-3', code: 'glamourguide', type: 'green', icon: '⭐', title: 'GlamourGuide — Partner anniversary', desc: 'Active for 1 year today. Reward with a custom bump.', actionText: 'Give Bump', action: "openBonusModal('GlamourGuide')" },
+          { id: 'm-4', code: 'domains', type: 'blue', icon: '🛡', title: '2 tracking redirects flagged', desc: 'DNS security certificate renewal required.', actionText: 'Fix HTTPS', action: "showToast('Updating redirection DNS credentials...', 'success')" }
+        ],
+
+        checkins: [
+          { partner: 'BudgetFinds Blog', time: 'Monday Jun 15 (Today) • Self-initiated', meta: 'Quarterly review • Revenue ↓8% — needs attention', dateM: 'JUN', dateD: '15' },
+          { partner: 'TrendSettersCo', time: 'Monday Jun 22 • CSM sync', meta: 'Monthly check-in • On track', dateM: 'JUN', dateD: '22' },
+          { partner: 'HomeGoods Network', time: 'Friday Jun 26 • Sarah Chen (CSM)', meta: 'Revenue ↑18% • Clicks lagging', dateM: 'JUN', dateD: '26' }
+        ],
+
+        recruit: [
+          { id: 'r-7', avatar: '💄', name: 'GlamGlowTips', meta: 'Beauty & Skincare • 420K followers', eng: '4.5%', epc: '$16', fit: '94%' },
+          { id: 'r-8', avatar: '💋', name: 'MakeupByMaya', meta: 'Cosmetics • 850K followers', eng: '3.2%', epc: '$22', fit: '91%' },
+          { id: 'r-9', avatar: '🧴', name: 'SkincareSecrets', meta: 'Skincare • 310K followers', eng: '5.0%', epc: '$15', fit: '87%' }
+        ],
+
+        topPartners: [
+          { logo: '💄', name: 'GlamGlowTips', meta: 'Creator • Beauty & Skincare', rev: '$120K', delta: '↑ 15%', tagType: 'green', tagText: 'Healthy' },
+          { logo: '💋', name: 'MakeupByMaya', meta: 'Creator • Cosmetics', rev: '$95K', delta: '↑ 12%', tagType: 'green', tagText: 'Healthy' },
+          { logo: '💅', name: 'GlowUpMakeup', meta: 'Creator • Makeup & Nails', rev: '$74K', delta: '↓ 18%', tagType: 'red', tagText: 'At Risk' },
+          { logo: '📖', name: 'GlamourGuide', meta: 'Affiliate • Beauty Blog', rev: '$55K', delta: '↑ 2.2x target', tagType: 'orange', tagText: 'Bonus Ready' },
+          { logo: '🧴', name: 'BeautyCompare', meta: 'Affiliate • Comparison', rev: '$44K', delta: '↑ 3%', tagType: 'green', tagText: 'Healthy' }
+        ],
+
+        campaigns: [
+          { name: 'Summer Glow Campaign', date: 'Jun 1 — Jul 31', creators: '8 active', rev: '$124K', revDelta: '↑15%', conv: '2,120', tagType: 'green', tagText: 'Live' },
+          { name: 'Lip Gloss Plumper Launch', date: 'Aug 1 — Aug 31', creators: '12 confirmed', rev: '—', revDelta: '', conv: 'Pending', tagType: 'blue', tagText: 'Upcoming' },
+          { name: 'Matte Foundation Trial', date: 'Ongoing', creators: '5 active', rev: '$62K', revDelta: '↓12%', conv: '1,180', tagType: 'orange', tagText: 'Needs Review' },
+          { name: 'Skincare Routine Series', date: 'Apr 1 — Apr 30', creators: '10 creators', rev: '$85K', revDelta: '', conv: '1,940', tagType: 'gray', tagText: 'Ended' }
+        ],
+
+        // V2 dashboard — contract + check-in heavy view
+        v2: {
+          layout: ['pillStrip', 'tasks', 'activityFeed', 'brandGrid', 'programHealth', 'promo'],
+          pills: [
+            { icon: '💎', value: '20', label: 'VIP Partners' },
+            { icon: '📥', value: '6', label: 'Applications' },
+            { icon: '📨', value: '2', label: 'Proposals' },
+            { icon: '📊', value: '8', label: 'Reports' }
+          ],
+          tasks: {
+            title: 'Partner relationships — this week',
+            rows: [
+              { title: 'Update GlowUpMakeup discount code', meta: '↓18% revenue · expired coupons', metaIcon: '🎟', badge: 'Urgent', ctaText: 'Verify Code', ctaAction: "openDrawer('GlowUpMakeup')" },
+              { title: 'Renew 2 partner contracts before Aug 15', meta: 'GlamGlowTips · BeautyCompare', metaIcon: '📋', ctaText: 'Update Contract', ctaAction: "showToast('Opening contract renewal flow...', 'info')" },
+              { title: 'Prep BudgetFinds Blog check-in brief', meta: 'Today · self-initiated quarterly review', metaIcon: '📅', ctaText: 'Open Brief', ctaAction: "openDrawer('BudgetFinds Blog')" },
+              { title: 'Issue anniversary bump — GlamourGuide', meta: '1 year active today · loyalty reward', metaIcon: '🎁', ctaText: 'Give Bump', ctaAction: "openBonusModal('GlamourGuide')" }
+            ],
+            footerLeft: 'Showing 4 of 7 partner tasks',
+            footerLink: 'Show all 7 tasks'
+          },
+          programHealth: [
+            { title: 'Revenue', value: '$1.25M', goalCurrent: '$1.25M', goalTarget: '$1.5M Goal', goalPct: 78, bars: [60, 75, 85, 95, 105, 110, 115, 124], legend: [{ label: 'Last Month', color: 'var(--text-disabled)' }, { label: 'This Month', color: 'var(--accent)' }] },
+            { title: 'Actions', value: '5,420', goalCurrent: '5,420', goalTarget: '6.5K Goal', goalPct: 83, bars: [30, 40, 48, 56, 64, 70, 78, 82], legend: [{ label: 'Last Month', color: 'var(--text-disabled)' }, { label: 'This Month', color: 'var(--accent)' }] },
+            { title: 'VIP Partner Retention', value: '95%', goalCurrent: '19/20', goalTarget: '20 retained', goalPct: 95, bars: [85, 88, 90, 92, 94, 95, 95, 95], legend: [{ label: 'Last Quarter', color: 'var(--text-disabled)' }, { label: 'This Quarter', color: 'var(--accent)' }] }
+          ],
+          activityFeed: [
+            { type: 'brandRoundup', eyebrow: '💄 Top beauty partners this month', title: 'Celebrate your top 5 — anniversary gifts auto-prepped', brands: [
+              { logo: '💄', name: 'GlamGlowTips', rev: '$120K' },
+              { logo: '💋', name: 'MakeupByMaya', rev: '$95K' },
+              { logo: '💅', name: 'GlowUpMakeup', rev: '$74K' },
+              { logo: '📖', name: 'GlamourGuide', rev: '$55K' },
+              { logo: '🧴', name: 'BeautyCompare', rev: '$44K' }
+            ] },
+            { type: 'goalWin', eyebrow: '🏆 Q3 progress', title: "You're 78% to your Q3 revenue goal — keep going", leftValue: '$1.2M', leftLabel: 'MTD revenue', rightValue: '$300K', rightLabel: 'Remaining to goal' },
+            { type: 'yearCompare', eyebrow: '📈 Year over year', title: 'Bi-weekly check-ins are paying off', calloutBig: '+12%', calloutSub: 'partner retention vs last year', chartThis: 95, chartLast: 83 }
+          ],
+          brandGrid: {
+            flavor: 'brand',
+            title: 'Content / Review partners worth reviewing',
+            tiles: [
+              { logo: '💄', name: 'GlamGlowTips', size: 'L', score: '92% match' },
+              { logo: '💋', name: 'MakeupByMaya', size: 'L', score: '88% match' },
+              { logo: '💅', name: 'GlowUpMakeup', size: 'M', score: '76% match' },
+              { logo: '📖', name: 'GlamourGuide', size: 'M', score: '82% match' },
+              { logo: '🧴', name: 'BeautyCompare', size: 'S', score: '78% match' }
+            ]
+          },
+          promo: {
+            title: 'Increase productivity with automated workflows',
+            desc: 'Auto-generate check-in briefs from your calendar, surface anniversary bumps, and renew contracts on time — no spreadsheets.',
+            ctaText: 'Learn More',
+            ctaAction: "showToast('Opening check-in automation guide...', 'info')"
+          }
+        }
+      }
+    }
+  };
+
+  // ── INITIALIZATION ──
+  window.addEventListener('DOMContentLoaded', () => {
+    // Show role selector pop-up on first load
+    setTimeout(() => {
+      openRoleConfirmModal();
+    }, 400);
+
+    // Initial render
+    switchPersona('aisha-v1');
+  });
+
+  // ── CONTROLLER FUNCTIONS ──
+
+  // Dynamic persona switcher.
+  // Accepts either the legacy persona key ("aisha") or a combined "persona-variant"
+  // string from the dropdown ("aisha-v2"). Variant defaults to "v1".
+  function switchPersona(rawValue) {
+    const parts = String(rawValue || '').split('-');
+    const personaKey = parts[0] || 'aisha';
+    const variant = (parts[1] === 'v2') ? 'v2' : 'v1';
+
+    AppState.selectedPersona = personaKey;
+    AppState.variant = variant;
+    const personaData = AppState.personas[personaKey];
+    
+    // Update top nav avatar & select input
+    document.getElementById('nav-avatar').innerText = personaData.avatar;
+    document.getElementById('persona-select').value = `${personaKey}-${variant}`;
+
+    // Reset banner dismissal state for new personas
+    AppState.isBannerDismissed = false;
+
+    // Page titles
+    document.getElementById('page-title').innerText = personaData.greeting;
+    document.getElementById('page-subtitle').innerText = personaData.subtitle;
+
+    // Sidebar items
+    document.getElementById('sidebar-prog-aff').innerHTML = `<span class="sidebar-icon">🏷</span> ${personaData.programAffiliate}`;
+    document.getElementById('sidebar-prog-cre').innerHTML = `<span class="sidebar-icon">📦</span> ${personaData.programCreator}`;
+
+    // Highlight the primary Focus Job for the persona in the sidebar
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active', 'focus-highlight'));
+    const firstItem = document.querySelector('.sidebar .sidebar-item');
+    if (firstItem) firstItem.classList.add('active'); // dashboard active
+    
+    const priorityJobEl = document.getElementById(`nav-job-${personaData.sidebarFocus}`);
+    if (priorityJobEl) {
+      priorityJobEl.classList.add('focus-highlight');
+    }
+
+    // Persona layout focus — switches dashboard composition (hero + reorder)
+    const mainEl = document.getElementById('main-content');
+    mainEl.setAttribute('data-focus', personaData.sidebarFocus);
+    mainEl.setAttribute('data-variant', variant);
+
+    // Render Stats (3rd KPI tile swaps per persona)
+    updateStatsDisplay();
+
+    // Context Priority Banner
+    renderPriorityBanner();
+
+    // Persona-specific hero surface (scan / checkin / recruit)
+    renderPersonaHero();
+
+    // Render Alerts, Checkins, Suggested Recruits, Top Partners, Campaigns
+    renderAlerts();
+    renderCheckins();
+    renderRecruits();
+    renderTopPartners();
+    renderCampaignsTable();
+
+    // V2 (Application Platform) dashboard composition
+    renderV2Dashboard();
+  }
+
+  // Update statistic counter widgets
+  function updateStatsDisplay() {
+    const key = AppState.selectedPersona;
+    const data = AppState.personas[key];
+    const raw = AppState.stats[key];
+
+    // Format currency helper
+    const fmtRev = raw.revenue >= 1000000 
+      ? `$${(raw.revenue / 1000000).toFixed(2)}M` 
+      : `$${(raw.revenue / 1000).toFixed(1)}K`;
+
+    document.getElementById('stat-revenue').innerText = fmtRev;
+    document.getElementById('stat-revenue-delta').innerHTML = data.stats.revDelta;
+
+    document.getElementById('stat-partners').innerText = raw.partners;
+    document.getElementById('stat-partners-delta').innerHTML = data.stats.partDelta;
+
+    // 3rd KPI tile — persona-specific (Alerts Today / Open Invites / Upcoming Check-ins)
+    if (data.kpi3) {
+      document.getElementById('stat-creators-label').innerText = data.kpi3.label;
+      document.getElementById('stat-creators').innerText = data.kpi3.value;
+      document.getElementById('stat-creators-delta').innerHTML = data.kpi3.deltaHtml;
+    } else {
+      document.getElementById('stat-creators-label').innerText = 'Active Creators';
+      document.getElementById('stat-creators').innerText = raw.creators;
+      document.getElementById('stat-creators-delta').innerHTML = data.stats.creDelta;
+    }
+
+    // Calculate goals progress percentage
+    const goalPct = Math.round((raw.target / raw.maxTarget) * 100);
+    document.getElementById('stat-goal-val').innerText = `${goalPct}%`;
+    document.getElementById('stat-goal-fill').style.width = `${goalPct}%`;
+    
+    const fmtTarget = raw.target >= 1000000 ? `$${(raw.target/1000000).toFixed(1)}M` : `$${(raw.target/1000).toFixed(0)}K`;
+    const fmtMax = raw.maxTarget >= 1000000 ? `$${(raw.maxTarget/1000000).toFixed(0)}M` : `$${(raw.maxTarget/1000).toFixed(0)}K`;
+    document.getElementById('stat-goal-sub').innerHTML = `<span class="stat-sub">${fmtTarget} of ${fmtMax} target</span>`;
+  }
+
+  // ── PERSONA HERO ──
+  // Each persona surfaces a distinct hero based on their primary job-to-be-done.
+  //   • scan    (Aisha)  → anomaly spotlight banner
+  //   • checkin (Marcus) → auto-generated partner check-in brief
+  //   • recruit (Priya)  → promoted partner suggestions grid
+  function renderPersonaHero() {
+    const data = AppState.personas[AppState.selectedPersona];
+    const host = document.getElementById('persona-hero');
+    if (!host) return;
+    const focus = data.sidebarFocus;
+
+    if (focus === 'scan' && data.scanHero) {
+      host.hidden = false;
+      const h = data.scanHero;
+      host.innerHTML = `
+        <div class="scan-hero">
+          <div class="scan-hero-icon">${h.icon}</div>
+          <div class="scan-hero-content">
+            <div class="scan-hero-title">${h.title}</div>
+            <div class="scan-hero-desc">${h.desc}</div>
+          </div>
+          <div class="scan-hero-cta">
+            <button class="btn-primary" onclick="${h.ctaAction}">${h.ctaText}</button>
+          </div>
+        </div>
+      `;
+    } else if (focus === 'checkin' && data.checkinBrief) {
+      host.hidden = false;
+      const b = data.checkinBrief;
+      const metricCells = b.metrics.map(m => `
+        <div class="brief-metric">
+          <div class="brief-metric-label">${m.label}</div>
+          <div class="brief-metric-value">${m.value}</div>
+          <div class="brief-metric-note ${m.tone || ''}">${m.note || ''}</div>
+        </div>
+      `).join('');
+      const actionItems = b.actions.map(a => `
+        <div class="brief-action-item">
+          <span class="brief-action-emoji">${a.emoji}</span>
+          <span class="brief-action-text">${a.text}</span>
+        </div>
+      `).join('');
+      host.innerHTML = `
+        <div class="brief-hero">
+          <div class="brief-hero-header">
+            <div class="brief-hero-title-area">
+              <div class="brief-hero-logo">${b.logo}</div>
+              <div>
+                <div class="brief-hero-title">${b.partner} — Check-in Brief</div>
+                <div class="brief-hero-sub">${b.meta}</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="tag tag-${b.tagType}">${b.tagText}</span>
+              <button class="btn-primary" onclick="openDrawer('${b.partner}')">Open Full Brief →</button>
+            </div>
+          </div>
+          <div class="brief-hero-body">${metricCells}</div>
+          <div class="brief-actions">
+            <div class="brief-actions-title">✨ AI Suggested Talking Points</div>
+            <div class="brief-actions-list">${actionItems}</div>
+          </div>
+        </div>
+      `;
+    } else if (focus === 'recruit' && data.recruitHero) {
+      host.hidden = false;
+      const h = data.recruitHero;
+      const cards = (data.recruit || []).map(item => `
+        <div class="recruit-hero-card">
+          <div class="recruit-hero-top">
+            <div class="recruit-hero-avatar">${item.avatar}</div>
+            <div>
+              <div class="recruit-hero-name">${item.name}</div>
+              <div class="recruit-hero-meta">${item.meta}</div>
+            </div>
+          </div>
+          <div class="recruit-hero-stats">
+            <div class="recruit-hero-stat">
+              <div class="recruit-hero-stat-value">${item.eng}</div>
+              <div class="recruit-hero-stat-label">Eng. Rate</div>
+            </div>
+            <div class="recruit-hero-stat">
+              <div class="recruit-hero-stat-value">${item.epc}</div>
+              <div class="recruit-hero-stat-label">Est. EPC</div>
+            </div>
+            <div class="recruit-hero-stat recruit-hero-stat-fit">
+              <div class="recruit-hero-stat-value">${item.fit}</div>
+              <div class="recruit-hero-stat-label">Fit Score</div>
+            </div>
+          </div>
+          <button class="btn-primary" id="btn-rec-${item.id}" onclick="invitePartner('${item.id}', '${item.name.replace(/'/g, "\\'")}')">＋ Invite</button>
+        </div>
+      `).join('');
+      host.innerHTML = `
+        <div class="recruit-hero">
+          <div class="recruit-hero-header">
+            <div>
+              <div class="recruit-hero-title">${h.title}</div>
+              <div class="recruit-hero-sub">${h.subtitle}</div>
+            </div>
+            <button class="btn-secondary" onclick="focusJob('recruit')">View full marketplace →</button>
+          </div>
+          <div class="recruit-hero-grid">${cards}</div>
+        </div>
+      `;
+    } else {
+      host.hidden = true;
+      host.innerHTML = '';
+    }
+  }
+
+  // ── V2 DASHBOARD RENDERERS ──
+  // Orchestrator: reads the persona's `v2.layout` array and dispatches to
+  // per-widget renderers in order, populating the shared #v2-dashboard host.
+  function renderV2Dashboard() {
+    const host = document.getElementById('v2-dashboard');
+    if (!host) return;
+    const data = AppState.personas[AppState.selectedPersona];
+    if (!data || !data.v2) {
+      host.innerHTML = '';
+      return;
+    }
+    const v2 = data.v2;
+    host.innerHTML = '';
+
+    (v2.layout || []).forEach(key => {
+      let html = '';
+      if (key === 'pillStrip')       html = renderPillStrip(v2.pills);
+      else if (key === 'tasks')      html = renderTasks(v2.tasks);
+      else if (key === 'programHealth' && v2.programHealth && v2.programHealth.length) html = renderProgramHealth(v2.programHealth);
+      else if (key === 'activityFeed' && v2.activityFeed) html = renderActivityFeed(v2.activityFeed);
+      else if (key === 'brandGrid' && v2.brandGrid)   html = renderMatchGrid(v2.brandGrid);
+      else if (key === 'creatorGrid' && v2.creatorGrid) html = renderMatchGrid(v2.creatorGrid);
+      else if (key === 'promo' && v2.promo)           html = renderPromo(v2.promo);
+      if (html) host.insertAdjacentHTML('beforeend', html);
+    });
+  }
+
+  function renderPillStrip(pills) {
+    if (!pills || !pills.length) return '';
+    const cells = pills.map(p => `
+      <div class="pill-cell" onclick="showToast('Drilling into ${p.label.replace(/'/g, "\\'")}...', 'info')">
+        <div class="pill-icon">${p.icon}</div>
+        <div class="pill-text">
+          <div class="pill-value">${p.value}</div>
+          <div class="pill-label">${p.label}</div>
+        </div>
+        <span class="pill-arrow">→</span>
+      </div>
+    `).join('');
+    return `<div class="pill-strip">${cells}</div>`;
+  }
+
+  function renderTasks(t) {
+    if (!t || !t.rows) return '';
+    const rows = t.rows.map(r => `
+      <div class="task-row">
+        <div class="task-row-content">
+          <div class="task-row-title">${r.title}${r.badge ? ` <span class="task-row-badge">${r.badge}</span>` : ''}</div>
+          <div class="task-row-meta"><span class="task-row-meta-icon">${r.metaIcon || '•'}</span>${r.meta}</div>
+        </div>
+        <div class="task-row-action">
+          <button class="btn-secondary" onclick="${r.ctaAction}">${r.ctaText}</button>
+        </div>
+      </div>
+    `).join('');
+    return `
+      <div class="task-card">
+        <div class="task-card-header">
+          <div class="task-card-title">${t.title}</div>
+        </div>
+        ${rows}
+        <div class="task-row-footer">
+          <span>${t.footerLeft || ''}</span>
+          ${t.footerLink ? `<a href="#" onclick="event.preventDefault(); showToast('Loading full task queue...', 'info');">${t.footerLink}</a>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderProgramHealth(cells) {
+    if (!cells || !cells.length) return '';
+    const buildMini = (bars, alt = false) => {
+      const max = Math.max(...bars, 1);
+      return bars.map((b, i) => {
+        const h = Math.max(6, Math.round((b / max) * 100));
+        const cls = (alt && i >= bars.length - 4) ? ' alt' : '';
+        return `<div class="ph-bar${cls}" style="height:${h}%"></div>`;
+      }).join('');
+    };
+    const cellHtml = cells.map((c, idx) => `
+      <div class="ph-cell">
+        <div class="ph-title">${c.title}</div>
+        <div class="ph-value">${c.value}</div>
+        <div>
+          <div class="ph-goal-labels"><span>Current</span><span>${c.goalTarget}</span></div>
+          <div class="ph-goal-bar"><div class="ph-goal-current" style="width:${c.goalPct}%"></div></div>
+        </div>
+        <div class="ph-minichart">${buildMini(c.bars, idx === 0)}</div>
+        <div class="ph-legend">
+          ${(c.legend || []).map(l => `<span><span class="ph-legend-dot" style="background:${l.color}"></span>${l.label}</span>`).join('')}
+        </div>
+      </div>
+    `).join('');
+    return `<div class="program-health">${cellHtml}</div>`;
+  }
+
+  function renderActivityFeed(items) {
+    if (!items || !items.length) return '';
+    return `<div class="activity-feed">${items.map(renderFeedCard).join('')}</div>`;
+  }
+
+  function renderFeedCard(item) {
+    if (item.type === 'goalWin') {
+      return `
+        <div class="feed-card feed-goal-win">
+          <div class="feed-eyebrow">${item.eyebrow || ''}</div>
+          <div class="feed-title">${item.title}</div>
+          <div class="feed-goal-stats">
+            <div>
+              <div class="feed-goal-stat-value">${item.leftValue}</div>
+              <div class="feed-goal-stat-label">${item.leftLabel}</div>
+            </div>
+            <div>
+              <div class="feed-goal-stat-value">${item.rightValue}</div>
+              <div class="feed-goal-stat-label">${item.rightLabel}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    if (item.type === 'brandRoundup') {
+      const tiles = (item.brands || []).map(b => `
+        <div class="feed-brand-tile">
+          <div class="feed-brand-logo">${b.logo}</div>
+          <div class="feed-brand-rev">${b.rev}</div>
+          <div class="feed-brand-name">${b.name}</div>
+        </div>
+      `).join('');
+      return `
+        <div class="feed-card">
+          <div class="feed-eyebrow">${item.eyebrow || ''}</div>
+          <div class="feed-title">${item.title}</div>
+          <div class="feed-brand-list">${tiles}</div>
+        </div>
+      `;
+    }
+    if (item.type === 'trendingContent') {
+      return `
+        <div class="feed-card">
+          <div class="feed-eyebrow">${item.eyebrow || ''}</div>
+          <div class="feed-trending">
+            <div class="feed-trending-thumb">${item.thumbEmoji || '🎬'}</div>
+            <div>
+              <div class="feed-trending-headline">${item.headline}</div>
+              <div class="feed-trending-link">${item.link}</div>
+              <span class="feed-trending-clicks">▲ ${item.clicks}</span>
+            </div>
+            <div>
+              <button class="btn-secondary" onclick="${item.ctaAction}">${item.ctaText}</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    if (item.type === 'partnerRecs') {
+      const cards = (item.partners || []).map(p => `
+        <div class="feed-partner-card">
+          <div class="feed-partner-top">
+            <div class="feed-partner-avatar">${p.logo}</div>
+            <div>
+              <div class="feed-partner-name">${p.name}</div>
+              <div class="feed-partner-role">${p.role}</div>
+            </div>
+          </div>
+          <div class="feed-partner-clicks">${p.clicks} clicks <span class="delta">${p.delta}</span></div>
+          <div class="feed-partner-rec">${p.rec}</div>
+          <button class="btn-primary" onclick="${p.ctaAction}">${p.ctaText}</button>
+          <button class="btn-secondary" onclick="showToast('Adding task to partner queue...', 'info')">Add task</button>
+        </div>
+      `).join('');
+      return `
+        <div class="feed-card">
+          <div class="feed-eyebrow">${item.eyebrow || ''}</div>
+          <div class="feed-title">${item.title}</div>
+          <div class="feed-partner-list">${cards}</div>
+        </div>
+      `;
+    }
+    if (item.type === 'yearCompare') {
+      // 12-bar comparison: faint bars for last year, solid for this year
+      const lastYear  = [40, 55, 62, 70, 65, 78, 85, 92, 88, 95, 100, 105];
+      const thisYear  = [55, 72, 85, 95, 90, 110, 120, 135, 130, 145, 158, 165];
+      const max = Math.max(...thisYear, ...lastYear);
+      const bars = thisYear.map((t, i) => {
+        const lh = Math.round((lastYear[i] / max) * 100);
+        const th = Math.round((t / max) * 100);
+        return `<div class="feed-compare-bar" style="height:${lh}%"></div><div class="feed-compare-bar this-year" style="height:${th}%"></div>`;
+      }).join('');
+      // Build a simple SVG line of thisYear
+      const pts = thisYear.map((v, i) => {
+        const x = (i / (thisYear.length - 1)) * 100;
+        const y = 100 - (v / max) * 90;
+        return `${x},${y}`;
+      }).join(' ');
+      const lyPts = lastYear.map((v, i) => {
+        const x = (i / (lastYear.length - 1)) * 100;
+        const y = 100 - (v / max) * 90;
+        return `${x},${y}`;
+      }).join(' ');
+      return `
+        <div class="feed-card">
+          <div class="feed-eyebrow">${item.eyebrow || ''}</div>
+          <div class="feed-title">${item.title}</div>
+          <div class="feed-compare">
+            <div class="feed-compare-callout">
+              <span class="big">${item.calloutBig}</span>
+              <span class="sub">${item.calloutSub}</span>
+              <div class="feed-compare-mini-legend" style="margin-top:8px;">
+                <span><span class="ph-legend-dot" style="background:var(--text-disabled)"></span>${(item.chartLast||'last yr').toLocaleString ? 'Last year' : 'Last year'}</span>
+                <span><span class="ph-legend-dot" style="background:var(--accent)"></span>This year</span>
+              </div>
+            </div>
+            <div class="feed-compare-chart">${bars}</div>
+            <div class="feed-compare-line">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polyline points="${lyPts}" fill="none" stroke="var(--text-disabled)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    return '';
+  }
+
+  function renderMatchGrid(g) {
+    if (!g || !g.tiles) return '';
+    const classMod = g.flavor === 'creator' ? ' match-grid-creator' : ' match-grid-brand';
+    const tiles = g.tiles.map(t => `
+      <div class="match-tile" onclick="showToast('Opening ${t.name.replace(/'/g, "\\'")} profile...', 'info')">
+        <div class="match-tile-thumb">${t.logo}</div>
+        <div class="match-tile-name">${t.name}</div>
+        <div class="match-tile-meta"><span class="match-tile-size">${t.size}</span> ${t.size === 'L' ? 'Large' : t.size === 'M' ? 'Medium' : 'Small'}</div>
+        <div class="match-tile-score">${t.score}</div>
+      </div>
+    `).join('');
+    return `
+      <div class="match-grid${classMod}">
+        <div class="match-grid-header">
+          <div class="match-grid-title">${g.title}</div>
+          <button class="see-all" onclick="showToast('Opening full marketplace...', 'info')">See all</button>
+        </div>
+        <div class="match-grid-row">${tiles}</div>
+      </div>
+    `;
+  }
+
+  function renderPromo(p) {
+    if (!p) return '';
+    return `
+      <div class="promo-banner-v2">
+        <div class="promo-banner-v2-text">
+          <div class="promo-banner-v2-title">${p.title}</div>
+          <div class="promo-banner-v2-desc">${p.desc}</div>
+          <button class="btn-primary" onclick="${p.ctaAction}">${p.ctaText}</button>
+        </div>
+        <div class="promo-banner-v2-circles">
+          <div class="promo-circle">🤖</div>
+          <div class="promo-circle">⚡</div>
+          <div class="promo-circle">✨</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Focus a specific Job in the layout (visual highlight)
+  function focusJob(jobKey) {
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+    const item = document.getElementById(`nav-job-${jobKey}`);
+    if (item) item.classList.add('active');
+    
+    // Smooth scroll down to corresponding panel
+    let targetCardId = '';
+    if (jobKey === 'checkin') targetCardId = 'card-checkins';
+    else if (jobKey === 'scan') targetCardId = 'card-alerts';
+    else if (jobKey === 'recruit') targetCardId = 'card-recruit';
+    else if (jobKey === 'campaigns') targetCardId = 'card-campaigns';
+
+    const targetEl = document.getElementById(targetCardId);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      targetEl.style.transform = 'scale(1.02)';
+      setTimeout(() => {
+        targetEl.style.transform = '';
+      }, 1000);
+    }
+  }
+
+  // Render context banner based on persona
+  // Inline SVG icon set for the styleguide alert banner tones.
+  // Each is a 16x16 glyph rendered inside a 32x32 tone-colored circle (set via CSS).
+  const TONE_ICONS = {
+    info:     '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm0 3a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Zm-.85 3.05h1.7v4.6h-1.7v-4.6Z"/></svg>',
+    success:  '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm3.3 4.96-3.86 4.36a.84.84 0 0 1-1.21.06l-2.04-2a.85.85 0 1 1 1.19-1.21l1.42 1.39 3.27-3.69a.85.85 0 0 1 1.27 1.13Z"/></svg>',
+    warning:  '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm.85 3.05v4h-1.7v-4h1.7Zm-.85 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>',
+    critical: '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm2.65 8.04a.78.78 0 0 1-1.11 1.11L8 9.11l-1.54 1.54a.78.78 0 1 1-1.11-1.11L6.89 8 5.35 6.46a.78.78 0 1 1 1.11-1.11L8 6.89l1.54-1.54a.78.78 0 1 1 1.11 1.11L9.11 8l1.54 1.54Z"/></svg>'
+  };
+
+  function renderPriorityBanner() {
+    const bannerContainer = document.getElementById('context-banner');
+    if (AppState.isBannerDismissed) {
+      bannerContainer.style.display = 'none';
+      return;
+    }
+
+    const data = AppState.personas[AppState.selectedPersona];
+    const tone = (data.banner && data.banner.tone) || 'info';
+
+    bannerContainer.style.display = 'flex';
+    bannerContainer.setAttribute('data-tone', tone);
+    document.getElementById('context-banner-icon').innerHTML = TONE_ICONS[tone] || TONE_ICONS.info;
+    document.getElementById('context-banner-label').innerText = data.banner.label;
+    document.getElementById('context-banner-title').innerText = data.banner.title;
+
+    const actionBtn = document.getElementById('context-banner-btn');
+    if (data.sidebarFocus === 'recruit') {
+      actionBtn.innerText = 'Recruit Suggested Partners →';
+      actionBtn.setAttribute('onclick', "focusJob('recruit')");
+    } else {
+      actionBtn.innerText = 'Prep Check-in Brief →';
+      actionBtn.setAttribute('onclick', `openDrawer('${data.banner.partnerName}')`);
+    }
+  }
+
+  function dismissPriorityBanner() {
+    AppState.isBannerDismissed = true;
+    document.getElementById('context-banner').style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('context-banner').style.display = 'none';
+    }, 250);
+    showToast('Banner dismissed. Focus job saved.', 'info');
+  }
+
+  // Render Alerts
+  function renderAlerts() {
+    const list = AppState.personas[AppState.selectedPersona].alerts;
+    const container = document.getElementById('alerts-container');
+    container.innerHTML = '';
+
+    // Update Badges
+    document.getElementById('badge-alerts').innerText = list.length;
+    document.getElementById('badge-alerts-panel').innerText = `${list.length} alert${list.length !== 1 ? 's' : ''}`;
+
+    if (list.length === 0) {
+      container.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text-light);font-weight:600;">✨ All clear! No pending alerts.</div>`;
+      return;
+    }
+
+    list.forEach(alert => {
+      const row = document.createElement('div');
+      row.className = 'alert-row';
+      row.id = `row-${alert.id}`;
+      row.innerHTML = `
+        <div class="alert-icon alert-icon-${alert.type}">${alert.icon}</div>
+        <div class="alert-content">
+          <div class="alert-title">${alert.title}</div>
+          <div class="alert-desc">${alert.desc}</div>
+        </div>
+        <div class="alert-action" style="display:flex;gap:4px;">
+          <button class="btn-secondary" style="padding: 5px 10px;" onclick="${alert.action}">${alert.actionText}</button>
+          <button class="btn-icon" onclick="dismissAlert('${alert.id}')">✕</button>
+        </div>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  function dismissAlert(alertId) {
+    const list = AppState.personas[AppState.selectedPersona].alerts;
+    const idx = list.findIndex(a => a.id === alertId);
+    if (idx !== -1) {
+      list.splice(idx, 1);
+      
+      // Animate slide-out
+      const row = document.getElementById(`row-${alertId}`);
+      if (row) {
+        row.style.transform = 'translateX(50px)';
+        row.style.opacity = '0';
+        setTimeout(() => {
+          renderAlerts();
+          showToast('Alert resolved successfully.', 'success');
+        }, 250);
+      }
+    }
+  }
+
+  // Render Upcoming Check-ins
+  function renderCheckins() {
+    const list = AppState.personas[AppState.selectedPersona].checkins;
+    const container = document.getElementById('checkins-container');
+    container.innerHTML = '';
+
+    document.getElementById('badge-checkins').innerText = list.length;
+
+    list.forEach(checkin => {
+      const card = document.createElement('div');
+      card.className = 'checkin-card';
+      card.innerHTML = `
+        <div class="checkin-date">
+          <div class="checkin-month">${checkin.dateM}</div>
+          <div class="checkin-day">${checkin.dateD}</div>
+        </div>
+        <div class="checkin-info">
+          <div class="checkin-name">${checkin.partner}</div>
+          <div class="checkin-meta">${checkin.time} • <span style="font-weight:600;color:var(--text-primary);">${checkin.meta}</span></div>
+        </div>
+        <div class="checkin-actions">
+          <button class="btn-primary" style="padding: 6px 12px;" onclick="openDrawer('${checkin.partner}')">Prep Brief</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // Render Suggested Recruits
+  function renderRecruits() {
+    const list = AppState.personas[AppState.selectedPersona].recruit;
+    const container = document.getElementById('recruit-container');
+    container.innerHTML = '';
+
+    list.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'recruit-card';
+      card.id = `recruit-${item.id}`;
+      card.innerHTML = `
+        <div class="recruit-avatar">${item.avatar}</div>
+        <div style="flex:1;">
+          <div class="recruit-name">${item.name}</div>
+          <div class="recruit-meta">${item.meta}</div>
+          <div class="recruit-stats">
+            <div><div class="recruit-stat-value">${item.eng}</div><div class="recruit-stat-label">Eng. Rate</div></div>
+            <div><div class="recruit-stat-value">${item.epc}</div><div class="recruit-stat-label">Est. EPC</div></div>
+            <div><div class="recruit-stat-value">${item.fit}</div><div class="recruit-stat-label">Fit Score</div></div>
+          </div>
+        </div>
+        <div>
+          <button class="btn-primary" id="btn-rec-${item.id}" onclick="invitePartner('${item.id}', '${item.name}')">Invite</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function invitePartner(id, name) {
+    const btn = document.getElementById(`btn-rec-${id}`);
+    if (btn) {
+      btn.innerText = 'Invited ✔';
+      btn.className = 'btn-secondary';
+      btn.style.color = 'var(--success-text)';
+      btn.disabled = true;
+      showToast(`Recruitment invite sent to ${name}!`, 'success');
+      
+      // Dynamic metric boost
+      const key = AppState.selectedPersona;
+      AppState.stats[key].partners += 1;
+      updateStatsDisplay();
+    }
+  }
+
+  // Render Top Partners
+  function renderTopPartners() {
+    const list = AppState.personas[AppState.selectedPersona].topPartners;
+    const container = document.getElementById('partners-container');
+    container.innerHTML = '';
+
+    list.forEach(p => {
+      const row = document.createElement('div');
+      row.className = 'partner-row';
+      row.innerHTML = `
+        <div class="partner-logo">${p.logo}</div>
+        <div class="partner-info">
+          <div class="partner-name">${p.name}</div>
+          <div class="partner-meta">${p.meta}</div>
+        </div>
+        <div class="partner-revenue">
+          <div class="partner-rev-value">${p.rev}</div>
+          <div class="partner-rev-delta ${p.delta.includes('↓') ? 'delta-down' : 'delta-up'}">${p.delta}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="tag tag-${p.tagType}">${p.tagText}</span>
+          <button class="btn-icon" style="border:none;" onclick="openDrawer('${p.name}')">📋</button>
+        </div>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  // Filter & Render Campaigns
+  let currentCampaignFilter = 'all';
+  function filterCampaigns(tabEl, filterType) {
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    tabEl.classList.add('active');
+    currentCampaignFilter = filterType;
+    renderCampaignsTable();
+  }
+
+  function renderCampaignsTable() {
+    const list = AppState.personas[AppState.selectedPersona].campaigns;
+    const container = document.getElementById('campaigns-table-body');
+    container.innerHTML = '';
+
+    const filtered = list.filter(c => {
+      if (currentCampaignFilter === 'all') return true;
+      if (currentCampaignFilter === 'live' && c.tagText === 'Live') return true;
+      if (currentCampaignFilter === 'pending' && c.tagText === 'Needs Review') return true;
+      if (currentCampaignFilter === 'ended' && c.tagText === 'Ended') return true;
+      return false;
+    });
+
+    document.getElementById('campaigns-count').innerText = `${filtered.length} campaign${filtered.length !== 1 ? 's' : ''}`;
+
+    filtered.forEach(c => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>
+          <div style="font-weight:700;color:var(--text-primary);">${c.name}</div>
+          <div style="font-size:11px;color:var(--text-light);">${c.date}</div>
+        </td>
+        <td>${c.creators}</td>
+        <td>
+          <span style="font-weight:700;">${c.rev}</span> 
+          ${c.revDelta ? `<span class="${c.revDelta.includes('↓') ? 'delta-down' : 'delta-up'}" style="font-size:11px;font-weight:600;">${c.revDelta}</span>` : ''}
+        </td>
+        <td>${c.conv}</td>
+        <td><span class="tag tag-${c.tagType}">${c.tagText}</span></td>
+        <td style="text-align:right;">
+          <button class="btn-secondary" style="padding: 5px 12px;" onclick="showToast('Loading full campaign overview...', 'info')">Manage</button>
+        </td>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  // ── INLINE TOAST NOTIFICATION ──
+  function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    
+    let icon = '✔️';
+    if (type === 'info') {
+      icon = 'ℹ️';
+      toast.style.background = 'var(--text-primary)';
+    } else if (type === 'warning') {
+      icon = '⚠️';
+      toast.style.background = 'var(--warning-text)';
+    } else if (type === 'success') {
+      toast.style.background = 'var(--success-text)';
+    }
+
+    toast.innerHTML = `<span class="toast-icon">${icon}</span> <span>${message}</span>`;
+    container.appendChild(toast);
+
+    // Trigger animation frame
+    setTimeout(() => {
+      toast.classList.add('active');
+    }, 10);
+
+    // Slide-out after duration
+    setTimeout(() => {
+      toast.classList.remove('active');
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+    }, 3200);
+  }
+
+  // ── SLIDE-OUT BRIEF DRAWER (Job 5) ──
+  let activeDrawerPartner = '';
+
+  function openDrawer(partnerName) {
+    activeDrawerPartner = partnerName;
+    const overlay = document.getElementById('drawer-overlay');
+    
+    // Find partner metadata in our list
+    let meta = 'Partnership Relationship Sync';
+    let logo = '🤝';
+    let status = 'Healthy';
+    let statusType = 'green';
+    let category = 'Affiliate';
+
+    const topList = AppState.personas[AppState.selectedPersona].topPartners;
+    const checkinList = AppState.personas[AppState.selectedPersona].checkins;
+    const match = topList.find(p => p.name === partnerName) || checkinList.find(p => p.partner === partnerName);
+
+    if (match) {
+      logo = match.logo || '🏠';
+      status = match.tagText || 'Active';
+      statusType = match.tagType || 'green';
+      category = match.meta || 'Affiliate Partner';
+    }
+
+    document.getElementById('drawer-partner-logo').innerText = logo;
+    document.getElementById('drawer-partner-name').innerText = partnerName;
+    document.getElementById('drawer-partner-meta').innerText = category;
+    
+    const statusEl = document.getElementById('drawer-partner-status');
+    statusEl.innerText = status;
+    statusEl.className = `tag tag-${statusType}`;
+
+    // Render interactive trend chart
+    renderDrawerChart(partnerName);
+
+    // Render Checklist (Job 5)
+    renderDrawerChecklist(partnerName);
+
+    // Render Notes list (Job 3)
+    renderDrawerNotes(partnerName);
+
+    // Load Commission Term
+    let commission = "8.5%";
+    if (partnerName.includes('Creator') || partnerName.includes('Daily') || partnerName.includes('Catnap')) {
+      commission = "12.0%";
+    } else if (partnerName.includes('TechDeals')) {
+      commission = "6.0%";
+    }
+    document.getElementById('drawer-term-commission').value = commission;
+
+    overlay.classList.add('active');
+  }
+
+  function closeDrawer() {
+    document.getElementById('drawer-overlay').classList.remove('active');
+    activeDrawerPartner = '';
+  }
+
+  // Render chart bars inside drawer
+  function renderDrawerChart(partnerName) {
+    const chartContainer = document.getElementById('drawer-chart-bars');
+    chartContainer.innerHTML = '';
+    
+    let chartData = [45, 60, 55, 70, 85, 95]; 
+    if (partnerName === 'HomeGoods Network') {
+      chartData = [110, 115, 125, 140, 160, 184]; // upward trend
+    } else if (partnerName === 'TechDeals Pro' || partnerName === 'GlowUpMakeup') {
+      chartData = [150, 145, 130, 110, 95, 63]; // downward trend
+    } else if (partnerName === 'BudgetFinds Blog') {
+      chartData = [90, 92, 88, 85, 80, 74]; // slight decline
+    } else if (partnerName === 'MomLifeCreator' || partnerName === 'CatNapCatnips') {
+      chartData = [20, 25, 38, 45, 60, 76]; // rapid growth
+    }
+    
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    chartData.forEach((val, idx) => {
+      const barPercent = Math.min(100, Math.round((val / 200) * 100));
+      const barWrapper = document.createElement('div');
+      barWrapper.className = 'chart-bar-wrapper';
+      
+      const tooltip = document.createElement('div');
+      tooltip.className = 'chart-bar-tooltip';
+      tooltip.innerText = `$${val}K`;
+      
+      const bar = document.createElement('div');
+      bar.className = 'chart-bar';
+      bar.style.height = `${barPercent}%`;
+      if (idx === chartData.length - 1) {
+        bar.classList.add('highlight');
+      }
+      
+      const label = document.createElement('div');
+      label.className = 'chart-bar-label';
+      label.innerText = months[idx];
+      
+      barWrapper.appendChild(tooltip);
+      barWrapper.appendChild(bar);
+      barWrapper.appendChild(label);
+      chartContainer.appendChild(barWrapper);
+    });
+  }
+
+  // Render checklist items for preparation
+  function renderDrawerChecklist(partnerName) {
+    const list = AppState.checklist[partnerName] || [
+      { label: 'Review previous sync comments', checked: false },
+      { label: 'Inspect current MTD tracking conversion ratios', checked: false },
+      { label: 'Prepare target proposal criteria', checked: false }
+    ];
+    
+    // Save reference in state
+    AppState.checklist[partnerName] = list;
+
+    const container = document.getElementById('drawer-checklist');
+    container.innerHTML = '';
+
+    list.forEach((item, idx) => {
+      const div = document.createElement('div');
+      div.className = `checklist-item ${item.checked ? 'checked' : ''}`;
+      div.innerHTML = `
+        <input type="checkbox" class="checklist-checkbox" ${item.checked ? 'checked' : ''} onchange="toggleChecklistItem(${idx})">
+        <span class="checklist-label">${item.label}</span>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function toggleChecklistItem(idx) {
+    const partner = activeDrawerPartner;
+    const item = AppState.checklist[partner][idx];
+    item.checked = !item.checked;
+    
+    renderDrawerChecklist(partner);
+    
+    const remaining = AppState.checklist[partner].filter(c => !c.checked).length;
+    if (remaining === 0) {
+      showToast('Brief preparation tasks completed!', 'success');
+    }
+  }
+
+  // Render Relationship Log Notes
+  function renderDrawerNotes(partnerName) {
+    const container = document.getElementById('drawer-notes-list');
+    container.innerHTML = '';
+
+    const list = AppState.notes[partnerName] || [];
+    
+    if (list.length === 0) {
+      container.innerHTML = `<div style="font-size:11px;color:var(--text-light);text-align:center;padding:12px 0;">No logs added yet. Type below to record a call note.</div>`;
+      return;
+    }
+
+    list.forEach(note => {
+      const bubble = document.createElement('div');
+      bubble.className = 'note-bubble';
+      bubble.innerHTML = `
+        <div class="note-time">${note.time}</div>
+        <div class="note-text">${note.text}</div>
+      `;
+      container.appendChild(bubble);
+    });
+
+    // Scroll container to bottom
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function saveCheckinNote() {
+    const input = document.getElementById('drawer-note-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const partner = activeDrawerPartner;
+    if (!AppState.notes[partner]) {
+      AppState.notes[partner] = [];
+    }
+
+    const timestamp = new Date().toLocaleTimeString([], { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+    AppState.notes[partner].push({
+      time: `${timestamp}, 2026`,
+      text: text
+    });
+
+    input.value = '';
+    renderDrawerNotes(partner);
+    showToast('Check-in log updated.', 'success');
+  }
+
+  function saveDrawerTerms() {
+    const commission = document.getElementById('drawer-term-commission').value;
+    showToast(`Terms updated. New rate: ${commission}`, 'success');
+    
+    // Log as notes item
+    const partner = activeDrawerPartner;
+    const timestamp = new Date().toLocaleTimeString([], { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+    AppState.notes[partner].push({
+      time: `${timestamp}, 2026`,
+      text: `Admin updated terms: Commission adjusted to ${commission}.`
+    });
+    
+    renderDrawerNotes(partner);
+    closeDrawer();
+  }
+
+  function triggerDrawerBonus() {
+    const name = activeDrawerPartner;
+    closeDrawer();
+    setTimeout(() => {
+      openBonusModal(name);
+    }, 350);
+  }
+
+  // ── INCENTIVE / BONUS MODAL ──
+  let activeBonusPartner = '';
+
+  function openBonusModal(partnerName) {
+    activeBonusPartner = partnerName;
+    document.getElementById('bonus-modal-partner-desc').innerHTML = `Select incentive tier parameters and issue bonus amount for **${partnerName}**.`;
+    document.getElementById('modal-give-bonus').classList.add('active');
+  }
+
+  function closeBonusModal() {
+    document.getElementById('modal-give-bonus').classList.remove('active');
+    activeBonusPartner = '';
+  }
+
+  function submitIncentiveBonus() {
+    const amt = parseFloat(document.getElementById('bonus-amount-input').value) || 0;
+    const type = document.getElementById('bonus-type-select').value;
+    const reason = document.getElementById('bonus-reason-input').value.trim() || 'Milestone performance reward';
+
+    if (amt <= 0) {
+      showToast('Please enter a valid bonus amount', 'warning');
+      return;
+    }
+
+    const partner = activeBonusPartner;
+    
+    // Dynamic financial state boost
+    const key = AppState.selectedPersona;
+    AppState.stats[key].revenue += amt;
+    AppState.stats[key].target += amt;
+    updateStatsDisplay();
+
+    // Log the transaction in Notes
+    if (!AppState.notes[partner]) AppState.notes[partner] = [];
+    const timestamp = new Date().toLocaleTimeString([], { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+    AppState.notes[partner].push({
+      time: `${timestamp}, 2026`,
+      text: `Issued **$${amt.toLocaleString()}** incentive bonus (${type} type). Notes: "${reason}"`
+    });
+
+    // Clear and Close
+    document.getElementById('bonus-reason-input').value = '';
+    closeBonusModal();
+    
+    showToast(`Success! $${amt.toLocaleString()} issued to ${partner}`, 'success');
+
+    // If there is an alert corresponding to giving this bonus, resolve it!
+    const activeAlerts = AppState.personas[key].alerts;
+    const relatedAlert = activeAlerts.find(a => a.action.includes('openBonusModal') && a.action.includes(partner));
+    if (relatedAlert) {
+      dismissAlert(relatedAlert.id);
+    }
+  }
+
+  // ── ROLE SELECT CONFIRM MODAL ──
+  let tempRole = 'aisha';
+
+  function openRoleConfirmModal() {
+    document.getElementById('modal-role-confirm').classList.add('active');
+  }
+
+  function closeRoleConfirmModal() {
+    document.getElementById('modal-role-confirm').classList.remove('active');
+  }
+
+  function selectRoleOption(el, roleKey) {
+    document.querySelectorAll('.modal-option').forEach(opt => opt.classList.remove('selected'));
+    el.classList.add('selected');
+    tempRole = roleKey;
+  }
+
+  function confirmRoleSelection() {
+    closeRoleConfirmModal();
+    // Modal picks a persona; default to v1 layout (preserve current variant if same persona).
+    const currentVariant = (AppState.variant === 'v2' && AppState.selectedPersona === tempRole) ? 'v2' : 'v1';
+    switchPersona(`${tempRole}-${currentVariant}`);
+    showToast(`Focus role updated to ${tempRole === 'aisha' ? 'Affiliate Creator' : tempRole === 'priya' ? 'Campaign Lead' : 'Program Lead'}`, 'success');
+  }
+
+</script>
+</body>
+</html>
