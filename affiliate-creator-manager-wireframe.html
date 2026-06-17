@@ -652,23 +652,28 @@
      v1 = jobs-to-be-done layout (default). v2 = Application Platform layout.
      v3 = adventurous per-persona reimagining (keeps current sidebar).
      v4 = Co-pilot Console (no sidebar, Ask Impact is the navigation).
-     v5 = HubSpot Pattern (top mega-nav, saved views, list-view shell). */
+     v5 = HubSpot Pattern (top mega-nav, saved views, list-view shell).
+     v6 = HubSpot Pattern (64px side icon rail with hover-flyout sub-nav). */
   .main[data-variant="v1"] .v2-only,
   .main[data-variant="v1"] .v3-only,
   .main[data-variant="v1"] .v4-only,
-  .main[data-variant="v1"] .v5-only { display: none; }
+  .main[data-variant="v1"] .v5-only,
+  .main[data-variant="v1"] .v6-only { display: none; }
   .main[data-variant="v2"] .v1-only,
   .main[data-variant="v2"] .v3-only,
   .main[data-variant="v2"] .v4-only,
-  .main[data-variant="v2"] .v5-only { display: none; }
+  .main[data-variant="v2"] .v5-only,
+  .main[data-variant="v2"] .v6-only { display: none; }
   .main[data-variant="v3"] .v1-only,
   .main[data-variant="v3"] .v2-only,
   .main[data-variant="v3"] .v4-only,
-  .main[data-variant="v3"] .v5-only { display: none; }
+  .main[data-variant="v3"] .v5-only,
+  .main[data-variant="v3"] .v6-only { display: none; }
   .main[data-variant="v4"] .v1-only,
   .main[data-variant="v4"] .v2-only,
   .main[data-variant="v4"] .v3-only,
   .main[data-variant="v4"] .v5-only,
+  .main[data-variant="v4"] .v6-only,
   .main[data-variant="v4"] .page-header,
   .main[data-variant="v4"] .context-banner,
   .main[data-variant="v4"] .persona-hero { display: none; }
@@ -676,9 +681,18 @@
   .main[data-variant="v5"] .v2-only,
   .main[data-variant="v5"] .v3-only,
   .main[data-variant="v5"] .v4-only,
+  .main[data-variant="v5"] .v6-only,
   .main[data-variant="v5"] .page-header,
   .main[data-variant="v5"] .context-banner,
   .main[data-variant="v5"] .persona-hero { display: none; }
+  .main[data-variant="v6"] .v1-only,
+  .main[data-variant="v6"] .v2-only,
+  .main[data-variant="v6"] .v3-only,
+  .main[data-variant="v6"] .v4-only,
+  .main[data-variant="v6"] .v5-only,
+  .main[data-variant="v6"] .page-header,
+  .main[data-variant="v6"] .context-banner,
+  .main[data-variant="v6"] .persona-hero { display: none; }
   /* In v4 the sidebar and topnav center links collapse — Ask Impact is the nav */
   body.variant-v4 .sidebar { display: none; }
   body.variant-v4 .topnav-links { display: none; }
@@ -690,6 +704,12 @@
   body.variant-v5 .sidebar { display: none; }
   body.variant-v5 .topnav-links { display: none; }
   body.variant-v5 .main { max-width: none; padding: 0; }
+  /* In v6 the left sidebar collapses; navigation lives in a 64px icon rail
+     inside the v6 shell. The existing topnav stays for brand mark +
+     persona switcher + global controls (same as v5). */
+  body.variant-v6 .sidebar { display: none; }
+  body.variant-v6 .topnav-links { display: none; }
+  body.variant-v6 .main { max-width: none; padding: 0; }
 
   /* ── V2 DASHBOARD ── */
   #v2-dashboard {
@@ -3676,6 +3696,186 @@
     border: 2px solid var(--accent);
   }
 
+  /* ════════════════════════════════════════════════════════════
+     V6 — HUBSPOT PATTERN (SIDE NAV)
+     64px icon rail · hover flyout · same body as v5
+     ════════════════════════════════════════════════════════════ */
+
+  .v6-shell {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    min-height: calc(100vh - var(--header-height));
+    background: var(--background-subdued);
+    position: relative;
+  }
+
+  /* ── Icon rail ── */
+  .v6-rail {
+    background: var(--background);
+    border-right: 1px solid var(--border-default);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    gap: 4px;
+    position: sticky;
+    top: var(--header-height);
+    height: calc(100vh - var(--header-height));
+    z-index: 20;
+  }
+  .v6-rail-divider {
+    width: 32px;
+    height: 1px;
+    background: var(--border-default);
+    margin: 6px 0;
+  }
+  .v6-rail-spacer { flex: 1; }
+  .v6-rail-btn {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: var(--text-subdued);
+    transition: var(--transition-fast);
+  }
+  .v6-rail-btn:hover { background: var(--surface-hover); color: var(--foreground); }
+  .v6-rail-btn.active { background: var(--sidebar-accent); color: var(--sidebar-accent-foreground); }
+  .v6-rail-btn.active::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent);
+  }
+  .v6-rail-icon { font-size: 18px; line-height: 1; }
+  .v6-rail-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    line-height: 1;
+  }
+  .v6-rail-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: var(--negative);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 9999px;
+    border: 2px solid var(--background);
+    min-width: 14px;
+    text-align: center;
+  }
+
+  /* ── Flyout panel ── */
+  .v6-flyout {
+    position: fixed;
+    left: 64px;
+    top: var(--header-height);
+    width: 320px;
+    max-height: calc(100vh - var(--header-height));
+    background: var(--background);
+    border-right: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+    box-shadow: 6px 0 16px rgba(15, 22, 33, 0.08);
+    padding: 22px 22px 26px;
+    display: none;
+    z-index: 40;
+    overflow-y: auto;
+    animation: v6FlyoutIn 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes v6FlyoutIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .v6-shell.flyout-open .v6-flyout { display: block; }
+  .v6-flyout-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .v6-flyout-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .v6-flyout-icon { font-size: 18px; }
+  .v6-flyout-pin {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+    background: var(--background);
+    cursor: pointer;
+    color: var(--text-subdued);
+    font-size: 12px;
+    transition: var(--transition-fast);
+  }
+  .v6-flyout-pin:hover { background: var(--surface-hover); color: var(--foreground); }
+  .v6-flyout.pinned .v6-flyout-pin {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .v6-flyout-body { display: flex; flex-direction: column; gap: 16px; }
+  .v6-flyout-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .v6-flyout-col-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding-bottom: 6px;
+  }
+
+  /* Reuse v5-megamenu-link visual treatment inside the flyout */
+  .v6-flyout .v5-megamenu-link {
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ── Content column (right of the rail) ── */
+  .v6-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  /* Body grid mirrors v5: filters · list · activity */
+  .v6-body {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr) 300px;
+    gap: 0;
+    flex: 1;
+    align-items: stretch;
+  }
+  @media (max-width: 1200px) {
+    .v6-body { grid-template-columns: 220px minmax(0, 1fr); }
+    .v6-body .v5-activity { display: none; }
+  }
+
 </style>
 </head>
 <body>
@@ -3846,21 +4046,24 @@
         <option value="aisha-v2">Aisha — v2 · Application Platform</option>
         <option value="aisha-v3">Aisha — v3 · Mission Control</option>
         <option value="aisha-v4">Aisha — v4 · Co-pilot (Analyst)</option>
-        <option value="aisha-v5">Aisha — v5 · HubSpot Pattern</option>
+        <option value="aisha-v5">Aisha — v5 · HubSpot Pattern (Top Nav)</option>
+        <option value="aisha-v6">Aisha — v6 · HubSpot Pattern (Side Nav)</option>
       </optgroup>
       <optgroup label="Priya Nguyen (Chewy Brand)">
         <option value="priya-v1">Priya — v1 · Jobs-to-be-done</option>
         <option value="priya-v2">Priya — v2 · Application Platform</option>
         <option value="priya-v3">Priya — v3 · Talent Radar</option>
         <option value="priya-v4">Priya — v4 · Co-pilot (Scout)</option>
-        <option value="priya-v5">Priya — v5 · HubSpot Pattern</option>
+        <option value="priya-v5">Priya — v5 · HubSpot Pattern (Top Nav)</option>
+        <option value="priya-v6">Priya — v6 · HubSpot Pattern (Side Nav)</option>
       </optgroup>
       <optgroup label="Marcus Delgado (Fenty Beauty Brand)">
         <option value="marcus-v1">Marcus — v1 · Jobs-to-be-done</option>
         <option value="marcus-v2">Marcus — v2 · Application Platform</option>
         <option value="marcus-v3">Marcus — v3 · Pre-call Coach</option>
         <option value="marcus-v4">Marcus — v4 · Co-pilot (Coach)</option>
-        <option value="marcus-v5">Marcus — v5 · HubSpot Pattern</option>
+        <option value="marcus-v5">Marcus — v5 · HubSpot Pattern (Top Nav)</option>
+        <option value="marcus-v6">Marcus — v6 · HubSpot Pattern (Side Nav)</option>
       </optgroup>
     </select>
   </div>
@@ -4092,6 +4295,9 @@
 
     <!-- ── V5 HUBSPOT-PATTERN SHELL — populated by renderV5Dashboard() -->
     <div class="v5-only v5-shell" id="v5-shell"></div>
+
+    <!-- ── V6 HUBSPOT-PATTERN SIDE-NAV SHELL — populated by renderV6Dashboard() -->
+    <div class="v6-only v6-shell" id="v6-shell"></div>
 
     <!-- ── V4 CO-PILOT SHELL (Ask Impact IS the navigation) — populated by renderV4Dashboard() -->
     <div class="v4-only v4-shell" id="v4-shell">
@@ -5322,7 +5528,7 @@
   function switchPersona(rawValue) {
     const parts = String(rawValue || '').split('-');
     const personaKey = parts[0] || 'aisha';
-    const validVariants = ['v1', 'v2', 'v3', 'v4', 'v5'];
+    const validVariants = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
     const variant = validVariants.includes(parts[1]) ? parts[1] : 'v1';
 
     AppState.selectedPersona = personaKey;
@@ -5396,6 +5602,14 @@
       document.body.classList.remove('variant-v5');
     }
     renderV5Dashboard();
+
+    // V6 (HubSpot Side Nav) — only rendered when active. Also toggles body chrome class.
+    if (variant === 'v6') {
+      document.body.classList.add('variant-v6');
+    } else {
+      document.body.classList.remove('variant-v6');
+    }
+    renderV6Dashboard();
   }
 
   // Update statistic counter widgets
@@ -7024,9 +7238,12 @@
   // ════════════════════════════════════════════════════════════
 
   // Mega-nav is shared across personas (the IA is global, content varies).
+  // `icon` is read by the v6 side-rail renderer; v5 (top mega-nav) ignores it.
+  // `railBadge` shows on the rail tile in v6 only.
   const V5_MEGANAV = [
     {
       label: 'Partners',
+      icon: '👥',
       caret: true,
       columns: [
         { label: 'Manage', links: [
@@ -7049,6 +7266,7 @@
     },
     {
       label: 'Analytics',
+      icon: '📊',
       caret: true,
       columns: [
         { label: 'Measure', links: [
@@ -7069,6 +7287,8 @@
     },
     {
       label: 'Monitoring',
+      icon: '🛡',
+      railBadge: '4',
       caret: true,
       columns: [
         { label: 'Brand Safety', links: [
@@ -7083,9 +7303,9 @@
         ] }
       ]
     },
-    { label: 'Campaigns', caret: false },
-    { label: 'Reports', caret: false },
-    { label: 'Automation', caret: false }
+    { label: 'Campaigns', icon: '🎬', caret: false },
+    { label: 'Reports', icon: '📋', caret: false },
+    { label: 'Automation', icon: '⚡', caret: false }
   ];
 
   function renderV5Dashboard() {
@@ -7294,6 +7514,187 @@
     AppState.personas[persona].v5.activeView = viewId;
     showToast(`Switched to "${el.textContent.trim().split(/\s+/).slice(0, -1).join(' ') || viewId}" view.`, 'info');
   }
+
+  // ════════════════════════════════════════════════════════════
+  // V6 — HUBSPOT SIDE NAV
+  // 64px icon rail + hover-flyout sub-nav. Body reuses v5 renderers.
+  // ════════════════════════════════════════════════════════════
+  let v6FlyoutOpen = null; // label of currently open flyout (null when closed)
+  let v6FlyoutPinned = false;
+
+  function renderV6Dashboard() {
+    const host = document.getElementById('v6-shell');
+    if (!host) return;
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    // v6 content defaults to v5 — the only meaningful difference is the chrome.
+    const v6 = (data && (data.v6 || data.v5));
+    if (!v6 || AppState.variant !== 'v6') {
+      host.innerHTML = '';
+      v6FlyoutOpen = null;
+      v6FlyoutPinned = false;
+      return;
+    }
+
+    // Reset flyout state on each render
+    v6FlyoutOpen = null;
+    v6FlyoutPinned = false;
+
+    host.classList.remove('flyout-open');
+    host.innerHTML = `
+      ${v6RenderRail(v6.activeMenu)}
+      ${v6RenderFlyout()}
+      <div class="v6-content">
+        ${v5RenderPageHeader(v6)}
+        <div class="v6-body">
+          ${v5RenderFilters(v6.filters)}
+          ${v5RenderListPane(v6)}
+          ${v5RenderActivity(v6.activity)}
+        </div>
+      </div>
+      <button class="v5-help" title="Help & Ask Impact" onclick="showToast('✦ Ask Impact opened.', 'info')">?</button>
+    `;
+  }
+
+  function v6RenderRail(activeLabel) {
+    const tiles = V5_MEGANAV.map(m => {
+      const isActive = m.label === activeLabel;
+      const badge = m.railBadge ? `<span class="v6-rail-badge">${m.railBadge}</span>` : '';
+      const safeLabel = m.label.replace(/'/g, "\\'");
+      return `
+        <button class="v6-rail-btn ${isActive ? 'active' : ''}"
+                onmouseenter="v6OpenFlyout('${safeLabel}')"
+                onclick="v6PinFlyout('${safeLabel}')"
+                title="${m.label}">
+          <span class="v6-rail-icon">${m.icon || '✦'}</span>
+          <span class="v6-rail-label">${m.label}</span>
+          ${badge}
+        </button>`;
+    }).join('');
+    return `
+      <aside class="v6-rail" onmouseleave="v6MaybeCloseFlyout()">
+        ${tiles}
+        <div class="v6-rail-spacer"></div>
+        <div class="v6-rail-divider"></div>
+        <button class="v6-rail-btn" title="Search" onclick="showToast('Global search...', 'info')">
+          <span class="v6-rail-icon">🔍</span>
+          <span class="v6-rail-label">Search</span>
+        </button>
+        <button class="v6-rail-btn" title="Settings" onclick="showToast('Account settings...', 'info')">
+          <span class="v6-rail-icon">⚙</span>
+          <span class="v6-rail-label">Settings</span>
+        </button>
+      </aside>`;
+  }
+
+  function v6RenderFlyout() {
+    // Flyout content is updated dynamically on hover; we stamp a stable shell here.
+    return `
+      <div class="v6-flyout" id="v6-flyout"
+           onmouseenter="v6KeepFlyoutOpen()"
+           onmouseleave="v6MaybeCloseFlyout()">
+        <div class="v6-flyout-header">
+          <div class="v6-flyout-title">
+            <span class="v6-flyout-icon" id="v6-flyout-icon">✦</span>
+            <span id="v6-flyout-label">Section</span>
+          </div>
+          <button class="v6-flyout-pin" id="v6-flyout-pin"
+                  title="Pin this menu open"
+                  onclick="v6TogglePin()">📌</button>
+        </div>
+        <div class="v6-flyout-body" id="v6-flyout-body"></div>
+      </div>`;
+  }
+
+  function v6OpenFlyout(label) {
+    const entry = V5_MEGANAV.find(m => m.label === label);
+    if (!entry || !entry.columns || !entry.columns.length) {
+      // Top-level item without sub-nav — close flyout
+      if (!v6FlyoutPinned) v6CloseFlyout();
+      return;
+    }
+    const shell = document.getElementById('v6-shell');
+    const labelEl = document.getElementById('v6-flyout-label');
+    const iconEl = document.getElementById('v6-flyout-icon');
+    const bodyEl = document.getElementById('v6-flyout-body');
+    if (!shell || !labelEl || !bodyEl) return;
+
+    labelEl.textContent = label;
+    iconEl.textContent = entry.icon || '✦';
+    bodyEl.innerHTML = entry.columns.map(col => `
+      <div class="v6-flyout-col">
+        <div class="v6-flyout-col-label">${col.label}</div>
+        ${col.links.map(l => `
+          <a class="v5-megamenu-link" onclick="event.preventDefault(); showToast('Opening ${l.title.replace(/'/g, "\\'")}...', 'info')">
+            <span class="v5-megamenu-link-icon">${l.icon}</span>
+            <span class="v5-megamenu-link-text">
+              <span class="v5-megamenu-link-title">${l.title}</span>
+              <span class="v5-megamenu-link-desc">${l.desc}</span>
+            </span>
+            ${l.badge ? `<span class="v5-megamenu-badge">${l.badge}</span>` : ''}
+          </a>`).join('')}
+      </div>`).join('');
+
+    shell.classList.add('flyout-open');
+    v6FlyoutOpen = label;
+  }
+
+  function v6PinFlyout(label) {
+    const entry = V5_MEGANAV.find(m => m.label === label);
+    if (!entry || !entry.columns || !entry.columns.length) {
+      // No sub-nav — treat as a direct navigation click
+      showToast(`Switching to ${label}...`, 'info');
+      return;
+    }
+    v6OpenFlyout(label);
+    v6FlyoutPinned = true;
+    const flyout = document.getElementById('v6-flyout');
+    const pinBtn = document.getElementById('v6-flyout-pin');
+    if (flyout) flyout.classList.add('pinned');
+    if (pinBtn) pinBtn.title = 'Unpin';
+  }
+
+  function v6TogglePin() {
+    v6FlyoutPinned = !v6FlyoutPinned;
+    const flyout = document.getElementById('v6-flyout');
+    if (!flyout) return;
+    flyout.classList.toggle('pinned', v6FlyoutPinned);
+    if (!v6FlyoutPinned) {
+      v6CloseFlyout();
+    }
+  }
+
+  function v6KeepFlyoutOpen() {
+    // Cursor moved onto the flyout itself — cancel any pending close
+    if (v6CloseTimer) { clearTimeout(v6CloseTimer); v6CloseTimer = null; }
+  }
+
+  let v6CloseTimer = null;
+  function v6MaybeCloseFlyout() {
+    if (v6FlyoutPinned) return;
+    if (v6CloseTimer) clearTimeout(v6CloseTimer);
+    v6CloseTimer = setTimeout(() => {
+      v6CloseFlyout();
+    }, 140);
+  }
+
+  function v6CloseFlyout() {
+    const shell = document.getElementById('v6-shell');
+    if (shell) shell.classList.remove('flyout-open');
+    v6FlyoutOpen = null;
+  }
+
+  // Click outside the flyout / rail to dismiss (and unpin)
+  document.addEventListener('click', e => {
+    if (AppState.variant !== 'v6') return;
+    const flyout = document.getElementById('v6-flyout');
+    const rail = document.querySelector('.v6-rail');
+    if (!flyout || !rail) return;
+    if (flyout.contains(e.target) || rail.contains(e.target)) return;
+    v6FlyoutPinned = false;
+    flyout.classList.remove('pinned');
+    v6CloseFlyout();
+  });
 
 </script>
 </body>
