@@ -36,6 +36,19 @@ jobs:
       - name: Add SPA 404 fallback
         run: cp dist/index.html dist/404.html
 
+      - name: Publish standalone wireframes
+        run: |
+          # Static HTML prototypes live at the repo root and are reachable
+          # at e.g. /affiliate-creator-manager-wireframe.html on Pages.
+          cp affiliate-creator-manager-wireframe.html dist/ || true
+          cp affiliate-creator-manager-personas.html dist/ || true
+          cp affiliate-creator-manager-prd.md dist/ || true
+          # Shared static assets the wireframes reference (logo, etc.).
+          # Vite's build also writes to dist/assets/ with hashed filenames,
+          # so this merge is collision-free.
+          mkdir -p dist/assets
+          cp -R assets/. dist/assets/ || true
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
