@@ -649,9 +649,29 @@
   /* Aisha — Scan hero is a thin anomaly summary; banner still shows below */
 
   /* ── DATA-VARIANT TOGGLE ──
-     v1 = jobs-to-be-done layout (default). v2 = Application Platform layout. */
-  .main[data-variant="v1"] .v2-only { display: none; }
-  .main[data-variant="v2"] .v1-only { display: none; }
+     v1 = jobs-to-be-done layout (default). v2 = Application Platform layout.
+     v3 = adventurous per-persona reimagining (keeps current sidebar).
+     v4 = Co-pilot Console (no sidebar, Ask Impact is the navigation). */
+  .main[data-variant="v1"] .v2-only,
+  .main[data-variant="v1"] .v3-only,
+  .main[data-variant="v1"] .v4-only { display: none; }
+  .main[data-variant="v2"] .v1-only,
+  .main[data-variant="v2"] .v3-only,
+  .main[data-variant="v2"] .v4-only { display: none; }
+  .main[data-variant="v3"] .v1-only,
+  .main[data-variant="v3"] .v2-only,
+  .main[data-variant="v3"] .v4-only { display: none; }
+  .main[data-variant="v4"] .v1-only,
+  .main[data-variant="v4"] .v2-only,
+  .main[data-variant="v4"] .v3-only,
+  .main[data-variant="v4"] .page-header,
+  .main[data-variant="v4"] .context-banner,
+  .main[data-variant="v4"] .persona-hero { display: none; }
+  /* In v4 the sidebar and topnav center links collapse — Ask Impact is the nav */
+  body.variant-v4 .sidebar { display: none; }
+  body.variant-v4 .topnav-links { display: none; }
+  body.variant-v4 .layout { background: var(--background); }
+  body.variant-v4 .main { max-width: none; padding: 0; }
 
   /* ── V2 DASHBOARD ── */
   #v2-dashboard {
@@ -2000,6 +2020,1161 @@
   }
   .toast-icon { font-size: 16px; }
 
+  /* ════════════════════════════════════════════════════════════
+     V3 DASHBOARDS — adventurous per-persona reimaginings.
+     Each persona's v3 keeps the current Focus Jobs sidebar, but
+     replaces the main content with a job-shaped, expressive surface.
+     ════════════════════════════════════════════════════════════ */
+
+  #v3-dashboard { display: flex; flex-direction: column; gap: 24px; }
+  .v3-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-subdued);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── V3 · AISHA: MISSION CONTROL ── */
+  .mc-ticker {
+    background: #0F1621;
+    color: #C8D2E0;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    overflow: hidden;
+    position: relative;
+    font-size: 12px;
+  }
+  .mc-ticker-label {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #4A8DDE;
+    padding-right: 12px;
+    border-right: 1px solid rgba(255,255,255,0.12);
+  }
+  .mc-ticker-track {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    height: 22px;
+  }
+  .mc-ticker-list {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    white-space: nowrap;
+    animation: mcTickerScroll 60s linear infinite;
+    padding-right: 28px;
+  }
+  .mc-ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+  .mc-ticker-time { color: #4A8DDE; font-weight: 700; font-size: 10px; letter-spacing: 0.4px; }
+  .mc-ticker-delta-up { color: #4ADE80; font-weight: 700; }
+  .mc-ticker-delta-down { color: #F87171; font-weight: 700; }
+  .mc-ticker-delta-info { color: #60A5FA; font-weight: 700; }
+  @keyframes mcTickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .mc-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 1100px) { .mc-grid { grid-template-columns: 1fr; } }
+
+  .mc-treemap-card,
+  .mc-radar-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .mc-treemap {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+    height: 320px;
+  }
+  .mc-tile {
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.18);
+  }
+  .mc-tile:hover { transform: scale(1.012); box-shadow: var(--shadow-md); }
+  .mc-tile-name { font-size: 13px; font-weight: 700; line-height: 1.2; }
+  .mc-tile-rev { font-size: 18px; font-weight: 700; letter-spacing: -0.2px; }
+  .mc-tile-delta { font-size: 11px; font-weight: 600; opacity: 0.95; }
+  .mc-tile-spark { display: flex; align-items: flex-end; gap: 2px; height: 22px; opacity: 0.85; }
+  .mc-tile-spark-bar { flex: 1; background: rgba(255,255,255,0.85); border-radius: 1px; min-height: 2px; }
+  .mc-tile-severity {
+    position: absolute; top: 10px; right: 10px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #fff; opacity: 0.95;
+  }
+  .mc-tile[data-sev="critical"] { background: linear-gradient(135deg, #B91C1C, #DC2626); }
+  .mc-tile[data-sev="warning"]  { background: linear-gradient(135deg, #B45309, #F59E0B); }
+  .mc-tile[data-sev="info"]     { background: linear-gradient(135deg, #1D4ED8, #3B82F6); }
+  .mc-tile[data-sev="positive"] { background: linear-gradient(135deg, #047857, #10B981); }
+  .mc-tile[data-sev="neutral"]  { background: linear-gradient(135deg, #475569, #64748B); }
+  .mc-tile[data-size="lg"] { grid-column: span 1; grid-row: span 2; }
+  .mc-tile[data-size="md"] { grid-column: span 1; grid-row: span 1; }
+  .mc-tile[data-size="wide"] { grid-column: span 1; grid-row: span 1; }
+
+  .mc-radar-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-default);
+    align-items: center;
+  }
+  .mc-radar-row:last-child { border-bottom: none; }
+  .mc-radar-name { font-size: 12px; font-weight: 600; color: var(--foreground); display: flex; align-items: center; gap: 8px; }
+  .mc-radar-name::before {
+    content: '';
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--positive);
+    flex-shrink: 0;
+  }
+  .mc-radar-name[data-sev="critical"]::before { background: var(--negative); }
+  .mc-radar-name[data-sev="warning"]::before  { background: var(--caution); }
+  .mc-radar-name[data-sev="info"]::before     { background: var(--info-default); }
+  .mc-radar-spark {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 26px;
+    width: 100px;
+  }
+  .mc-radar-spark-bar {
+    flex: 1;
+    background: var(--accent);
+    opacity: 0.55;
+    border-radius: 1px;
+    min-height: 2px;
+  }
+  .mc-radar-spark-bar.alt { background: var(--negative); opacity: 0.85; }
+  .mc-radar-delta { font-size: 11px; font-weight: 700; min-width: 52px; text-align: right; }
+
+  .mc-anomaly-strip {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .mc-anomaly-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 16px;
+    border-right: 1px solid var(--border-default);
+  }
+  .mc-anomaly-cell:last-child { border-right: none; padding-right: 0; }
+  .mc-anomaly-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-subdued); }
+  .mc-anomaly-value { font-size: 18px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+  .mc-anomaly-sub { font-size: 11px; color: var(--text-subdued); }
+  .mc-anomaly-sub.critical { color: var(--negative); font-weight: 600; }
+  .mc-anomaly-sub.warning { color: var(--caution); font-weight: 600; }
+  .mc-anomaly-sub.positive { color: var(--positive); font-weight: 600; }
+
+  /* ── V3 · PRIYA: TALENT RADAR ── */
+  .tr-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 20px;
+  }
+  @media (max-width: 1100px) { .tr-shell { grid-template-columns: 1fr; } }
+
+  .tr-deck {
+    background: linear-gradient(135deg, #F9FBFF 0%, #EDF1F9 100%);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    min-height: 460px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .tr-deck-empty {
+    text-align: center;
+    color: var(--text-subdued);
+    font-size: 13px;
+  }
+  .tr-stack {
+    position: relative;
+    width: 340px;
+    height: 400px;
+  }
+  .tr-card {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    cursor: grab;
+  }
+  .tr-card[data-depth="0"] { transform: translateY(0) scale(1); z-index: 3; }
+  .tr-card[data-depth="1"] { transform: translateY(10px) scale(0.96); z-index: 2; opacity: 0.85; }
+  .tr-card[data-depth="2"] { transform: translateY(20px) scale(0.92); z-index: 1; opacity: 0.55; }
+  .tr-card.dismiss-left  { transform: translate(-160%, 20px) rotate(-18deg); opacity: 0; }
+  .tr-card.dismiss-right { transform: translate(160%, 20px) rotate(18deg); opacity: 0; }
+  .tr-card.dismiss-up    { transform: translate(0, -120%) scale(0.95); opacity: 0; }
+
+  .tr-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .tr-card-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--sidebar-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+  .tr-card-name { font-size: 16px; font-weight: 700; color: var(--foreground); }
+  .tr-card-meta { font-size: 12px; color: var(--text-subdued); margin-top: 2px; }
+
+  .tr-card-fit {
+    margin-left: auto;
+    background: var(--positive-bg);
+    color: var(--positive);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 9999px;
+  }
+  .tr-card-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .tr-card-stat {
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 10px;
+    text-align: center;
+  }
+  .tr-card-stat-value { font-size: 14px; font-weight: 700; color: var(--foreground); }
+  .tr-card-stat-label { font-size: 10px; color: var(--text-subdued); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+
+  .tr-card-velocity {
+    background: linear-gradient(135deg, #F5F0FF, #E6DAFF);
+    border: 1px solid var(--ai-border);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    font-size: 11px;
+    color: var(--ai-foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tr-card-velocity strong { font-weight: 700; }
+
+  .tr-card-spark {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 60px;
+    padding: 8px;
+    background: var(--background-subdued);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-default);
+  }
+  .tr-card-spark-bar { flex: 1; background: var(--accent); border-radius: 2px; min-height: 3px; }
+  .tr-card-spark-bar.last { background: var(--positive); }
+
+  .tr-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tr-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .tr-action {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: var(--radius-button);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: var(--transition-fast);
+  }
+  .tr-action-skip { background: var(--muted); color: var(--muted-foreground); }
+  .tr-action-skip:hover { background: var(--surface-hover); }
+  .tr-action-watch { background: var(--caution-bg); color: var(--caution); }
+  .tr-action-watch:hover { box-shadow: var(--shadow-md); }
+  .tr-action-invite { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .tr-action-invite:hover { background: var(--accent-hover); }
+
+  .tr-keys {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-subdued);
+  }
+  .tr-key-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--muted);
+    border: 1px solid var(--border-default);
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0 4px;
+  }
+
+  .tr-sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .tr-funnel-card,
+  .tr-rising-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .tr-funnel-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .tr-funnel-row:last-child { border-bottom: none; }
+  .tr-funnel-stage { font-size: 12px; font-weight: 600; color: var(--foreground); }
+  .tr-funnel-bar {
+    grid-column: 1 / -1;
+    height: 6px;
+    background: var(--muted);
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .tr-funnel-fill { height: 100%; background: var(--accent); border-radius: 9999px; }
+  .tr-funnel-count { font-size: 13px; font-weight: 700; color: var(--foreground); }
+
+  .tr-rising-row {
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 0;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .tr-rising-row:last-child { border-bottom: none; }
+  .tr-rising-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--sidebar-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .tr-rising-name { font-size: 12px; font-weight: 700; color: var(--foreground); }
+  .tr-rising-meta { font-size: 11px; color: var(--text-subdued); }
+  .tr-rising-velocity {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--positive);
+    background: var(--positive-bg);
+    padding: 3px 8px;
+    border-radius: 9999px;
+  }
+
+  /* ── V3 · MARCUS: PRE-CALL COACH TIMELINE ── */
+  .pc-heartbeat {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+  }
+  .pc-heartbeat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .pc-heartbeat-tile {
+    flex-shrink: 0;
+    width: 80px;
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-align: center;
+    position: relative;
+  }
+  .pc-heartbeat-tile:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+  .pc-heartbeat-tile[data-state="healthy"] { border-top: 3px solid var(--positive); }
+  .pc-heartbeat-tile[data-state="watch"]   { border-top: 3px solid var(--caution); }
+  .pc-heartbeat-tile[data-state="risk"]    { border-top: 3px solid var(--negative); }
+  .pc-heartbeat-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--sidebar-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin: 0 auto 6px;
+  }
+  .pc-heartbeat-name { font-size: 11px; font-weight: 700; color: var(--foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pc-heartbeat-spark { display: flex; align-items: flex-end; gap: 1px; height: 18px; margin-top: 4px; }
+  .pc-heartbeat-spark-bar { flex: 1; background: var(--accent); opacity: 0.65; border-radius: 1px; min-height: 2px; }
+  .pc-heartbeat-spark-bar.last { background: var(--positive); }
+  .pc-heartbeat-tile[data-state="risk"] .pc-heartbeat-spark-bar.last { background: var(--negative); }
+  .pc-heartbeat-tile[data-state="watch"] .pc-heartbeat-spark-bar.last { background: var(--caution); }
+
+  .pc-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .pc-timeline::before {
+    content: '';
+    position: absolute;
+    left: 52px;
+    top: 12px;
+    bottom: 12px;
+    width: 2px;
+    background: var(--border-default);
+    border-radius: 1px;
+  }
+  .pc-meeting {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 16px;
+    padding: 18px 0;
+    position: relative;
+  }
+  .pc-meeting-date {
+    text-align: center;
+    background: var(--sidebar-accent);
+    border-radius: var(--radius);
+    padding: 10px 8px;
+    height: fit-content;
+    position: relative;
+    z-index: 1;
+  }
+  .pc-meeting-month { font-size: 10px; font-weight: 700; color: var(--sidebar-accent-foreground); text-transform: uppercase; letter-spacing: 0.5px; }
+  .pc-meeting-day { font-size: 22px; font-weight: 700; color: var(--sidebar-accent-foreground); line-height: 1; margin-top: 2px; }
+  .pc-meeting-time { font-size: 10px; font-weight: 600; color: var(--text-subdued); margin-top: 4px; }
+
+  .pc-meeting[data-status="today"] .pc-meeting-date { background: var(--negative-bg); }
+  .pc-meeting[data-status="today"] .pc-meeting-month,
+  .pc-meeting[data-status="today"] .pc-meeting-day { color: var(--negative); }
+
+  .pc-meeting-body {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    transition: var(--transition-fast);
+  }
+  .pc-meeting[data-status="today"] .pc-meeting-body { border-color: var(--negative); box-shadow: 0 0 0 3px var(--negative-bg); }
+  .pc-meeting-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .pc-meeting-title { font-size: 14px; font-weight: 700; color: var(--foreground); display: flex; align-items: center; gap: 10px; }
+  .pc-meeting-partner-logo {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .pc-meeting-meta { font-size: 11px; color: var(--text-subdued); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pc-meeting-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 12px 0;
+    padding: 12px;
+    background: var(--background-subdued);
+    border-radius: var(--radius-md);
+  }
+  .pc-meeting-metric { display: flex; flex-direction: column; gap: 2px; }
+  .pc-meeting-metric-label { font-size: 9px; font-weight: 700; color: var(--text-subdued); text-transform: uppercase; letter-spacing: 0.5px; }
+  .pc-meeting-metric-value { font-size: 13px; font-weight: 700; color: var(--foreground); }
+  .pc-meeting-metric-note { font-size: 10px; }
+  .pc-meeting-metric-note.warn { color: var(--caution); font-weight: 600; }
+  .pc-meeting-metric-note.bad { color: var(--negative); font-weight: 600; }
+  .pc-meeting-metric-note.good { color: var(--positive); font-weight: 600; }
+
+  .pc-meeting-talking {
+    margin-top: 10px;
+  }
+  .pc-meeting-talking-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ai-foreground);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pc-meeting-talking-item {
+    font-size: 12px;
+    color: var(--foreground);
+    padding: 6px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .pc-meeting-talking-emoji { flex-shrink: 0; }
+  .pc-meeting-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+  /* ════════════════════════════════════════════════════════════
+     V4 CO-PILOT CONSOLE — Ask Impact IS the navigation
+     48px rail · 420px AI stream · canvas. Nothing else.
+     ════════════════════════════════════════════════════════════ */
+
+  .v4-shell {
+    display: grid;
+    grid-template-columns: 56px 420px minmax(0, 1fr);
+    height: calc(100vh - var(--header-height));
+    background: var(--background-subdued);
+    position: relative;
+  }
+  @media (max-width: 1100px) { .v4-shell { grid-template-columns: 56px 360px 1fr; } }
+
+  /* ── Ghost Rail ── */
+  .v4-rail {
+    background: #0F1621;
+    color: #C8D2E0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 0;
+    gap: 6px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+  .v4-rail-logo {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #8A63D2, #4B3296);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .v4-rail-btn {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: none;
+    color: rgba(200, 210, 224, 0.65);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+    position: relative;
+  }
+  .v4-rail-btn:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .v4-rail-btn.active { background: rgba(138, 99, 210, 0.18); color: #C8B4FF; }
+  .v4-rail-tooltip {
+    position: absolute;
+    left: 48px;
+    background: #25282F;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
+    z-index: 50;
+  }
+  .v4-rail-btn:hover .v4-rail-tooltip { opacity: 1; }
+
+  /* ── AI Stream ── */
+  .v4-stream {
+    background: var(--background);
+    border-right: 1px solid var(--border-default);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+  .v4-stream-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(180deg, var(--ai-background) 0%, var(--background) 100%);
+  }
+  .v4-stream-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8A63D2, #4B3296);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(138, 99, 210, 0.35);
+  }
+  .v4-stream-title { font-size: 13px; font-weight: 700; color: var(--foreground); }
+  .v4-stream-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--ai-background);
+    border: 1px solid var(--ai-border);
+    color: var(--ai-foreground);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+  .v4-stream-status {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-subdued);
+  }
+  .v4-stream-status::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--positive);
+    box-shadow: 0 0 0 3px rgba(6, 95, 70, 0.18);
+    animation: v4Pulse 2s infinite;
+  }
+  @keyframes v4Pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(6, 95, 70, 0.18); }
+    50% { box-shadow: 0 0 0 5px rgba(6, 95, 70, 0.08); }
+  }
+
+  .v4-stream-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .v4-msg {
+    max-width: 100%;
+    animation: v4MsgIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes v4MsgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .v4-msg-ai {
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    border-top-left-radius: 4px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--foreground);
+    line-height: 1.55;
+  }
+  .v4-msg-ai-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ai-foreground);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .v4-msg-user {
+    background: var(--accent);
+    color: #fff;
+    border-radius: var(--radius-lg);
+    border-top-right-radius: 4px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-left: 36px;
+    align-self: flex-end;
+    max-width: 88%;
+  }
+  .v4-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .v4-chip {
+    background: #fff;
+    border: 1px solid var(--ai-border);
+    color: var(--ai-foreground);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .v4-chip:hover { background: var(--ai-background); }
+  .v4-chip-primary {
+    background: var(--ai-foreground);
+    color: #fff;
+    border-color: var(--ai-foreground);
+  }
+  .v4-chip-primary:hover { background: #2d1f5a; color: #fff; }
+
+  .v4-msg-proactive {
+    background: linear-gradient(135deg, #F5F0FF, #FFFFFF);
+    border: 1px solid var(--ai-border);
+    border-left: 3px solid var(--ai-accent);
+  }
+
+  .v4-stream-composer {
+    padding: 12px 14px;
+    border-top: 1px solid var(--border-default);
+    background: var(--background);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .v4-composer-input {
+    flex: 1;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    padding: 9px 14px;
+    font-size: 13px;
+    color: var(--foreground);
+    background: var(--background-subdued);
+    transition: var(--transition-fast);
+  }
+  .v4-composer-input:focus { border-color: var(--ai-accent); background: var(--background); }
+  .v4-composer-kbd {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--muted);
+    border: 1px solid var(--border-default);
+    font-family: monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    flex-shrink: 0;
+  }
+  .v4-composer-send {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--ai-foreground);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .v4-composer-send:hover { background: var(--ai-accent); }
+
+  /* ── Canvas ── */
+  .v4-canvas {
+    overflow-y: auto;
+    background: var(--background-subdued);
+    display: flex;
+    flex-direction: column;
+  }
+  .v4-canvas-header {
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border-default);
+    background: var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .v4-canvas-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-subdued);
+    flex-wrap: wrap;
+  }
+  .v4-canvas-breadcrumb-current {
+    color: var(--foreground);
+    font-weight: 700;
+  }
+  .v4-canvas-actions { display: flex; gap: 6px; align-items: center; }
+  .v4-canvas-icon-btn {
+    width: 30px; height: 30px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+    background: var(--background);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-subdued);
+    font-size: 13px;
+  }
+  .v4-canvas-icon-btn:hover { background: var(--surface-hover); color: var(--foreground); }
+  .v4-canvas-body {
+    padding: 24px;
+    flex: 1;
+  }
+
+  /* ── Omnibar (Cmd+K) ── */
+  .v4-omnibar {
+    position: fixed;
+    top: calc(var(--header-height) + 14px);
+    left: 50%;
+    transform: translateX(calc(-50% + 110px)); /* offset right to clear AI stream */
+    z-index: 90;
+    width: 440px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-default);
+    border-radius: 9999px;
+    box-shadow: 0 8px 32px rgba(15, 22, 33, 0.10);
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .v4-omnibar:hover {
+    box-shadow: 0 12px 40px rgba(15, 22, 33, 0.18);
+    border-color: var(--ai-accent);
+  }
+  .v4-omnibar-icon { color: var(--ai-accent); flex-shrink: 0; }
+  .v4-omnibar-placeholder { flex: 1; font-size: 13px; color: var(--text-subdued); }
+  .v4-omnibar-kbd {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--muted);
+    border: 1px solid var(--border-default);
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    flex-shrink: 0;
+  }
+  .v4-omnibar-popover {
+    position: absolute;
+    top: 52px;
+    left: 0;
+    right: 0;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    padding: 12px;
+    display: none;
+  }
+  .v4-omnibar.open .v4-omnibar-popover { display: block; }
+  .v4-omnibar-popover-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-subdued);
+    padding: 6px 12px;
+  }
+  .v4-omnibar-suggestion {
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    color: var(--foreground);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .v4-omnibar-suggestion:hover { background: var(--surface-hover); }
+  .v4-omnibar-suggestion-icon {
+    color: var(--ai-accent);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── Canvas surfaces ── */
+  .v4-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    margin-bottom: 18px;
+  }
+  .v4-card-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--ai-foreground);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .v4-card-title { font-size: 18px; font-weight: 700; color: var(--foreground); margin-bottom: 4px; letter-spacing: -0.2px; }
+  .v4-card-desc { font-size: 13px; color: var(--text-subdued); margin-bottom: 14px; line-height: 1.5; }
+
+  /* Briefing list */
+  .v4-briefing-item {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-default);
+    align-items: center;
+  }
+  .v4-briefing-item:last-child { border-bottom: none; }
+  .v4-briefing-icon {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .v4-briefing-icon[data-tone="critical"] { background: var(--negative-bg); }
+  .v4-briefing-icon[data-tone="warning"]  { background: var(--caution-bg); }
+  .v4-briefing-icon[data-tone="positive"] { background: var(--positive-bg); }
+  .v4-briefing-icon[data-tone="info"]     { background: var(--info-bg); }
+  .v4-briefing-title { font-size: 14px; font-weight: 700; color: var(--foreground); margin-bottom: 2px; }
+  .v4-briefing-meta { font-size: 12px; color: var(--text-subdued); }
+
+  /* Pipeline (Priya kanban) */
+  .v4-pipeline {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(180px, 1fr));
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .v4-pipe-col {
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 12px;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .v4-pipe-col-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-subdued);
+  }
+  .v4-pipe-col-count {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    color: var(--foreground);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 9999px;
+  }
+  .v4-pipe-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    font-size: 12px;
+    cursor: grab;
+    transition: var(--transition-fast);
+  }
+  .v4-pipe-card:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+  .v4-pipe-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .v4-pipe-card-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--sidebar-accent); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .v4-pipe-card-name { font-weight: 700; color: var(--foreground); font-size: 12px; }
+  .v4-pipe-card-meta { font-size: 11px; color: var(--text-subdued); }
+
+  /* VIP grid (Marcus) */
+  .v4-vip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+  .v4-vip-tile {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    position: relative;
+  }
+  .v4-vip-tile:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .v4-vip-tile[data-state="risk"]    { border-top: 3px solid var(--negative); }
+  .v4-vip-tile[data-state="watch"]   { border-top: 3px solid var(--caution); }
+  .v4-vip-tile[data-state="healthy"] { border-top: 3px solid var(--positive); }
+  .v4-vip-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--sidebar-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 8px;
+  }
+  .v4-vip-name { font-size: 12px; font-weight: 700; color: var(--foreground); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .v4-vip-meta { font-size: 10px; color: var(--text-subdued); text-align: center; margin-top: 2px; }
+  .v4-vip-spark { display: flex; align-items: flex-end; gap: 2px; height: 18px; margin: 8px 4px 0; }
+  .v4-vip-spark-bar { flex: 1; background: var(--accent); opacity: 0.65; border-radius: 1px; min-height: 2px; }
+  .v4-vip-spark-bar.last { background: var(--positive); }
+  .v4-vip-tile[data-state="risk"] .v4-vip-spark-bar.last { background: var(--negative); }
+  .v4-vip-tile[data-state="watch"] .v4-vip-spark-bar.last { background: var(--caution); }
+  .v4-vip-suggested {
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 8px;
+    padding: 4px 6px;
+    border-radius: 9999px;
+    background: var(--ai-background);
+    color: var(--ai-foreground);
+    border: 1px solid var(--ai-border);
+  }
+
+  /* Check-in brief on canvas (Marcus) */
+  .v4-brief {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .v4-brief-header {
+    padding: 18px 22px;
+    background: linear-gradient(180deg, var(--background-subdued), var(--background));
+    border-bottom: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .v4-brief-title-area { display: flex; align-items: center; gap: 12px; }
+  .v4-brief-logo { width: 48px; height: 48px; border-radius: var(--radius); background: var(--background); border: 1px solid var(--border-default); display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .v4-brief-partner { font-size: 16px; font-weight: 700; color: var(--foreground); }
+  .v4-brief-meta { font-size: 12px; color: var(--text-subdued); margin-top: 2px; }
+  .v4-brief-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px 24px; padding: 20px 22px; }
+  .v4-brief-metric-label { font-size: 11px; font-weight: 700; color: var(--text-subdued); text-transform: uppercase; letter-spacing: 0.5px; }
+  .v4-brief-metric-value { font-size: 20px; font-weight: 700; color: var(--foreground); margin-top: 4px; }
+  .v4-brief-metric-note { font-size: 12px; margin-top: 2px; }
+  .v4-brief-metric-note.warn { color: var(--caution); font-weight: 600; }
+  .v4-brief-metric-note.bad { color: var(--negative); font-weight: 600; }
+  .v4-brief-talking {
+    padding: 16px 22px;
+    background: var(--background-subdued);
+    border-top: 1px solid var(--border-default);
+  }
+  .v4-brief-talking-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--ai-foreground); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .v4-brief-talking-item { font-size: 13px; padding: 8px 12px; background: var(--background); border: 1px solid var(--border-default); border-radius: var(--radius); margin-bottom: 6px; display: flex; gap: 10px; align-items: flex-start; }
+
+  /* Candidate compare (Priya) */
+  .v4-compare {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .v4-compare-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .v4-compare-card.highlight { border-color: var(--ai-accent); box-shadow: 0 0 0 3px var(--ai-background); }
+  .v4-compare-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .v4-compare-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--sidebar-accent); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .v4-compare-name { font-weight: 700; font-size: 13px; color: var(--foreground); }
+  .v4-compare-meta { font-size: 11px; color: var(--text-subdued); }
+  .v4-compare-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 12px;
+    border-bottom: 1px dashed var(--border-default);
+  }
+  .v4-compare-row:last-of-type { border-bottom: none; }
+  .v4-compare-row span:first-child { color: var(--text-subdued); }
+  .v4-compare-row span:last-child { font-weight: 700; color: var(--foreground); }
+  .v4-compare-card .btn-primary { width: 100%; margin-top: 10px; }
+
 </style>
 </head>
 <body>
@@ -2166,16 +3341,22 @@
     <span class="persona-label">Persona Profile:</span>
     <select class="persona-select" id="persona-select" onchange="switchPersona(this.value)">
       <optgroup label="Aisha Thompson (Walmart Brand)">
-        <option value="aisha-v1">Aisha — v1</option>
-        <option value="aisha-v2">Aisha — v2</option>
+        <option value="aisha-v1">Aisha — v1 · Jobs-to-be-done</option>
+        <option value="aisha-v2">Aisha — v2 · Application Platform</option>
+        <option value="aisha-v3">Aisha — v3 · Mission Control</option>
+        <option value="aisha-v4">Aisha — v4 · Co-pilot (Analyst)</option>
       </optgroup>
       <optgroup label="Priya Nguyen (Chewy Brand)">
-        <option value="priya-v1">Priya — v1</option>
-        <option value="priya-v2">Priya — v2</option>
+        <option value="priya-v1">Priya — v1 · Jobs-to-be-done</option>
+        <option value="priya-v2">Priya — v2 · Application Platform</option>
+        <option value="priya-v3">Priya — v3 · Talent Radar</option>
+        <option value="priya-v4">Priya — v4 · Co-pilot (Scout)</option>
       </optgroup>
       <optgroup label="Marcus Delgado (Fenty Beauty Brand)">
-        <option value="marcus-v1">Marcus — v1</option>
-        <option value="marcus-v2">Marcus — v2</option>
+        <option value="marcus-v1">Marcus — v1 · Jobs-to-be-done</option>
+        <option value="marcus-v2">Marcus — v2 · Application Platform</option>
+        <option value="marcus-v3">Marcus — v3 · Pre-call Coach</option>
+        <option value="marcus-v4">Marcus — v4 · Co-pilot (Coach)</option>
       </optgroup>
     </select>
   </div>
@@ -2402,6 +3583,79 @@
     <!-- ── V2 DASHBOARD (Application Platform flavor) — populated by renderV2Dashboard() -->
     <section class="v2-only" id="v2-dashboard"></section>
 
+    <!-- ── V3 DASHBOARD (Adventurous per-persona reimagining) — populated by renderV3Dashboard() -->
+    <section class="v3-only" id="v3-dashboard"></section>
+
+    <!-- ── V4 CO-PILOT SHELL (Ask Impact IS the navigation) — populated by renderV4Dashboard() -->
+    <div class="v4-only v4-shell" id="v4-shell">
+      <!-- Ghost rail -->
+      <aside class="v4-rail">
+        <div class="v4-rail-logo">i</div>
+        <button class="v4-rail-btn active" title="Home" onclick="showToast('Already at the briefing home.', 'info')">
+          <span aria-hidden="true">🏠</span>
+          <span class="v4-rail-tooltip">Home</span>
+        </button>
+        <button class="v4-rail-btn" title="History" onclick="showToast('Opening conversation history...', 'info')">
+          <span aria-hidden="true">🕘</span>
+          <span class="v4-rail-tooltip">History</span>
+        </button>
+        <button class="v4-rail-btn" title="Pinned" onclick="showToast('Opening pinned conversations...', 'info')">
+          <span aria-hidden="true">📌</span>
+          <span class="v4-rail-tooltip">Pinned</span>
+        </button>
+      </aside>
+
+      <!-- Ask Impact stream -->
+      <section class="v4-stream">
+        <div class="v4-stream-header">
+          <div class="v4-stream-avatar">✦</div>
+          <div>
+            <div class="v4-stream-title">Ask Impact</div>
+            <div class="v4-stream-role-badge" id="v4-role-badge">✦ Analyst</div>
+          </div>
+          <div class="v4-stream-status">Online</div>
+        </div>
+        <div class="v4-stream-body" id="v4-stream-body">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="v4-stream-composer">
+          <input class="v4-composer-input" type="text" placeholder="Ask Impact anything…" id="v4-composer-input" onkeydown="if(event.key==='Enter') v4SubmitComposer()">
+          <span class="v4-composer-kbd">⌘K</span>
+          <button class="v4-composer-send" onclick="v4SubmitComposer()" aria-label="Send">→</button>
+        </div>
+      </section>
+
+      <!-- Canvas -->
+      <section class="v4-canvas">
+        <div class="v4-canvas-header">
+          <div class="v4-canvas-breadcrumb" id="v4-canvas-breadcrumb">
+            <span>Today</span>
+            <span>›</span>
+            <span class="v4-canvas-breadcrumb-current">Briefing</span>
+          </div>
+          <div class="v4-canvas-actions">
+            <button class="v4-canvas-icon-btn" title="Pin to home" onclick="showToast('Pinned to home.', 'success')">📌</button>
+            <button class="v4-canvas-icon-btn" title="Share" onclick="showToast('Share link copied.', 'success')">↗</button>
+            <button class="v4-canvas-icon-btn" title="Refresh" onclick="renderV4Dashboard(); showToast('Canvas refreshed.', 'info')">⟳</button>
+          </div>
+        </div>
+        <div class="v4-canvas-body" id="v4-canvas-body">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- Floating omnibar -->
+      <div class="v4-omnibar" id="v4-omnibar" onclick="v4ToggleOmnibar()">
+        <span class="v4-omnibar-icon">✦</span>
+        <span class="v4-omnibar-placeholder" id="v4-omnibar-placeholder">Ask Impact anything…</span>
+        <span class="v4-omnibar-kbd">⌘K</span>
+        <div class="v4-omnibar-popover" id="v4-omnibar-popover" onclick="event.stopPropagation()">
+          <div class="v4-omnibar-popover-label">Try one of these</div>
+          <div id="v4-omnibar-suggestions"></div>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -2589,6 +3843,121 @@
             ctaText: 'Learn More',
             ctaAction: "showToast('Opening automation playbook...', 'info')"
           }
+        },
+
+        // V3 — MISSION CONTROL: trading-floor situation room for the morning scan
+        v3: {
+          ticker: [
+            { time: '08:42', icon: '📉', text: 'TechDeals Pro revenue', delta: '↓ 34%', tone: 'down' },
+            { time: '08:38', icon: '⭐', text: 'MomLifeCreator hit 2× target', delta: '+$76K', tone: 'up' },
+            { time: '08:24', icon: '🆕', text: 'CozyHomeFinds accepted invite', delta: 'New partner', tone: 'info' },
+            { time: '08:11', icon: '⏰', text: 'StyleBlogger Network inactive', delta: '14 days', tone: 'down' },
+            { time: '07:58', icon: '🛒', text: 'Grocery Deals Weekly conversion', delta: '↑ 8%', tone: 'up' },
+            { time: '07:45', icon: '✨', text: 'AI flagged 3 partners for outreach', delta: 'Action', tone: 'info' },
+            { time: '07:32', icon: '🏠', text: 'HomeGoods Network revenue', delta: '↑ 18%', tone: 'up' },
+            { time: '07:14', icon: '🚨', text: 'Walmart Grocery clicks anomaly', delta: '↓ 22%', tone: 'down' }
+          ],
+          treemap: [
+            { name: 'Walmart Affiliates', rev: '$1.24M', delta: '↑ 14%', sev: 'positive', size: 'lg', bars: [60,70,75,80,85,82,90,95] },
+            { name: 'Walmart Creators',   rev: '$520K', delta: '↑ 22%', sev: 'positive', size: 'md', bars: [40,55,60,65,70,75,82,90] },
+            { name: 'Walmart Grocery',    rev: '$310K', delta: '↓ 9%',  sev: 'warning',  size: 'md', bars: [80,75,78,72,70,68,62,58] },
+            { name: 'Walmart Electronics',rev: '$184K', delta: '↓ 34%', sev: 'critical', size: 'md', bars: [90,85,75,60,50,40,36,32] },
+            { name: 'Walmart Fashion',    rev: '$98K',  delta: '↑ 4%',  sev: 'info',     size: 'md', bars: [50,52,55,53,58,60,62,65] }
+          ],
+          radar: [
+            { name: 'TechDeals Pro',       sev: 'critical', bars: [70,75,72,68,55,42,38,32], delta: '↓ 34%' },
+            { name: 'StyleBlogger Network',sev: 'warning',  bars: [60,62,60,55,50,42,40,38], delta: '14d 🦗' },
+            { name: 'HomeGoods Network',   sev: 'positive', bars: [50,55,60,65,72,78,85,92], delta: '↑ 18%' },
+            { name: 'MomLifeCreator',      sev: 'positive', bars: [20,30,40,50,60,68,80,95], delta: '↑ 2×' },
+            { name: 'EcoLiving Blog',      sev: 'positive', bars: [55,58,62,65,68,72,75,78], delta: '↑ 9%'  },
+            { name: 'Budget Travel Hub',   sev: 'positive', bars: [40,42,45,48,52,55,58,62], delta: '↑ 5%'  },
+            { name: 'GadgetGuru',          sev: 'info',     bars: [62,60,58,55,52,50,48,45], delta: 'flat' }
+          ],
+          anomalyStrip: [
+            { label: 'Programs Healthy', value: '3 / 5', sub: '60% on track', subTone: 'positive' },
+            { label: 'Critical Alerts',  value: '1',     sub: 'TechDeals Pro', subTone: 'critical' },
+            { label: 'Warnings',         value: '2',     sub: 'Grocery & StyleBlogger', subTone: 'warning' },
+            { label: 'AI Recommendations', value: '4',   sub: 'Tap radar to investigate', subTone: 'neutral' }
+          ]
+        },
+
+        // V4 — CO-PILOT (ANALYST): Ask Impact runs the morning scan as a colleague
+        v4: {
+          aiRole: 'Analyst',
+          breadcrumb: ['Today', 'Briefing'],
+          conversation: [
+            {
+              from: 'ai',
+              eyebrow: '✦ Analyst · 8:42 am',
+              text: "Morning, Aisha. I scanned all 5 Walmart programs overnight. Two programs need your eyes before your 10am — the biggest is <strong>Walmart Electronics</strong> (TechDeals Pro is down 34%, likely tracking).",
+              chips: [
+                { label: 'Headlines first', primary: true, intent: 'briefing' },
+                { label: 'Open the anomaly', intent: 'spotlightTechDeals' },
+                { label: 'Skip to Friday check-in', intent: 'checkinFriday' }
+              ]
+            },
+            {
+              from: 'user',
+              text: 'Headlines first.'
+            },
+            {
+              from: 'ai',
+              eyebrow: '✦ Analyst',
+              text: "Here's the 3-line version on the canvas. I've ranked them by impact on Q3 revenue. Want me to draft outreach to TechDeals Pro's account manager while you read?",
+              chips: [
+                { label: 'Draft outreach', primary: true, intent: 'draftTechDealsOutreach' },
+                { label: 'Show me last week\'s comparison', intent: 'compareWeek' }
+              ]
+            }
+          ],
+          proactiveStream: [
+            {
+              delay: 8000,
+              eyebrow: '✦ Proactive',
+              text: "Heads up — <strong>MomLifeCreator</strong> just hit 2× target in the last hour. They've never crossed it before. Want to lock in a loyalty bonus?",
+              chips: [
+                { label: 'Give bonus', primary: true, intent: 'bonusMomLife' },
+                { label: 'Wait & watch', intent: 'snooze' }
+              ]
+            },
+            {
+              delay: 22000,
+              eyebrow: '✦ Proactive',
+              text: "Walmart Grocery clicks just spiked +18% on a single SKU (Organic Eggs). I can build a flash creator campaign in 30 seconds — open it on the canvas?",
+              chips: [
+                { label: 'Build flash campaign', primary: true, intent: 'flashCampaign' }
+              ]
+            }
+          ],
+          initialSurface: 'briefing',
+          surfaces: {
+            briefing: {
+              breadcrumb: ['Today', 'Briefing'],
+              eyebrow: '✦ Morning briefing · 5 programs scanned',
+              title: 'Three things, in order of impact',
+              desc: "Ranked by Q3 revenue impact. Click any line to drill in — I'll keep the chat threaded.",
+              items: [
+                { icon: '📉', tone: 'critical', title: 'Walmart Electronics — TechDeals Pro down 34%', meta: 'Conversion 4.2% → 2.7% · likely tracking issue · $98K at risk this month', cta: 'Open spotlight', action: "v4RunIntent('spotlightTechDeals')" },
+                { icon: '⏰', tone: 'warning',  title: 'StyleBlogger Network — 14 days dark', meta: 'No clicks since Jun 1 · last content Jun 5 · re-engagement recommended', cta: 'Draft outreach', action: "showToast('Drafting re-engagement note...', 'info')" },
+                { icon: '⭐', tone: 'positive', title: 'MomLifeCreator hit 2× target', meta: 'First time ever · $76K · loyalty bonus recommended', cta: 'Give bonus', action: "openBonusModal('MomLifeCreator')" },
+                { icon: '🆕', tone: 'info',     title: '3 partners awaiting onboarding', meta: 'Accepted invite, tracking pending', cta: 'Onboard', action: "showToast('Redirecting to Onboarding Console...', 'info')" }
+              ]
+            },
+            spotlightTechDeals: {
+              breadcrumb: ['Today', 'Briefing', 'TechDeals Pro'],
+              eyebrow: '✦ Anomaly spotlight',
+              title: 'TechDeals Pro — Revenue ↓ 34% this week',
+              desc: 'Conversion rate fell from 4.2% to 2.7% over 7 days. The drop correlates with a tracking parameter that stopped firing on June 9.',
+              partnerCta: { name: 'TechDeals Pro', text: 'Open full brief', action: "openDrawer('TechDeals Pro')" }
+            }
+          },
+          omnibarIntents: [
+            { icon: '📊', label: 'Show me partners who dropped >20% this week' },
+            { icon: '✨', label: 'Draft re-engagement note for StyleBlogger Network' },
+            { icon: '📅', label: "Brief me on Friday's HomeGoods Network check-in" },
+            { icon: '🎁', label: 'Give MomLifeCreator a $1,500 loyalty bonus' },
+            { icon: '⚙', label: 'Compare this week to last week across all programs' }
+          ]
         }
       },
 
@@ -2723,6 +4092,146 @@
             ctaText: 'Learn More',
             ctaAction: "showToast('Opening recruitment automation guide...', 'info')"
           }
+        },
+
+        // V3 — TALENT RADAR: swipe-stack of AI-vetted candidates + outreach funnel + rising talent
+        v3: {
+          swipeStack: [
+            { id: 's-1', avatar: '🐕', name: 'BarkingLotReviews', meta: 'Pets & Dogs · 340K followers · TikTok + IG', eng: '5.2%', epc: '$14', fit: '95%', velocity: '+340% engagement velocity vs. her 90-day avg', spark: [22,28,35,40,52,68,82,95], tags: [
+              { type: 'green', text: '🔥 Rising' },
+              { type: 'blue', text: 'Pet niche' },
+              { type: 'orange', text: 'Viral last week' }
+            ] },
+            { id: 's-2', avatar: '🐈', name: 'MeowLifestyle', meta: 'Pets & Cats · 180K followers · IG', eng: '6.1%', epc: '$11', fit: '90%', velocity: 'High repeat-engagement audience (cat parents)', spark: [30,32,35,40,45,50,58,65], tags: [
+              { type: 'green', text: '✦ Consistent' },
+              { type: 'blue', text: 'Cat niche' }
+            ] },
+            { id: 's-3', avatar: '🦜', name: 'PetParentingTips', meta: 'Family & Pets · 720K followers · YouTube', eng: '3.1%', epc: '$8', fit: '86%', velocity: 'Tutorial format converts 2× our category average', spark: [60,58,62,64,68,72,78,82], tags: [
+              { type: 'blue', text: 'Tutorial' },
+              { type: 'orange', text: 'Long-form' }
+            ] },
+            { id: 's-4', avatar: '🐶', name: 'PuppyMomLife', meta: 'Pets & Dogs · 95K followers · TikTok', eng: '8.4%', epc: '$13', fit: '92%', velocity: 'Micro-creator with the highest engagement we\'ve seen this quarter', spark: [10,15,22,30,42,56,72,88], tags: [
+              { type: 'green', text: '🔥 Micro-rising' },
+              { type: 'blue', text: 'TikTok-native' }
+            ] },
+            { id: 's-5', avatar: '🐱', name: 'CatCornerDaily', meta: 'Pets & Cats · 410K followers · IG + YouTube', eng: '4.0%', epc: '$10', fit: '83%', velocity: 'Decelerating — engagement -8% over 30d', spark: [80,78,75,72,68,65,62,58], tags: [
+              { type: 'orange', text: '⚠️ Decelerating' }
+            ] }
+          ],
+          funnel: [
+            { stage: 'Spotted (AI matched)', count: 32, fillPct: 100 },
+            { stage: 'Invited',              count: 18, fillPct: 56  },
+            { stage: 'Replied',              count: 11, fillPct: 34  },
+            { stage: 'In Talks',             count: 7,  fillPct: 22  },
+            { stage: 'Onboarded',            count: 3,  fillPct: 9   }
+          ],
+          risingTalent: [
+            { avatar: '🐶', name: 'PuppyMomLife',      meta: '95K · TikTok · 8.4% eng',   velocity: '+340%' },
+            { avatar: '🐕', name: 'BarkingLotReviews', meta: '340K · IG · 5.2% eng',     velocity: '+220%' },
+            { avatar: '🐈', name: 'MeowLifestyle',     meta: '180K · IG · 6.1% eng',     velocity: '+110%' },
+            { avatar: '🦴', name: 'TreatTimeTales',    meta: '60K · TikTok · 7.8% eng',  velocity: '+88%'  },
+            { avatar: '🐾', name: 'PawsitiveVibes',    meta: '210K · YT · 3.4% eng',     velocity: '+62%'  }
+          ]
+        },
+
+        // V4 — CO-PILOT (SCOUT): Ask Impact behaves as the talent scout
+        v4: {
+          aiRole: 'Scout',
+          breadcrumb: ['Discover', 'Pipeline'],
+          conversation: [
+            {
+              from: 'ai',
+              eyebrow: '✦ Scout · 9:14 am',
+              text: "Priya — three creators broke 2× engagement velocity this week. Lock <strong>GlamGlowTips</strong>… wait, scratch that, you're Chewy. <strong>PuppyMomLife</strong> in before noon — competitor reps are likely seeing the same signals.",
+              chips: [
+                { label: 'Show me all 3', primary: true, intent: 'compareTop3' },
+                { label: 'Draft outreach for PuppyMomLife', intent: 'draftPuppy' },
+                { label: 'Show my pipeline', intent: 'pipeline' }
+              ]
+            },
+            {
+              from: 'user',
+              text: 'Show me all 3.'
+            },
+            {
+              from: 'ai',
+              eyebrow: '✦ Scout',
+              text: "Side-by-side on the canvas. PuppyMomLife is the highest engagement we've seen this quarter and the cheapest of the three. I'd lock her in first — bulk outreach drafted?",
+              chips: [
+                { label: 'Send all 3 invites', primary: true, intent: 'bulkInvite3' },
+                { label: 'Just PuppyMomLife', intent: 'invitePuppy' }
+              ]
+            }
+          ],
+          proactiveStream: [
+            {
+              delay: 7000,
+              eyebrow: '✦ Live alert',
+              text: "<strong>MakeupByMaya</strong> — sorry, scratch that — <strong>TreatTimeTales</strong> just posted a viral video (1.2M views in 2hrs). Interest spike detected from your category. Want to fast-track an invite?",
+              chips: [
+                { label: 'Fast-track invite', primary: true, intent: 'inviteTreatTime' },
+                { label: 'Watch for a day', intent: 'watch' }
+              ]
+            },
+            {
+              delay: 18000,
+              eyebrow: '✦ Pipeline nudge',
+              text: "3 conversations have been quiet for 5+ days. I can send personalized follow-ups in your voice. Approve?",
+              chips: [
+                { label: 'Send all 3', primary: true, intent: 'followups' },
+                { label: 'Review drafts first', intent: 'reviewDrafts' }
+              ]
+            }
+          ],
+          initialSurface: 'pipeline',
+          surfaces: {
+            pipeline: {
+              breadcrumb: ['Discover', 'Pipeline'],
+              eyebrow: '✦ Recruit pipeline · 32 active candidates',
+              title: 'Discover pipeline',
+              desc: 'Drag a card between columns or click for the AI-drafted next action. I refresh this view in real time as creators sign or reply.',
+              columns: [
+                { stage: 'Spotted', count: 14, cards: [
+                  { avatar: '🐶', name: 'PuppyMomLife', meta: '95K · 8.4% eng · 92% fit' },
+                  { avatar: '🦴', name: 'TreatTimeTales', meta: '60K · 7.8% eng · 89% fit' },
+                  { avatar: '🐕', name: 'PawsAndPaws', meta: '120K · 5.0% eng · 84% fit' }
+                ] },
+                { stage: 'Invited', count: 8, cards: [
+                  { avatar: '🐈', name: 'MeowLifestyle', meta: 'Invited 2d ago · awaiting reply' },
+                  { avatar: '🐾', name: 'PawsitiveVibes', meta: 'Invited 4d ago · seen' }
+                ] },
+                { stage: 'Replied', count: 5, cards: [
+                  { avatar: '🐕', name: 'BarkingLotReviews', meta: 'Replied — rate ask $14 EPC' },
+                  { avatar: '🦜', name: 'PetParentingTips', meta: 'Asked for product samples' }
+                ] },
+                { stage: 'In Talks', count: 3, cards: [
+                  { avatar: '🐱', name: 'CatCornerDaily', meta: 'Negotiating: 12% comm + $500 flat' }
+                ] },
+                { stage: 'Onboarded', count: 2, cards: [
+                  { avatar: '🐾', name: 'DogMomDuo', meta: 'Tracking pending — fix link' },
+                  { avatar: '🐱', name: 'CatNapCatnips', meta: 'Live · first conversion today' }
+                ] }
+              ]
+            },
+            compareTop3: {
+              breadcrumb: ['Discover', 'Pipeline', 'Top 3 candidates'],
+              eyebrow: '✦ Side-by-side',
+              title: 'Top 3 creators · this week',
+              desc: 'Ranked by engagement velocity. I\'ve highlighted PuppyMomLife — best ratio of audience-to-cost.',
+              candidates: [
+                { highlight: true, avatar: '🐶', name: 'PuppyMomLife', meta: 'TikTok · Dogs · 95K', rows: [['Engagement', '8.4%'], ['EPC est.', '$13'], ['Fit', '92%'], ['Velocity', '+340%'], ['Audience overlap', '68%']], cta: 'Invite', action: "showToast('Outreach to PuppyMomLife drafted in your voice.', 'success')" },
+                { avatar: '🐕', name: 'BarkingLotReviews', meta: 'IG · Dogs · 340K', rows: [['Engagement', '5.2%'], ['EPC est.', '$14'], ['Fit', '95%'], ['Velocity', '+220%'], ['Audience overlap', '74%']], cta: 'Invite', action: "showToast('Outreach to BarkingLotReviews drafted.', 'success')" },
+                { avatar: '🦴', name: 'TreatTimeTales', meta: 'TikTok · Dogs · 60K', rows: [['Engagement', '7.8%'], ['EPC est.', '$11'], ['Fit', '89%'], ['Velocity', '+88%'], ['Audience overlap', '52%']], cta: 'Invite', action: "showToast('Outreach to TreatTimeTales drafted.', 'success')" }
+              ]
+            }
+          },
+          omnibarIntents: [
+            { icon: '🔍', label: 'Find pet creators with >5% engagement and <500K followers' },
+            { icon: '✨', label: 'Draft a Mother\'s Day campaign invite for my top 5 creators' },
+            { icon: '🎁', label: 'Send all replied creators a $250 welcome bonus' },
+            { icon: '📊', label: "How is this quarter's recruit funnel vs. Q2?" },
+            { icon: '⚡', label: 'Show creators losing engagement velocity' }
+          ]
         }
       },
 
@@ -2871,6 +4380,212 @@
             ctaText: 'Learn More',
             ctaAction: "showToast('Opening check-in automation guide...', 'info')"
           }
+        },
+
+        // V3 — PRE-CALL COACH TIMELINE: calendar becomes the dashboard; VIP heartbeat above
+        v3: {
+          heartbeat: [
+            { name: 'GlamGlowTips', avatar: '💄', state: 'healthy', spark: [40,45,52,58,62,68,75,82] },
+            { name: 'MakeupByMaya', avatar: '💋', state: 'healthy', spark: [50,55,58,60,65,68,72,78] },
+            { name: 'GlowUpMakeup', avatar: '💅', state: 'risk',    spark: [80,75,72,68,60,52,45,38] },
+            { name: 'GlamourGuide', avatar: '📖', state: 'healthy', spark: [30,38,45,52,58,68,78,92] },
+            { name: 'BeautyCompare',avatar: '🧴', state: 'watch',   spark: [60,58,55,52,50,48,45,42] },
+            { name: 'TrendSettersCo',avatar: '✨', state: 'healthy', spark: [55,58,60,62,65,68,70,72] },
+            { name: 'BudgetFinds',  avatar: '📖', state: 'risk',    spark: [70,68,65,62,58,55,52,48] },
+            { name: 'SkincareSecrets',avatar: '🧴',state: 'healthy', spark: [40,42,45,48,52,55,58,62] },
+            { name: 'LipPlumperPro', avatar: '💋', state: 'watch',   spark: [55,53,50,48,46,44,42,40] },
+            { name: 'BoldBeauty',    avatar: '💎', state: 'healthy', spark: [62,65,68,70,72,75,78,82] },
+            { name: 'RougeReviews',  avatar: '💄', state: 'healthy', spark: [48,52,55,58,62,65,68,72] },
+            { name: 'BronzeBae',     avatar: '🤎', state: 'watch',   spark: [60,58,56,54,52,50,48,46] }
+          ],
+          meetings: [
+            {
+              status: 'today',
+              dateM: 'JUN', dateD: '16', time: '2:00 pm',
+              partner: 'BudgetFinds Blog', logo: '📖',
+              metaItems: ['Bi-weekly · self-initiated', 'CSM: Sarah Chen', 'Last sync: May 28'],
+              metrics: [
+                { label: 'Revenue MTD', value: '$74K', note: '↓ 18%', tone: 'bad' },
+                { label: 'Conversion', value: '2.4%', note: 'was 3.1%', tone: 'warn' },
+                { label: 'Clicks',     value: '31,800', note: '↓ 9%', tone: 'warn' },
+                { label: 'Contract',   value: 'Aug 15', note: 'Renew', tone: 'warn' }
+              ],
+              talking: [
+                { emoji: '🔍', text: 'Investigate click drop — possible expired coupon codes (last refreshed May 20).' },
+                { emoji: '💬', text: 'Discuss creative refresh for summer collection.' },
+                { emoji: '🎁', text: 'Offer 10% performance bonus if Q3 target hit by Aug 1.' },
+                { emoji: '📋', text: 'Pre-fill renewal proposal — contract due Aug 15.' }
+              ],
+              actions: [
+                { text: 'Open Full Brief →', primary: true, action: "openDrawer('BudgetFinds Blog')" },
+                { text: '🎁 Issue Bonus', action: "openBonusModal('BudgetFinds Blog')" },
+                { text: '✉ Send Pre-call Note', action: "showToast('Pre-call note drafted in BudgetFinds Blog thread.', 'success')" }
+              ]
+            },
+            {
+              status: 'upcoming',
+              dateM: 'JUN', dateD: '20', time: '10:30 am',
+              partner: 'HomeGoods Network', logo: '🏠',
+              metaItems: ['Monthly · Sarah Chen (CSM)', 'Last sync: May 23'],
+              metrics: [
+                { label: 'Revenue MTD', value: '$184K', note: '↑ 18%', tone: 'good' },
+                { label: 'Conversion', value: '3.4%', note: 'stable', tone: '' },
+                { label: 'Clicks',     value: '54,200', note: '↓ 5%', tone: 'warn' },
+                { label: 'Contract',   value: 'Nov 4',  note: 'on track', tone: '' }
+              ],
+              talking: [
+                { emoji: '📈', text: 'Celebrate 18% revenue lift — recognise Sarah\'s team publicly.' },
+                { emoji: '🔍', text: 'Clicks down 5% even with revenue up — investigate conversion-rate-driven growth.' },
+                { emoji: '🎯', text: 'Pitch joint Q4 holiday campaign brief while engagement is high.' }
+              ],
+              actions: [
+                { text: 'Open Full Brief →', primary: true, action: "openDrawer('HomeGoods Network')" }
+              ]
+            },
+            {
+              status: 'upcoming',
+              dateM: 'JUN', dateD: '24', time: '3:00 pm',
+              partner: 'GlowUpMakeup', logo: '💅',
+              metaItems: ['Quarterly · Self-initiated · ⚠️ Performance review'],
+              metrics: [
+                { label: 'Revenue MTD', value: '$74K', note: '↓ 18%', tone: 'bad' },
+                { label: 'Conversion', value: '1.9%', note: 'was 2.6%', tone: 'bad' },
+                { label: 'Return rate', value: '12%',  note: 'high', tone: 'bad' },
+                { label: 'Last bonus', value: 'Feb 1',  note: '4mo ago', tone: '' }
+              ],
+              talking: [
+                { emoji: '⚠️', text: 'Discuss expired discount codes (root cause of conversion drop).' },
+                { emoji: '🛒', text: 'High return rate on shade-matching — request creator try-on content.' },
+                { emoji: '🤝', text: 'Frame as collaborative problem-solving, not performance review.' }
+              ],
+              actions: [
+                { text: 'Open Full Brief →', primary: true, action: "openDrawer('GlowUpMakeup')" },
+                { text: '🎟 Re-issue Discount Codes', action: "showToast('New code generated: FENTYGLOW24', 'success')" }
+              ]
+            },
+            {
+              status: 'upcoming',
+              dateM: 'JUL', dateD: '02', time: '11:00 am',
+              partner: 'TrendSettersCo', logo: '✨',
+              metaItems: ['Monthly · CSM sync', 'On track'],
+              metrics: [
+                { label: 'Revenue MTD', value: '$112K', note: '↑ 6%', tone: 'good' },
+                { label: 'Conversion', value: '3.1%', note: 'stable', tone: '' },
+                { label: 'Anniversary',value: 'Jul 14', note: '1 year!', tone: 'good' },
+                { label: 'Contract',   value: 'Sep 30', note: 'review Aug', tone: '' }
+              ],
+              talking: [
+                { emoji: '🎉', text: 'TrendSettersCo hits 1-year anniversary Jul 14 — anniversary bump auto-drafted.' },
+                { emoji: '📋', text: 'Discuss renewal terms (early ask = higher comm rate negotiation room).' }
+              ],
+              actions: [
+                { text: 'Open Full Brief →', primary: true, action: "openDrawer('TrendSettersCo')" },
+                { text: '🎁 Prepare Anniversary Bump', action: "openBonusModal('TrendSettersCo')" }
+              ]
+            }
+          ]
+        },
+
+        // V4 — CO-PILOT (COACH): Ask Impact is his partnership coach
+        v4: {
+          aiRole: 'Coach',
+          breadcrumb: ['This Week', 'BudgetFinds Blog'],
+          conversation: [
+            {
+              from: 'ai',
+              eyebrow: '✦ Coach · 9:02 am',
+              text: "Morning Marcus. You have a check-in with <strong>BudgetFinds Blog</strong> this afternoon at 2pm. I've drafted the brief — 4 metrics, 3 talking points, 1 bonus recommendation. Want to walk through it now, or save for after lunch?",
+              chips: [
+                { label: 'Walk me through it now', primary: true, intent: 'walkthroughBudget' },
+                { label: 'Open the brief on canvas', intent: 'briefBudget' },
+                { label: "Brief me on this week's 3 partners", intent: 'weekOverview' }
+              ]
+            },
+            {
+              from: 'user',
+              text: "Walk me through it."
+            },
+            {
+              from: 'ai',
+              eyebrow: '✦ Coach',
+              text: "Headlines: revenue is <strong>down 18%</strong> driven by expired coupon codes. Lead with the data, then offer the 10% performance bonus tied to a Q3 target. I'd avoid mentioning renewal until they accept the bonus framing.",
+              chips: [
+                { label: 'Got it — open brief', primary: true, intent: 'briefBudget' },
+                { label: 'Who haven\'t I spoken to recently?', intent: 'driftCheck' }
+              ]
+            }
+          ],
+          proactiveStream: [
+            {
+              delay: 6000,
+              eyebrow: '✦ Relationship drift',
+              text: "It's been <strong>14 days</strong> since you spoke to <strong>GlamMag</strong>. They were a top-5 partner last quarter but their revenue is trending down 7%. Send a check-in note?",
+              chips: [
+                { label: 'Draft a warm note', primary: true, intent: 'noteGlamMag' },
+                { label: 'Schedule for next week', intent: 'scheduleGlamMag' }
+              ]
+            },
+            {
+              delay: 24000,
+              eyebrow: '✦ Anniversary nudge',
+              text: "<strong>TrendSettersCo</strong> hits a 1-year anniversary on Jul 14. I drafted a $500 loyalty bump and an anniversary message — review when you have a sec.",
+              chips: [
+                { label: 'Open draft', primary: true, intent: 'anniversaryTrendSetters' }
+              ]
+            }
+          ],
+          initialSurface: 'briefBudget',
+          surfaces: {
+            briefBudget: {
+              breadcrumb: ['This Week', 'BudgetFinds Blog'],
+              brief: {
+                logo: '📖',
+                partner: 'BudgetFinds Blog',
+                meta: 'Affiliate · Beauty Blog · Bi-weekly cadence · Today 2:00 pm',
+                metrics: [
+                  { label: 'Revenue MTD', value: '$74K', note: '↓ 18% vs last month', tone: 'bad' },
+                  { label: 'Conversion Rate', value: '2.4%', note: 'was 3.1% — flagged', tone: 'warn' },
+                  { label: 'Clicks MTD', value: '31,800', note: '↓ 9%', tone: 'warn' },
+                  { label: 'Top Content', value: 'Summer Lip Plumper', note: '1,820 clicks', tone: '' },
+                  { label: 'Last Check-in', value: 'May 28', note: 'Discussed Q2 targets', tone: '' },
+                  { label: 'Contract Renewal', value: 'Aug 15', note: 'Window opens Jul 1', tone: '' }
+                ],
+                talking: [
+                  { emoji: '🔍', text: 'Investigate click drop — possible expired coupon codes (last refreshed May 20).' },
+                  { emoji: '💬', text: 'Discuss creative refresh for summer collection.' },
+                  { emoji: '🎁', text: 'Offer 10% performance bonus if Q3 target hit by Aug 1.' },
+                  { emoji: '📋', text: 'Pre-fill renewal proposal — contract due Aug 15.' }
+                ]
+              }
+            },
+            vipGrid: {
+              breadcrumb: ['This Week', 'My VIPs'],
+              eyebrow: '✦ VIP relationships · 12 partners',
+              title: 'My VIPs · relationship health',
+              desc: 'Click a VIP to open the AI-generated brief. Red border = needs attention this week.',
+              tiles: [
+                { name: 'GlamGlowTips', avatar: '💄', state: 'healthy', spark: [40,45,52,58,62,68,75,82], meta: '↑ 15%', suggested: 'Anniversary in 2 weeks' },
+                { name: 'MakeupByMaya', avatar: '💋', state: 'healthy', spark: [50,55,58,60,65,68,72,78], meta: '↑ 12%', suggested: 'No action needed' },
+                { name: 'GlowUpMakeup', avatar: '💅', state: 'risk',    spark: [80,75,72,68,60,52,45,38], meta: '↓ 18%', suggested: 'Refresh discount codes' },
+                { name: 'GlamourGuide', avatar: '📖', state: 'healthy', spark: [30,38,45,52,58,68,78,92], meta: '↑ 2×',  suggested: 'Issue loyalty bump' },
+                { name: 'BeautyCompare',avatar: '🧴', state: 'watch',   spark: [60,58,55,52,50,48,45,42], meta: '↓ 5%',  suggested: 'Send check-in note' },
+                { name: 'TrendSettersCo',avatar: '✨', state: 'healthy', spark: [55,58,60,62,65,68,70,72], meta: '↑ 6%',  suggested: 'Anniversary Jul 14' },
+                { name: 'BudgetFinds',  avatar: '📖', state: 'risk',    spark: [70,68,65,62,58,55,52,48], meta: '↓ 18%', suggested: 'Check-in today 2pm' },
+                { name: 'SkincareSecrets',avatar: '🧴',state: 'healthy', spark: [40,42,45,48,52,55,58,62], meta: '↑ 8%',  suggested: 'No action needed' },
+                { name: 'LipPlumperPro', avatar: '💋', state: 'watch',   spark: [55,53,50,48,46,44,42,40], meta: '↓ 7%',  suggested: 'Investigate' },
+                { name: 'BoldBeauty',    avatar: '💎', state: 'healthy', spark: [62,65,68,70,72,75,78,82], meta: '↑ 11%', suggested: 'No action needed' },
+                { name: 'RougeReviews',  avatar: '💄', state: 'healthy', spark: [48,52,55,58,62,65,68,72], meta: '↑ 9%',  suggested: 'No action needed' },
+                { name: 'BronzeBae',     avatar: '🤎', state: 'watch',   spark: [60,58,56,54,52,50,48,46], meta: '↓ 4%',  suggested: 'Send creative refresh' }
+              ]
+            }
+          },
+          omnibarIntents: [
+            { icon: '📅', label: "Brief me on this week's check-ins" },
+            { icon: '🎁', label: 'Draft an anniversary bump for TrendSettersCo' },
+            { icon: '✨', label: 'Who haven\'t I spoken to in 30 days?' },
+            { icon: '📊', label: 'Show VIP partners with declining revenue' },
+            { icon: '📋', label: 'Pre-fill BudgetFinds Blog renewal proposal' }
+          ]
         }
       }
     }
@@ -2895,7 +4610,8 @@
   function switchPersona(rawValue) {
     const parts = String(rawValue || '').split('-');
     const personaKey = parts[0] || 'aisha';
-    const variant = (parts[1] === 'v2') ? 'v2' : 'v1';
+    const validVariants = ['v1', 'v2', 'v3', 'v4'];
+    const variant = validVariants.includes(parts[1]) ? parts[1] : 'v1';
 
     AppState.selectedPersona = personaKey;
     AppState.variant = variant;
@@ -2949,6 +4665,17 @@
 
     // V2 (Application Platform) dashboard composition
     renderV2Dashboard();
+
+    // V3 (per-persona adventurous reimagining) — only rendered when active
+    renderV3Dashboard();
+
+    // V4 (Co-pilot Console) — only rendered when active. Also toggles body chrome class.
+    if (variant === 'v4') {
+      document.body.classList.add('variant-v4');
+    } else {
+      document.body.classList.remove('variant-v4');
+    }
+    renderV4Dashboard();
   }
 
   // Update statistic counter widgets
@@ -3953,10 +5680,622 @@
 
   function confirmRoleSelection() {
     closeRoleConfirmModal();
-    // Modal picks a persona; default to v1 layout (preserve current variant if same persona).
-    const currentVariant = (AppState.variant === 'v2' && AppState.selectedPersona === tempRole) ? 'v2' : 'v1';
+    // Modal picks a persona; preserve current variant when sticking with the same persona.
+    const sameRole = (AppState.selectedPersona === tempRole);
+    const currentVariant = sameRole ? AppState.variant : 'v1';
     switchPersona(`${tempRole}-${currentVariant}`);
     showToast(`Focus role updated to ${tempRole === 'aisha' ? 'Affiliate Creator' : tempRole === 'priya' ? 'Campaign Lead' : 'Program Lead'}`, 'success');
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // V3 DASHBOARDS — adventurous per-persona reimaginings.
+  // ════════════════════════════════════════════════════════════
+  function renderV3Dashboard() {
+    const host = document.getElementById('v3-dashboard');
+    if (!host) return;
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    if (!data || !data.v3 || AppState.variant !== 'v3') {
+      host.innerHTML = '';
+      return;
+    }
+    if (persona === 'aisha')  host.innerHTML = renderV3MissionControl(data.v3);
+    else if (persona === 'priya') host.innerHTML = renderV3TalentRadar(data.v3);
+    else if (persona === 'marcus') host.innerHTML = renderV3PreCallTimeline(data.v3);
+  }
+
+  // ── V3 · AISHA: MISSION CONTROL ──
+  function renderV3MissionControl(v3) {
+    const tickerItems = (v3.ticker || []).map(t => `
+      <span class="mc-ticker-item">
+        <span class="mc-ticker-time">${t.time}</span>
+        <span>${t.icon}</span>
+        <span>${t.text}</span>
+        <span class="mc-ticker-delta-${t.tone === 'up' ? 'up' : t.tone === 'down' ? 'down' : 'info'}">${t.delta}</span>
+      </span>`).join('');
+    // duplicate so the scroll animation loops seamlessly
+    const tickerHTML = `
+      <div class="mc-ticker">
+        <div class="mc-ticker-label">⚡ Last 24h</div>
+        <div class="mc-ticker-track">
+          <div class="mc-ticker-list">${tickerItems}${tickerItems}</div>
+        </div>
+      </div>`;
+
+    const treemap = (v3.treemap || []).map(t => {
+      const max = Math.max(...t.bars, 1);
+      const spark = t.bars.map(b => `<div class="mc-tile-spark-bar" style="height:${Math.max(8, Math.round((b/max)*100))}%"></div>`).join('');
+      const safeName = t.name.replace(/'/g, "\\'");
+      return `
+        <div class="mc-tile" data-sev="${t.sev}" data-size="${t.size}" onclick="showToast('Drilling into ${safeName}...', 'info')">
+          <span class="mc-tile-severity"></span>
+          <div>
+            <div class="mc-tile-name">${t.name}</div>
+            <div class="mc-tile-rev">${t.rev}</div>
+            <div class="mc-tile-delta">${t.delta}</div>
+          </div>
+          <div class="mc-tile-spark">${spark}</div>
+        </div>`;
+    }).join('');
+
+    const radarRows = (v3.radar || []).map(r => {
+      const max = Math.max(...r.bars, 1);
+      const bars = r.bars.map((b, i) => {
+        const cls = (r.sev === 'critical' && i >= r.bars.length - 3) ? ' alt' : '';
+        return `<div class="mc-radar-spark-bar${cls}" style="height:${Math.max(6, Math.round((b/max)*100))}%"></div>`;
+      }).join('');
+      const safeName = r.name.replace(/'/g, "\\'");
+      const deltaClass = r.delta.includes('↓') ? 'delta-down' : (r.delta.includes('↑') || r.delta.includes('×')) ? 'delta-up' : '';
+      return `
+        <div class="mc-radar-row" onclick="openDrawer('${safeName}')" style="cursor:pointer;">
+          <div class="mc-radar-name" data-sev="${r.sev}">${r.name}</div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="mc-radar-spark">${bars}</div>
+            <div class="mc-radar-delta ${deltaClass}">${r.delta}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const anomaly = (v3.anomalyStrip || []).map(a => `
+      <div class="mc-anomaly-cell">
+        <div class="mc-anomaly-label">${a.label}</div>
+        <div class="mc-anomaly-value">${a.value}</div>
+        <div class="mc-anomaly-sub ${a.subTone || ''}">${a.sub}</div>
+      </div>`).join('');
+
+    return `
+      ${tickerHTML}
+      <div class="mc-grid">
+        <div class="mc-treemap-card">
+          <div class="v3-section-title">🗺 Program Health Treemap <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--text-subdued);">— Sized by revenue contribution, colored by severity</span></div>
+          <div class="mc-treemap">${treemap}</div>
+        </div>
+        <div class="mc-radar-card">
+          <div class="v3-section-title">📡 Partner Radar <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--text-subdued);">— Last 8 weeks</span></div>
+          ${radarRows}
+        </div>
+      </div>
+      <div class="mc-anomaly-strip">${anomaly}</div>
+    `;
+  }
+
+  // ── V3 · PRIYA: TALENT RADAR ──
+  // Use a closure variable for the live stack pointer; reset whenever we render.
+  let trStackIndex = 0;
+  function renderV3TalentRadar(v3) {
+    trStackIndex = 0;
+    AppState._trStack = (v3.swipeStack || []).slice();
+    const cardsHTML = AppState._trStack.slice(0, 3).map((c, i) => trBuildCard(c, i)).join('');
+    const stackHTML = `
+      <div class="tr-stack" id="tr-stack">
+        ${cardsHTML}
+      </div>
+      <div class="tr-keys">
+        <span class="tr-key-chip">←</span> Skip
+        <span class="tr-key-chip">↑</span> Watchlist
+        <span class="tr-key-chip">→</span> Invite
+      </div>`;
+
+    const funnel = (v3.funnel || []).map(f => `
+      <div class="tr-funnel-row">
+        <div class="tr-funnel-stage">${f.stage}</div>
+        <div class="tr-funnel-count">${f.count}</div>
+        <div class="tr-funnel-bar"><div class="tr-funnel-fill" style="width:${f.fillPct}%"></div></div>
+      </div>`).join('');
+
+    const rising = (v3.risingTalent || []).map(r => `
+      <div class="tr-rising-row" onclick="showToast('Opening ${r.name}...', 'info')">
+        <div class="tr-rising-avatar">${r.avatar}</div>
+        <div>
+          <div class="tr-rising-name">${r.name}</div>
+          <div class="tr-rising-meta">${r.meta}</div>
+        </div>
+        <div class="tr-rising-velocity">${r.velocity}</div>
+      </div>`).join('');
+
+    return `
+      <div class="tr-shell">
+        <div class="tr-deck">
+          <div class="v3-section-title" style="align-self:flex-start;margin-bottom:18px;">🎯 Talent Radar <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--text-subdued);">— ${AppState._trStack.length} AI-vetted candidates · swipe to act</span></div>
+          ${stackHTML}
+          <div class="tr-actions" style="width:340px;">
+            <button class="tr-action tr-action-skip" onclick="trAct('skip')">← Skip</button>
+            <button class="tr-action tr-action-watch" onclick="trAct('watch')">↑ Watchlist</button>
+            <button class="tr-action tr-action-invite" onclick="trAct('invite')">Invite →</button>
+          </div>
+        </div>
+        <div class="tr-sidebar">
+          <div class="tr-funnel-card">
+            <div class="v3-section-title">📊 Outreach Pipeline</div>
+            ${funnel}
+          </div>
+          <div class="tr-rising-card">
+            <div class="v3-section-title">🔥 Rising Talent <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--text-subdued);">— Velocity vs. their own 90d avg</span></div>
+            ${rising}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function trBuildCard(c, depth) {
+    const max = Math.max(...c.spark, 1);
+    const spark = c.spark.map((b, i) => `<div class="tr-card-spark-bar${i === c.spark.length - 1 ? ' last' : ''}" style="height:${Math.max(6, Math.round((b/max)*100))}%"></div>`).join('');
+    const tags = (c.tags || []).map(t => `<span class="tag tag-${t.type}">${t.text}</span>`).join('');
+    return `
+      <div class="tr-card" data-depth="${depth}" data-id="${c.id}">
+        <div class="tr-card-top">
+          <div class="tr-card-avatar">${c.avatar}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="tr-card-name">${c.name}</div>
+            <div class="tr-card-meta">${c.meta}</div>
+          </div>
+          <div class="tr-card-fit">${c.fit}</div>
+        </div>
+        <div class="tr-card-stats">
+          <div class="tr-card-stat"><div class="tr-card-stat-value">${c.eng}</div><div class="tr-card-stat-label">Eng. Rate</div></div>
+          <div class="tr-card-stat"><div class="tr-card-stat-value">${c.epc}</div><div class="tr-card-stat-label">EPC est.</div></div>
+          <div class="tr-card-stat"><div class="tr-card-stat-value">${c.fit}</div><div class="tr-card-stat-label">Fit Score</div></div>
+        </div>
+        <div class="tr-card-spark">${spark}</div>
+        <div class="tr-card-velocity">✨ <strong>Scout says:</strong> ${c.velocity}</div>
+        <div class="tr-card-tags">${tags}</div>
+      </div>`;
+  }
+
+  function trAct(decision) {
+    const stack = AppState._trStack || [];
+    if (!stack.length) return;
+    const current = stack.shift();
+    const stackEl = document.getElementById('tr-stack');
+    if (!stackEl) return;
+    const topCard = stackEl.querySelector('.tr-card[data-depth="0"]');
+    if (topCard) {
+      if (decision === 'skip') topCard.classList.add('dismiss-left');
+      else if (decision === 'invite') topCard.classList.add('dismiss-right');
+      else topCard.classList.add('dismiss-up');
+    }
+    if (decision === 'invite') {
+      showToast(`Invite sent to ${current.name}.`, 'success');
+    } else if (decision === 'watch') {
+      showToast(`${current.name} added to your watchlist.`, 'info');
+    } else {
+      showToast(`Skipped ${current.name}.`, 'info');
+    }
+    setTimeout(() => {
+      const cardsHTML = stack.slice(0, 3).map((c, i) => trBuildCard(c, i)).join('');
+      stackEl.innerHTML = cardsHTML || `<div class="tr-deck-empty">✨ No more candidates today — scout will keep watching and ping you.</div>`;
+    }, 320);
+  }
+
+  // ── V3 · MARCUS: PRE-CALL COACH TIMELINE ──
+  function renderV3PreCallTimeline(v3) {
+    const heartbeat = (v3.heartbeat || []).map(h => {
+      const max = Math.max(...h.spark, 1);
+      const bars = h.spark.map((b, i) => `<div class="pc-heartbeat-spark-bar${i === h.spark.length - 1 ? ' last' : ''}" style="height:${Math.max(8, Math.round((b/max)*100))}%"></div>`).join('');
+      return `
+        <div class="pc-heartbeat-tile" data-state="${h.state}" onclick="openDrawer('${h.name.replace(/'/g, "\\'")}')">
+          <div class="pc-heartbeat-avatar">${h.avatar}</div>
+          <div class="pc-heartbeat-name">${h.name}</div>
+          <div class="pc-heartbeat-spark">${bars}</div>
+        </div>`;
+    }).join('');
+
+    const meetings = (v3.meetings || []).map(m => {
+      const metrics = (m.metrics || []).map(x => `
+        <div class="pc-meeting-metric">
+          <div class="pc-meeting-metric-label">${x.label}</div>
+          <div class="pc-meeting-metric-value">${x.value}</div>
+          <div class="pc-meeting-metric-note ${x.tone || ''}">${x.note}</div>
+        </div>`).join('');
+      const talking = (m.talking || []).map(t => `
+        <div class="pc-meeting-talking-item">
+          <span class="pc-meeting-talking-emoji">${t.emoji}</span>
+          <span>${t.text}</span>
+        </div>`).join('');
+      const actions = (m.actions || []).map(a => `<button class="${a.primary ? 'btn-primary' : 'btn-secondary'}" onclick="${a.action}">${a.text}</button>`).join('');
+      const metaPills = (m.metaItems || []).map(p => `<span>${p}</span>`).join(' · ');
+      return `
+        <div class="pc-meeting" data-status="${m.status}">
+          <div class="pc-meeting-date">
+            <div class="pc-meeting-month">${m.dateM}</div>
+            <div class="pc-meeting-day">${m.dateD}</div>
+            <div class="pc-meeting-time">${m.time}</div>
+          </div>
+          <div class="pc-meeting-body">
+            <div class="pc-meeting-header">
+              <div class="pc-meeting-title">
+                <div class="pc-meeting-partner-logo">${m.logo}</div>
+                ${m.partner}${m.status === 'today' ? ' <span class="tag tag-red" style="margin-left:6px;">Today</span>' : ''}
+              </div>
+            </div>
+            <div class="pc-meeting-meta">${metaPills}</div>
+            <div class="pc-meeting-metrics">${metrics}</div>
+            <div class="pc-meeting-talking">
+              <div class="pc-meeting-talking-title">✨ AI Suggested Talking Points</div>
+              ${talking}
+            </div>
+            <div class="pc-meeting-actions">${actions}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="pc-heartbeat">
+        <div class="v3-section-title">💞 VIP Heartbeat <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--text-subdued);">— Your top 12 partners · weekly pulse</span></div>
+        <div class="pc-heartbeat-row">${heartbeat}</div>
+      </div>
+      <div>
+        <div class="v3-section-title" style="margin: 24px 0 12px;">📅 Upcoming Check-ins <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--text-subdued);">— Briefs auto-prepped 24hrs before each meeting</span></div>
+        <div class="pc-timeline">${meetings}</div>
+      </div>`;
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // V4 CO-PILOT CONSOLE — Ask Impact IS the navigation.
+  // ════════════════════════════════════════════════════════════
+  let v4ProactiveTimers = [];
+  let v4ComposerCycle = 0;
+
+  function renderV4Dashboard() {
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    const v4 = data && data.v4;
+
+    // Clear any pending proactive timers from a previous render
+    v4ProactiveTimers.forEach(id => clearTimeout(id));
+    v4ProactiveTimers = [];
+
+    if (!v4 || AppState.variant !== 'v4') {
+      return;
+    }
+
+    // Role badge
+    const roleBadge = document.getElementById('v4-role-badge');
+    if (roleBadge) roleBadge.textContent = `✦ ${v4.aiRole}`;
+
+    // Initial stream content
+    const body = document.getElementById('v4-stream-body');
+    if (body) {
+      body.innerHTML = (v4.conversation || []).map(v4RenderMessage).join('');
+      body.scrollTop = body.scrollHeight;
+    }
+
+    // Canvas surface
+    AppState._v4Surface = v4.initialSurface || 'briefing';
+    renderV4Canvas();
+
+    // Omnibar suggestions
+    const sugList = document.getElementById('v4-omnibar-suggestions');
+    if (sugList) {
+      sugList.innerHTML = (v4.omnibarIntents || []).map((s, i) => `
+        <div class="v4-omnibar-suggestion" onclick="v4RunOmnibarIntent(${i})">
+          <span class="v4-omnibar-suggestion-icon">${s.icon}</span>
+          <span>${s.label}</span>
+        </div>`).join('');
+    }
+    const placeholder = document.getElementById('v4-omnibar-placeholder');
+    if (placeholder) {
+      placeholder.textContent = (v4.omnibarIntents && v4.omnibarIntents[0]) ? `e.g. "${v4.omnibarIntents[0].label}"` : 'Ask Impact anything…';
+    }
+
+    // Proactive stream — schedule scripted messages to appear over time
+    (v4.proactiveStream || []).forEach(p => {
+      const id = setTimeout(() => v4InjectProactive(p), p.delay || 5000);
+      v4ProactiveTimers.push(id);
+    });
+  }
+
+  function v4RenderMessage(m) {
+    if (m.from === 'user') {
+      return `<div class="v4-msg v4-msg-user">${m.text}</div>`;
+    }
+    const eyebrow = m.eyebrow ? `<div class="v4-msg-ai-eyebrow">${m.eyebrow}</div>` : '';
+    const chips = (m.chips || []).map((c, i) => `
+      <button class="v4-chip ${c.primary ? 'v4-chip-primary' : ''}" onclick="v4RunIntent('${(c.intent || '').replace(/'/g, "\\'")}')">${c.label}</button>
+    `).join('');
+    const proactive = m.proactive ? ' v4-msg-proactive' : '';
+    return `
+      <div class="v4-msg">
+        <div class="v4-msg-ai${proactive}">
+          ${eyebrow}
+          <div>${m.text}</div>
+          ${chips ? `<div class="v4-chips">${chips}</div>` : ''}
+        </div>
+      </div>`;
+  }
+
+  function v4InjectProactive(p) {
+    const body = document.getElementById('v4-stream-body');
+    if (!body) return;
+    body.insertAdjacentHTML('beforeend', v4RenderMessage({ from: 'ai', eyebrow: p.eyebrow, text: p.text, chips: p.chips, proactive: true }));
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function v4SubmitComposer() {
+    const input = document.getElementById('v4-composer-input');
+    if (!input) return;
+    const text = (input.value || '').trim();
+    if (!text) return;
+    input.value = '';
+
+    const body = document.getElementById('v4-stream-body');
+    body.insertAdjacentHTML('beforeend', v4RenderMessage({ from: 'user', text }));
+
+    // Scripted reply — recycle through 3 canned replies tied to whatever's loaded
+    const replies = [
+      { eyebrow: '✦ ' + (AppState.personas[AppState.selectedPersona].v4.aiRole), text: "Got it — pulled that onto the canvas. Tell me if you want me to dig deeper or move on.", chips: [{ label: 'Dig deeper', primary: true, intent: 'dig' }, { label: 'Next item', intent: 'next' }] },
+      { eyebrow: '✦ Thinking…', text: "Two ways to read that. One's a 30-second answer, the other's a fuller analysis I'd put on the canvas. Which?", chips: [{ label: '30-sec answer', primary: true, intent: 'short' }, { label: 'Full analysis', intent: 'long' }] },
+      { eyebrow: '✦ ' + (AppState.personas[AppState.selectedPersona].v4.aiRole), text: "Done. I rendered the result on the right. Want me to draft a follow-up action while you review?", chips: [{ label: 'Draft action', primary: true, intent: 'draft' }, { label: "I'll handle it", intent: 'dismiss' }] }
+    ];
+    const reply = replies[v4ComposerCycle % replies.length];
+    v4ComposerCycle++;
+    setTimeout(() => {
+      body.insertAdjacentHTML('beforeend', v4RenderMessage({ from: 'ai', ...reply }));
+      body.scrollTop = body.scrollHeight;
+    }, 500);
+
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function v4RunIntent(intent) {
+    // Map intent -> action. Unknown intents fall through to a toast + canvas refresh.
+    const persona = AppState.selectedPersona;
+    const v4 = AppState.personas[persona].v4;
+    if (!intent) return;
+
+    // Special-cases handled per-persona
+    if (intent === 'briefing' || intent === 'pipeline' || intent === 'vipGrid' || intent === 'briefBudget' || intent === 'compareTop3' || intent === 'spotlightTechDeals') {
+      AppState._v4Surface = intent;
+      renderV4Canvas();
+      showToast('Updated canvas.', 'info');
+      return;
+    }
+    if (intent === 'bonusMomLife')        { openBonusModal('MomLifeCreator'); return; }
+    if (intent === 'inviteTreatTime')     { showToast('Fast-track invite sent to TreatTimeTales.', 'success'); return; }
+    if (intent === 'invitePuppy')         { showToast('Outreach to PuppyMomLife drafted in your voice.', 'success'); return; }
+    if (intent === 'bulkInvite3')         { showToast('3 invites drafted — review queue opened.', 'success'); return; }
+    if (intent === 'followups')           { showToast('3 personalized follow-ups sent.', 'success'); return; }
+    if (intent === 'reviewDrafts')        { showToast('Opening follow-up drafts...', 'info'); return; }
+    if (intent === 'watch' || intent === 'snooze') { showToast('Snoozed. I\'ll check back later.', 'info'); return; }
+    if (intent === 'noteGlamMag')         { showToast('Warm check-in note drafted for GlamMag.', 'success'); return; }
+    if (intent === 'scheduleGlamMag')     { showToast('GlamMag check-in scheduled for next week.', 'info'); return; }
+    if (intent === 'anniversaryTrendSetters') { openBonusModal('TrendSettersCo'); return; }
+    if (intent === 'weekOverview' || intent === 'walkthroughBudget') {
+      AppState._v4Surface = (persona === 'marcus') ? 'briefBudget' : 'briefing';
+      renderV4Canvas();
+      return;
+    }
+    if (intent === 'checkinFriday')       { openDrawer('HomeGoods Network'); return; }
+    if (intent === 'draftTechDealsOutreach') { showToast('Outreach to TechDeals Pro\'s account manager drafted.', 'success'); return; }
+    if (intent === 'flashCampaign')       { showToast('Flash creator campaign brief drafted on the canvas.', 'success'); return; }
+    if (intent === 'compareWeek')         { showToast('Pulled last week\'s comparison...', 'info'); return; }
+    if (intent === 'driftCheck')          { showToast('Surfacing partners not contacted in 14+ days...', 'info'); return; }
+    if (intent === 'draftPuppy')          { showToast('Outreach to PuppyMomLife drafted.', 'success'); return; }
+    // generic chips spawned from composer replies
+    if (['dig', 'next', 'short', 'long', 'draft', 'dismiss'].includes(intent)) {
+      showToast('Got it. Continuing the thread.', 'info');
+      return;
+    }
+    showToast('Updated canvas.', 'info');
+  }
+
+  function v4ToggleOmnibar() {
+    const ob = document.getElementById('v4-omnibar');
+    if (!ob) return;
+    ob.classList.toggle('open');
+  }
+  // Close omnibar when clicking outside
+  document.addEventListener('click', e => {
+    const ob = document.getElementById('v4-omnibar');
+    if (!ob || !ob.classList.contains('open')) return;
+    if (!ob.contains(e.target)) ob.classList.remove('open');
+  });
+
+  function v4RunOmnibarIntent(idx) {
+    const v4 = AppState.personas[AppState.selectedPersona].v4;
+    const item = (v4.omnibarIntents || [])[idx];
+    if (!item) return;
+    const body = document.getElementById('v4-stream-body');
+    body.insertAdjacentHTML('beforeend', v4RenderMessage({ from: 'user', text: item.label }));
+    setTimeout(() => {
+      body.insertAdjacentHTML('beforeend', v4RenderMessage({
+        from: 'ai',
+        eyebrow: '✦ ' + v4.aiRole,
+        text: "On it — I've rendered the result on the canvas. Tell me what to do next.",
+        chips: [{ label: 'Looks good', primary: true, intent: 'dismiss' }, { label: 'Dig deeper', intent: 'dig' }]
+      }));
+      body.scrollTop = body.scrollHeight;
+    }, 350);
+    document.getElementById('v4-omnibar').classList.remove('open');
+    showToast('Canvas updated.', 'info');
+  }
+
+  // ── V4 canvas surface rendering ──
+  function renderV4Canvas() {
+    const host = document.getElementById('v4-canvas-body');
+    const crumbEl = document.getElementById('v4-canvas-breadcrumb');
+    if (!host) return;
+    const persona = AppState.selectedPersona;
+    const v4 = AppState.personas[persona].v4;
+    const surfaceKey = AppState._v4Surface || v4.initialSurface || 'briefing';
+    const surface = (v4.surfaces && v4.surfaces[surfaceKey]) || (v4.surfaces && v4.surfaces[v4.initialSurface]);
+    if (!surface) {
+      host.innerHTML = '<div class="v4-card"><div class="v4-card-title">Nothing on the canvas yet</div><div class="v4-card-desc">Ask Impact something to populate this surface.</div></div>';
+      return;
+    }
+
+    if (crumbEl && surface.breadcrumb) {
+      const parts = surface.breadcrumb;
+      crumbEl.innerHTML = parts.map((p, i) => i === parts.length - 1
+        ? `<span class="v4-canvas-breadcrumb-current">${p}</span>`
+        : `<span>${p}</span><span>›</span>`).join('');
+    }
+
+    // Dispatch by surface shape
+    if (surface.items)      { host.innerHTML = renderV4Briefing(surface); return; }
+    if (surface.columns)    { host.innerHTML = renderV4Pipeline(surface); return; }
+    if (surface.tiles)      { host.innerHTML = renderV4VipGrid(surface); return; }
+    if (surface.candidates) { host.innerHTML = renderV4Compare(surface); return; }
+    if (surface.brief)      { host.innerHTML = renderV4Brief(surface); return; }
+    if (surface.partnerCta) { host.innerHTML = renderV4Spotlight(surface); return; }
+    host.innerHTML = '<div class="v4-card"><div class="v4-card-title">Surface not recognised.</div></div>';
+  }
+
+  function renderV4Briefing(s) {
+    const items = (s.items || []).map(it => `
+      <div class="v4-briefing-item">
+        <div class="v4-briefing-icon" data-tone="${it.tone || 'info'}">${it.icon || '✦'}</div>
+        <div>
+          <div class="v4-briefing-title">${it.title}</div>
+          <div class="v4-briefing-meta">${it.meta || ''}</div>
+        </div>
+        <div><button class="btn-secondary" onclick="${it.action}">${it.cta}</button></div>
+      </div>`).join('');
+    return `
+      <div class="v4-card">
+        ${s.eyebrow ? `<div class="v4-card-eyebrow">${s.eyebrow}</div>` : ''}
+        <div class="v4-card-title">${s.title}</div>
+        ${s.desc ? `<div class="v4-card-desc">${s.desc}</div>` : ''}
+        ${items}
+      </div>`;
+  }
+
+  function renderV4Pipeline(s) {
+    const cols = (s.columns || []).map(col => {
+      const cards = (col.cards || []).map(c => `
+        <div class="v4-pipe-card" draggable="true">
+          <div class="v4-pipe-card-top">
+            <div class="v4-pipe-card-avatar">${c.avatar}</div>
+            <div class="v4-pipe-card-name">${c.name}</div>
+          </div>
+          <div class="v4-pipe-card-meta">${c.meta}</div>
+        </div>`).join('');
+      return `
+        <div class="v4-pipe-col">
+          <div class="v4-pipe-col-header">
+            <span>${col.stage}</span>
+            <span class="v4-pipe-col-count">${col.count}</span>
+          </div>
+          ${cards}
+        </div>`;
+    }).join('');
+    return `
+      <div class="v4-card">
+        ${s.eyebrow ? `<div class="v4-card-eyebrow">${s.eyebrow}</div>` : ''}
+        <div class="v4-card-title">${s.title}</div>
+        ${s.desc ? `<div class="v4-card-desc">${s.desc}</div>` : ''}
+      </div>
+      <div class="v4-pipeline">${cols}</div>`;
+  }
+
+  function renderV4VipGrid(s) {
+    const tiles = (s.tiles || []).map(t => {
+      const max = Math.max(...t.spark, 1);
+      const bars = t.spark.map((b, i) => `<div class="v4-vip-spark-bar${i === t.spark.length - 1 ? ' last' : ''}" style="height:${Math.max(8, Math.round((b/max)*100))}%"></div>`).join('');
+      return `
+        <div class="v4-vip-tile" data-state="${t.state}" onclick="openDrawer('${t.name.replace(/'/g, "\\'")}')">
+          <div class="v4-vip-avatar">${t.avatar}</div>
+          <div class="v4-vip-name">${t.name}</div>
+          <div class="v4-vip-meta">${t.meta}</div>
+          <div class="v4-vip-spark">${bars}</div>
+          <div class="v4-vip-suggested">${t.suggested}</div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="v4-card">
+        ${s.eyebrow ? `<div class="v4-card-eyebrow">${s.eyebrow}</div>` : ''}
+        <div class="v4-card-title">${s.title}</div>
+        ${s.desc ? `<div class="v4-card-desc">${s.desc}</div>` : ''}
+        <div class="v4-vip-grid">${tiles}</div>
+      </div>`;
+  }
+
+  function renderV4Compare(s) {
+    const cards = (s.candidates || []).map(c => {
+      const rows = (c.rows || []).map(r => `<div class="v4-compare-row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('');
+      return `
+        <div class="v4-compare-card${c.highlight ? ' highlight' : ''}">
+          <div class="v4-compare-top">
+            <div class="v4-compare-avatar">${c.avatar}</div>
+            <div>
+              <div class="v4-compare-name">${c.name}</div>
+              <div class="v4-compare-meta">${c.meta}</div>
+            </div>
+          </div>
+          ${rows}
+          <button class="btn-primary" onclick="${c.action}">${c.cta}</button>
+        </div>`;
+    }).join('');
+    return `
+      <div class="v4-card">
+        ${s.eyebrow ? `<div class="v4-card-eyebrow">${s.eyebrow}</div>` : ''}
+        <div class="v4-card-title">${s.title}</div>
+        ${s.desc ? `<div class="v4-card-desc">${s.desc}</div>` : ''}
+        <div class="v4-compare">${cards}</div>
+      </div>`;
+  }
+
+  function renderV4Brief(s) {
+    const b = s.brief;
+    const metrics = (b.metrics || []).map(m => `
+      <div>
+        <div class="v4-brief-metric-label">${m.label}</div>
+        <div class="v4-brief-metric-value">${m.value}</div>
+        <div class="v4-brief-metric-note ${m.tone || ''}">${m.note || ''}</div>
+      </div>`).join('');
+    const talking = (b.talking || []).map(t => `
+      <div class="v4-brief-talking-item">
+        <span>${t.emoji}</span><span>${t.text}</span>
+      </div>`).join('');
+    return `
+      <div class="v4-brief">
+        <div class="v4-brief-header">
+          <div class="v4-brief-title-area">
+            <div class="v4-brief-logo">${b.logo}</div>
+            <div>
+              <div class="v4-brief-partner">${b.partner}</div>
+              <div class="v4-brief-meta">${b.meta}</div>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="openDrawer('${b.partner.replace(/'/g, "\\'")}')">Open Full Brief →</button>
+        </div>
+        <div class="v4-brief-metrics">${metrics}</div>
+        <div class="v4-brief-talking">
+          <div class="v4-brief-talking-title">✦ AI suggested talking points</div>
+          ${talking}
+        </div>
+      </div>`;
+  }
+
+  function renderV4Spotlight(s) {
+    const p = s.partnerCta;
+    return `
+      <div class="v4-card">
+        ${s.eyebrow ? `<div class="v4-card-eyebrow">${s.eyebrow}</div>` : ''}
+        <div class="v4-card-title">${s.title}</div>
+        <div class="v4-card-desc">${s.desc || ''}</div>
+        ${p ? `<button class="btn-primary" onclick="${p.action}">${p.text}</button>` : ''}
+      </div>`;
   }
 
 </script>
