@@ -651,27 +651,45 @@
   /* ── DATA-VARIANT TOGGLE ──
      v1 = jobs-to-be-done layout (default). v2 = Application Platform layout.
      v3 = adventurous per-persona reimagining (keeps current sidebar).
-     v4 = Co-pilot Console (no sidebar, Ask Impact is the navigation). */
+     v4 = Co-pilot Console (no sidebar, Ask Impact is the navigation).
+     v5 = HubSpot Pattern (top mega-nav, saved views, list-view shell). */
   .main[data-variant="v1"] .v2-only,
   .main[data-variant="v1"] .v3-only,
-  .main[data-variant="v1"] .v4-only { display: none; }
+  .main[data-variant="v1"] .v4-only,
+  .main[data-variant="v1"] .v5-only { display: none; }
   .main[data-variant="v2"] .v1-only,
   .main[data-variant="v2"] .v3-only,
-  .main[data-variant="v2"] .v4-only { display: none; }
+  .main[data-variant="v2"] .v4-only,
+  .main[data-variant="v2"] .v5-only { display: none; }
   .main[data-variant="v3"] .v1-only,
   .main[data-variant="v3"] .v2-only,
-  .main[data-variant="v3"] .v4-only { display: none; }
+  .main[data-variant="v3"] .v4-only,
+  .main[data-variant="v3"] .v5-only { display: none; }
   .main[data-variant="v4"] .v1-only,
   .main[data-variant="v4"] .v2-only,
   .main[data-variant="v4"] .v3-only,
+  .main[data-variant="v4"] .v5-only,
   .main[data-variant="v4"] .page-header,
   .main[data-variant="v4"] .context-banner,
   .main[data-variant="v4"] .persona-hero { display: none; }
+  .main[data-variant="v5"] .v1-only,
+  .main[data-variant="v5"] .v2-only,
+  .main[data-variant="v5"] .v3-only,
+  .main[data-variant="v5"] .v4-only,
+  .main[data-variant="v5"] .page-header,
+  .main[data-variant="v5"] .context-banner,
+  .main[data-variant="v5"] .persona-hero { display: none; }
   /* In v4 the sidebar and topnav center links collapse — Ask Impact is the nav */
   body.variant-v4 .sidebar { display: none; }
   body.variant-v4 .topnav-links { display: none; }
   body.variant-v4 .layout { background: var(--background); }
   body.variant-v4 .main { max-width: none; padding: 0; }
+  /* In v5 the left sidebar collapses; the top nav links are replaced by the
+     HubSpot-style mega-nav inside the v5 shell (the existing topnav stays
+     for brand mark + persona switcher + global controls). */
+  body.variant-v5 .sidebar { display: none; }
+  body.variant-v5 .topnav-links { display: none; }
+  body.variant-v5 .main { max-width: none; padding: 0; }
 
   /* ── V2 DASHBOARD ── */
   #v2-dashboard {
@@ -3175,6 +3193,489 @@
   .v4-compare-row span:last-child { font-weight: 700; color: var(--foreground); }
   .v4-compare-card .btn-primary { width: 100%; margin-top: 10px; }
 
+  /* ════════════════════════════════════════════════════════════
+     V5 — HUBSPOT PATTERN
+     Top mega-nav · pinned saved views · 3-column list shell
+     ════════════════════════════════════════════════════════════ */
+
+  .v5-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--header-height));
+    background: var(--background-subdued);
+  }
+
+  /* ── Top mega-nav ── */
+  .v5-meganav {
+    background: var(--background);
+    border-bottom: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 4px;
+    position: relative;
+    height: 48px;
+  }
+  .v5-meganav-item {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--foreground);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: var(--transition-fast);
+    gap: 6px;
+  }
+  .v5-meganav-item:hover { background: var(--surface-hover); }
+  .v5-meganav-item.active {
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+  }
+  .v5-meganav-item .v5-meganav-caret {
+    font-size: 10px;
+    opacity: 0.7;
+  }
+  .v5-meganav-spacer { flex: 1; }
+  .v5-meganav-global {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-right: 6px;
+  }
+  .v5-meganav-iconbtn {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--text-subdued);
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+  }
+  .v5-meganav-iconbtn:hover { background: var(--surface-hover); color: var(--foreground); }
+
+  .v5-megamenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow-lg);
+    padding: 22px 28px;
+    min-width: 620px;
+    display: none;
+    z-index: 80;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px 36px;
+  }
+  .v5-meganav-item:hover .v5-megamenu,
+  .v5-meganav-item:focus-within .v5-megamenu { display: grid; }
+
+  .v5-megamenu-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .v5-megamenu-col-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 4px 0 6px;
+    border-bottom: 1px solid var(--border-default);
+    margin-bottom: 4px;
+  }
+  .v5-megamenu-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--foreground);
+    cursor: pointer;
+    text-decoration: none;
+    transition: var(--transition-fast);
+  }
+  .v5-megamenu-link:hover { background: var(--surface-hover); color: var(--accent); }
+  .v5-megamenu-link-icon {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .v5-megamenu-link-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .v5-megamenu-link-title { font-size: 13px; font-weight: 600; color: var(--foreground); }
+  .v5-megamenu-link-desc { font-size: 11px; color: var(--text-subdued); line-height: 1.35; }
+  .v5-megamenu-link:hover .v5-megamenu-link-title { color: var(--accent); }
+  .v5-megamenu-badge {
+    margin-left: auto;
+    background: var(--negative-bg);
+    color: var(--negative);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  /* ── Page header & pinned saved views ── */
+  .v5-pageheader {
+    background: var(--background);
+    border-bottom: 1px solid var(--border-default);
+    padding: 18px 28px 0;
+  }
+  .v5-pageheader-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .v5-pageheader-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .v5-pageheader-meta { font-size: 12px; color: var(--text-subdued); margin-top: 2px; }
+  .v5-pageheader-actions { display: flex; gap: 8px; align-items: center; }
+
+  .v5-views {
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+    overflow-x: auto;
+    margin-top: 4px;
+    margin-bottom: -1px; /* overlap parent border for active underline */
+  }
+  .v5-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px 11px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-subdued);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: var(--transition-fast);
+  }
+  .v5-view:hover { color: var(--foreground); background: var(--background-subdued); }
+  .v5-view.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+  .v5-view-count {
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 9999px;
+  }
+  .v5-view.active .v5-view-count { background: var(--sidebar-accent); color: var(--sidebar-accent-foreground); }
+  .v5-view-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 9px 12px;
+    font-size: 13px;
+    color: var(--text-subdued);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  .v5-view-add:hover { color: var(--accent); }
+
+  /* ── 3-column shell: filters · list · activity ── */
+  .v5-body {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr) 300px;
+    gap: 0;
+    flex: 1;
+    align-items: stretch;
+  }
+  @media (max-width: 1200px) {
+    .v5-body { grid-template-columns: 220px minmax(0, 1fr); }
+    .v5-activity { display: none; }
+  }
+
+  .v5-filters {
+    background: var(--background);
+    border-right: 1px solid var(--border-default);
+    padding: 20px 18px;
+    overflow-y: auto;
+  }
+  .v5-filters-section { margin-bottom: 18px; }
+  .v5-filters-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-subdued);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .v5-filters-clear {
+    font-size: 11px;
+    color: var(--text-interactive);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .v5-filters-search {
+    width: 100%;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px 7px 28px;
+    font-size: 12px;
+    background: var(--background-subdued) url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A959D' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 10px center;
+  }
+  .v5-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--foreground);
+  }
+  .v5-filter-row input { accent-color: var(--accent); margin: 0; }
+  .v5-filter-row-count {
+    margin-left: auto;
+    color: var(--text-subdued);
+    font-size: 11px;
+  }
+  .v5-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    background: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 2px 4px 2px 0;
+  }
+  .v5-filter-chip-x { cursor: pointer; opacity: 0.7; }
+
+  /* ── List view ── */
+  .v5-listpane {
+    background: var(--background-subdued);
+    padding: 18px 24px 24px;
+    overflow-y: auto;
+  }
+  .v5-listtoolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .v5-listtoolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-subdued);
+  }
+  .v5-listtoolbar-right { display: flex; gap: 6px; }
+  .v5-bulkbar {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--sidebar-accent);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--sidebar-accent-foreground);
+    font-weight: 600;
+  }
+  .v5-bulkbar.show { display: flex; }
+
+  .v5-list {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .v5-list-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .v5-list-table th {
+    text-align: left;
+    padding: 10px 16px;
+    background: var(--background-subdued);
+    border-bottom: 1px solid var(--border-default);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-subdued);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .v5-list-table th .v5-sort {
+    margin-left: 4px;
+    opacity: 0.5;
+    font-size: 10px;
+  }
+  .v5-list-table th.active .v5-sort { opacity: 1; color: var(--accent); }
+  .v5-list-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-default);
+    vertical-align: middle;
+  }
+  .v5-list-table tr:last-child td { border-bottom: none; }
+  .v5-list-table tr { transition: var(--transition-fast); }
+  .v5-list-table tr:hover td { background: var(--background-subdued); cursor: pointer; }
+  .v5-list-table tr.selected td { background: var(--sidebar-accent); }
+
+  .v5-cell-partner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .v5-cell-logo {
+    width: 30px; height: 30px;
+    border-radius: var(--radius-sm);
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .v5-cell-partner-name { font-weight: 700; color: var(--foreground); font-size: 13px; }
+  .v5-cell-partner-sub { font-size: 11px; color: var(--text-subdued); }
+  .v5-cell-rev { font-weight: 700; color: var(--foreground); }
+  .v5-cell-rev .delta { font-size: 11px; font-weight: 600; margin-left: 6px; }
+  .v5-cell-spark { display: inline-flex; align-items: flex-end; gap: 1px; height: 22px; width: 70px; }
+  .v5-cell-spark-bar { flex: 1; background: var(--accent); opacity: 0.55; min-height: 3px; border-radius: 1px; }
+  .v5-cell-spark-bar.last { background: var(--positive); opacity: 1; }
+  .v5-cell-spark.down .v5-cell-spark-bar.last { background: var(--negative); }
+
+  .v5-list-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--background-subdued);
+    border-top: 1px solid var(--border-default);
+    font-size: 12px;
+    color: var(--text-subdued);
+  }
+  .v5-list-pagination { display: flex; gap: 4px; }
+  .v5-list-pagination button {
+    width: 24px; height: 24px;
+    border-radius: var(--radius-sm);
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--foreground);
+  }
+  .v5-list-pagination button:hover { background: var(--surface-hover); }
+  .v5-list-pagination button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ── Activity feed (right column) ── */
+  .v5-activity {
+    background: var(--background);
+    border-left: 1px solid var(--border-default);
+    padding: 18px 18px;
+    overflow-y: auto;
+  }
+  .v5-activity-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .v5-activity-title { font-size: 13px; font-weight: 700; color: var(--foreground); }
+  .v5-activity-filter {
+    font-size: 11px;
+    color: var(--text-interactive);
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .v5-activity-item {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-default);
+    align-items: flex-start;
+  }
+  .v5-activity-item:last-child { border-bottom: none; }
+  .v5-activity-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--sidebar-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    color: var(--sidebar-accent-foreground);
+    flex-shrink: 0;
+  }
+  .v5-activity-item[data-tone="positive"] .v5-activity-dot { background: var(--positive-bg); color: var(--positive); }
+  .v5-activity-item[data-tone="warning"] .v5-activity-dot  { background: var(--caution-bg); color: var(--caution); }
+  .v5-activity-item[data-tone="critical"] .v5-activity-dot { background: var(--negative-bg); color: var(--negative); }
+  .v5-activity-text { font-size: 12px; color: var(--foreground); line-height: 1.4; }
+  .v5-activity-text strong { font-weight: 700; }
+  .v5-activity-time { font-size: 10px; color: var(--text-subdued); margin-top: 3px; }
+
+  /* ── Floating help bubble (HubSpot signature) ── */
+  .v5-help {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 26px rgba(0, 119, 219, 0.32);
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    transition: var(--transition-fast);
+  }
+  .v5-help:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 14px 32px rgba(0, 119, 219, 0.40); }
+  .v5-help::after {
+    content: '';
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--negative);
+    border: 2px solid var(--accent);
+  }
+
 </style>
 </head>
 <body>
@@ -3345,18 +3846,21 @@
         <option value="aisha-v2">Aisha — v2 · Application Platform</option>
         <option value="aisha-v3">Aisha — v3 · Mission Control</option>
         <option value="aisha-v4">Aisha — v4 · Co-pilot (Analyst)</option>
+        <option value="aisha-v5">Aisha — v5 · HubSpot Pattern</option>
       </optgroup>
       <optgroup label="Priya Nguyen (Chewy Brand)">
         <option value="priya-v1">Priya — v1 · Jobs-to-be-done</option>
         <option value="priya-v2">Priya — v2 · Application Platform</option>
         <option value="priya-v3">Priya — v3 · Talent Radar</option>
         <option value="priya-v4">Priya — v4 · Co-pilot (Scout)</option>
+        <option value="priya-v5">Priya — v5 · HubSpot Pattern</option>
       </optgroup>
       <optgroup label="Marcus Delgado (Fenty Beauty Brand)">
         <option value="marcus-v1">Marcus — v1 · Jobs-to-be-done</option>
         <option value="marcus-v2">Marcus — v2 · Application Platform</option>
         <option value="marcus-v3">Marcus — v3 · Pre-call Coach</option>
         <option value="marcus-v4">Marcus — v4 · Co-pilot (Coach)</option>
+        <option value="marcus-v5">Marcus — v5 · HubSpot Pattern</option>
       </optgroup>
     </select>
   </div>
@@ -3585,6 +4089,9 @@
 
     <!-- ── V3 DASHBOARD (Adventurous per-persona reimagining) — populated by renderV3Dashboard() -->
     <section class="v3-only" id="v3-dashboard"></section>
+
+    <!-- ── V5 HUBSPOT-PATTERN SHELL — populated by renderV5Dashboard() -->
+    <div class="v5-only v5-shell" id="v5-shell"></div>
 
     <!-- ── V4 CO-PILOT SHELL (Ask Impact IS the navigation) — populated by renderV4Dashboard() -->
     <div class="v4-only v4-shell" id="v4-shell">
@@ -3881,6 +4388,72 @@
           ]
         },
 
+        // V5 — HUBSPOT PATTERN: top mega-nav, saved views, list view + activity feed
+        v5: {
+          activeMenu: 'Partners',
+          activeView: 'all',
+          pageTitle: 'My Partner Portfolio',
+          pageMeta: '148 partners across 5 Walmart programs · Last sync 2 min ago',
+          primaryCta: { text: '＋ Recruit Partner', action: "showToast('Opening recruitment marketplace...', 'info')" },
+          secondaryCtas: [
+            { text: 'Import', action: "showToast('Import flow opened.', 'info')" },
+            { text: 'Actions ▾', action: "showToast('Bulk actions menu...', 'info')" }
+          ],
+          views: [
+            { id: 'all',       label: 'All Partners',    count: 148 },
+            { id: 'attention', label: 'Needs Attention', count: 4 },
+            { id: 'top',       label: 'Top Performers',  count: 12 },
+            { id: 'new',       label: 'New This Week',   count: 6 },
+            { id: 'inactive',  label: 'Inactive 14d+',   count: 8 }
+          ],
+          filters: {
+            search: 'Search 148 partners',
+            applied: [
+              { label: 'Status: Active' },
+              { label: 'Tier: Tier 1 or 2' }
+            ],
+            groups: [
+              { label: 'Status', items: [
+                { name: 'Healthy', count: 124, checked: true },
+                { name: 'At Risk', count: 8, checked: true },
+                { name: 'Onboarding', count: 3, checked: false },
+                { name: 'Inactive', count: 13, checked: false }
+              ] },
+              { label: 'Category', items: [
+                { name: 'Home & Living', count: 32, checked: false },
+                { name: 'Electronics',   count: 18, checked: false },
+                { name: 'Fashion',       count: 24, checked: false },
+                { name: 'Grocery',       count: 41, checked: false },
+                { name: 'Travel',        count: 12, checked: false }
+              ] },
+              { label: 'Tier', items: [
+                { name: 'Tier 1 (VIP)', count: 12, checked: true },
+                { name: 'Tier 2',       count: 36, checked: true },
+                { name: 'Tier 3',       count: 100, checked: false }
+              ] }
+            ]
+          },
+          listColumns: ['Partner', 'Category', 'MTD Revenue', '7-day Trend', 'Status', 'Last Activity'],
+          rows: [
+            { logo: '🏠', name: 'HomeGoods Network',  sub: 'Affiliate · Home & Living', category: 'Home & Living', rev: '$184K', delta: '↑ 18%', spark: [50,55,60,65,72,78,85,92], status: { type: 'green',  text: 'Healthy' }, last: '2h ago' },
+            { logo: '🌿', name: 'EcoLiving Blog',      sub: 'Creator · Sustainability',   category: 'Home & Living', rev: '$141K', delta: '↑ 9%',  spark: [55,58,62,65,68,72,75,78], status: { type: 'green',  text: 'Healthy' }, last: '5h ago' },
+            { logo: '💻', name: 'TechDeals Pro',       sub: 'Affiliate · Electronics',    category: 'Electronics',   rev: '$98K',  delta: '↓ 34%', spark: [70,75,72,68,55,42,38,32], status: { type: 'red',    text: 'At Risk' }, last: '1d ago', tone: 'down' },
+            { logo: '👶', name: 'MomLifeCreator',      sub: 'Creator · Family & Kids',    category: 'Family',        rev: '$76K',  delta: '↑ 2×',  spark: [20,30,40,50,60,68,80,95], status: { type: 'orange', text: 'Bonus Ready' }, last: '12m ago' },
+            { logo: '✈️', name: 'Budget Travel Hub',   sub: 'Affiliate · Travel',         category: 'Travel',        rev: '$63K',  delta: '↑ 5%',  spark: [40,42,45,48,52,55,58,62], status: { type: 'green',  text: 'Healthy' }, last: '3h ago' },
+            { logo: '🎮', name: 'GadgetGuru',          sub: 'Affiliate · Electronics',    category: 'Electronics',   rev: '$54K',  delta: 'flat',  spark: [62,60,58,55,52,50,48,45], status: { type: 'blue',   text: 'Stable' }, last: '1d ago' },
+            { logo: '👗', name: 'StyleBlogger Network',sub: 'Creator · Fashion',          category: 'Fashion',       rev: '$42K',  delta: '↓ 12%', spark: [60,62,60,55,50,42,40,38], status: { type: 'orange', text: '14d Inactive' }, last: '14d ago', tone: 'down' },
+            { logo: '🍳', name: 'KitchenWithKayla',    sub: 'Creator · Food',             category: 'Grocery',       rev: '$38K',  delta: '↑ 7%',  spark: [38,40,42,46,48,52,55,58], status: { type: 'green',  text: 'Healthy' }, last: '4h ago' }
+          ],
+          activity: [
+            { icon: '⚡', tone: 'critical', text: '<strong>TechDeals Pro</strong> revenue dropped 34% this week. Conversion fell from 4.2% → 2.7%.', time: '10 min ago' },
+            { icon: '⭐', tone: 'positive', text: '<strong>MomLifeCreator</strong> hit 2× target — first time crossing this threshold.', time: '32 min ago' },
+            { icon: '🆕', tone: '', text: '<strong>CozyHomeFinds</strong> accepted your invite — onboarding queue updated.', time: '1h ago' },
+            { icon: '✉', tone: '', text: 'Outreach sent to <strong>4 partners</strong> in StyleBlogger Network re-engagement campaign.', time: '2h ago' },
+            { icon: '📊', tone: '', text: 'Weekly performance report ready for <strong>Walmart Affiliates</strong>.', time: '4h ago' },
+            { icon: '🎁', tone: 'warning', text: 'Anniversary bonus reminder: <strong>GadgetGuru</strong> hits 1 year on Jul 02.', time: 'Yesterday' }
+          ]
+        },
+
         // V4 — CO-PILOT (ANALYST): Ask Impact runs the morning scan as a colleague
         v4: {
           aiRole: 'Analyst',
@@ -4131,6 +4704,77 @@
             { avatar: '🐈', name: 'MeowLifestyle',     meta: '180K · IG · 6.1% eng',     velocity: '+110%' },
             { avatar: '🦴', name: 'TreatTimeTales',    meta: '60K · TikTok · 7.8% eng',  velocity: '+88%'  },
             { avatar: '🐾', name: 'PawsitiveVibes',    meta: '210K · YT · 3.4% eng',     velocity: '+62%'  }
+          ]
+        },
+
+        // V5 — HUBSPOT PATTERN: creator discovery list view + active outreach feed
+        v5: {
+          activeMenu: 'Partners',
+          activeView: 'discovery',
+          pageTitle: 'Creator Discovery',
+          pageMeta: '142 creators matching your Chewy program · Auto-refreshed every 15 min',
+          primaryCta: { text: '＋ Invite Selected', action: "showToast('Bulk invite queued — review drafts.', 'success')" },
+          secondaryCtas: [
+            { text: 'Save Search', action: "showToast('Search saved as a new view.', 'success')" },
+            { text: 'Export', action: "showToast('Export started — CSV download in 30s.', 'info')" }
+          ],
+          views: [
+            { id: 'discovery', label: 'Discovery Queue',  count: 142 },
+            { id: 'rising',    label: 'Rising Talent ✨', count: 18 },
+            { id: 'invited',   label: 'Invited',          count: 18 },
+            { id: 'talks',     label: 'In Talks',         count: 7 },
+            { id: 'onboarded', label: 'Onboarded',        count: 3 }
+          ],
+          filters: {
+            search: 'Search 142 creators',
+            applied: [
+              { label: 'Vertical: Pets' },
+              { label: 'Engagement: ≥4%' },
+              { label: 'Followers: 50K – 1M' }
+            ],
+            groups: [
+              { label: 'Vertical', items: [
+                { name: 'Dogs', count: 62, checked: true },
+                { name: 'Cats', count: 48, checked: true },
+                { name: 'Small Pets', count: 18, checked: false },
+                { name: 'Lifestyle', count: 14, checked: false }
+              ] },
+              { label: 'Platform', items: [
+                { name: 'TikTok',   count: 64, checked: false },
+                { name: 'Instagram',count: 78, checked: false },
+                { name: 'YouTube',  count: 32, checked: false }
+              ] },
+              { label: 'Audience Size', items: [
+                { name: '<50K (Micro)', count: 28, checked: false },
+                { name: '50K–500K',     count: 86, checked: true },
+                { name: '500K–1M',      count: 22, checked: true },
+                { name: '1M+',          count: 6,  checked: false }
+              ] },
+              { label: 'Fit Score', items: [
+                { name: '90%+', count: 14, checked: true },
+                { name: '80–89%', count: 38, checked: true },
+                { name: '70–79%', count: 52, checked: false }
+              ] }
+            ]
+          },
+          listColumns: ['Creator', 'Platform', 'Engagement', '90-day Velocity', 'Fit Score', 'Status'],
+          rows: [
+            { logo: '🐶', name: 'PuppyMomLife',        sub: 'TikTok · Dogs · 95K · 8.4% eng', category: 'TikTok',   rev: '8.4%', delta: '+340%', spark: [10,15,22,30,42,56,72,88], status: { type: 'green', text: '92% fit' }, last: 'New today' },
+            { logo: '🐕', name: 'BarkingLotReviews',   sub: 'IG · Dogs · 340K · 5.2% eng',   category: 'Instagram',rev: '5.2%', delta: '+220%', spark: [22,28,35,40,52,68,82,95], status: { type: 'green', text: '95% fit' }, last: '1h ago' },
+            { logo: '🦴', name: 'TreatTimeTales',      sub: 'TikTok · Dogs · 60K · 7.8% eng',category: 'TikTok',   rev: '7.8%', delta: '+88%',  spark: [40,45,50,55,60,68,75,82], status: { type: 'green', text: '89% fit' }, last: '3h ago' },
+            { logo: '🐈', name: 'MeowLifestyle',       sub: 'IG · Cats · 180K · 6.1% eng',   category: 'Instagram',rev: '6.1%', delta: '+110%', spark: [30,32,35,40,45,50,58,65], status: { type: 'blue',  text: 'Invited 2d ago' }, last: 'Awaiting' },
+            { logo: '🐱', name: 'CatCornerDaily',      sub: 'IG · Cats · 410K · 4.0% eng',   category: 'Instagram',rev: '4.0%', delta: '-8%',   spark: [80,78,75,72,68,65,62,58], status: { type: 'orange',text: '83% · decel' }, last: 'New today', tone: 'down' },
+            { logo: '🦜', name: 'PetParentingTips',    sub: 'YT · Family · 720K · 3.1% eng', category: 'YouTube',  rev: '3.1%', delta: '+34%',  spark: [60,58,62,64,68,72,78,82], status: { type: 'green', text: '86% fit' }, last: '5h ago' },
+            { logo: '🐾', name: 'PawsitiveVibes',      sub: 'YT · Mixed · 210K · 3.4% eng',  category: 'YouTube',  rev: '3.4%', delta: '+62%',  spark: [44,48,50,52,55,58,60,64], status: { type: 'blue',  text: 'Invited 4d ago' }, last: 'Seen' },
+            { logo: '🦮', name: 'DogTrainingPro',      sub: 'YT · Dogs · 95K · 5.5% eng',    category: 'YouTube',  rev: '5.5%', delta: '+48%',  spark: [38,42,48,52,58,62,68,72], status: { type: 'green', text: '84% fit' }, last: '1d ago' }
+          ],
+          activity: [
+            { icon: '🔥', tone: 'positive', text: '<strong>TreatTimeTales</strong> just posted a viral video — 1.2M views in 2hrs.', time: '8 min ago' },
+            { icon: '✅', tone: 'positive', text: '<strong>BarkingLotReviews</strong> opened your invite email.', time: '24 min ago' },
+            { icon: '✉', tone: '', text: 'Outreach drafted to <strong>PuppyMomLife</strong> — review and send.', time: '1h ago' },
+            { icon: '🆕', tone: '', text: '<strong>DogMomDuo</strong> went live · first conversion logged.', time: '2h ago' },
+            { icon: '📊', tone: '', text: 'Recruitment funnel report ready — 32 spotted, 18 invited, 7 in talks.', time: '4h ago' },
+            { icon: '⚠️', tone: 'warning', text: 'Your <strong>top fit candidate</strong> (PuppyMomLife) has been spotted by 2 competitor brands.', time: 'Yesterday' }
           ]
         },
 
@@ -4486,6 +5130,74 @@
           ]
         },
 
+        // V5 — HUBSPOT PATTERN: VIP relationship list view + this-week activity feed
+        v5: {
+          activeMenu: 'Partners',
+          activeView: 'vips',
+          pageTitle: 'My VIP Relationships',
+          pageMeta: '20 VIP partners on bi-weekly cadence · 1 check-in today · contract renewal alerts on',
+          primaryCta: { text: '＋ Schedule Check-in', action: "showToast('Opening calendar...', 'info')" },
+          secondaryCtas: [
+            { text: 'Print Brief Pack', action: "showToast('Generating PDF for this week\\'s 3 partners...', 'info')" },
+            { text: 'Bulk Email', action: "showToast('Composer opened.', 'info')" }
+          ],
+          views: [
+            { id: 'vips',      label: 'VIP 20',             count: 20 },
+            { id: 'thisweek',  label: 'This Week (3)',      count: 3 },
+            { id: 'risk',      label: 'Needs Attention',    count: 3 },
+            { id: 'renewals',  label: 'Renewals < 60d',     count: 2 },
+            { id: 'all',       label: 'All Partners',       count: 94 }
+          ],
+          filters: {
+            search: 'Search 20 VIPs',
+            applied: [
+              { label: 'Tier: VIP' },
+              { label: 'Vertical: Beauty' }
+            ],
+            groups: [
+              { label: 'Relationship State', items: [
+                { name: 'Healthy',  count: 14, checked: true },
+                { name: 'Watching', count: 4,  checked: true },
+                { name: 'At Risk',  count: 2,  checked: true }
+              ] },
+              { label: 'Contract', items: [
+                { name: 'Renews <30d',  count: 1, checked: false },
+                { name: 'Renews 30–90d', count: 2, checked: true },
+                { name: 'Active >90d',   count: 17, checked: true }
+              ] },
+              { label: 'Cadence', items: [
+                { name: 'Weekly',    count: 5,  checked: true },
+                { name: 'Bi-weekly', count: 12, checked: true },
+                { name: 'Monthly',   count: 3,  checked: true }
+              ] },
+              { label: 'Last Contact', items: [
+                { name: '< 7 days',  count: 12, checked: true },
+                { name: '7–14 days', count: 5,  checked: false },
+                { name: '14+ days',  count: 3,  checked: false }
+              ] }
+            ]
+          },
+          listColumns: ['Partner', 'Cadence', 'MTD Revenue', 'Trend', 'Next Check-in', 'Last Contact'],
+          rows: [
+            { logo: '📖', name: 'BudgetFinds Blog',  sub: 'Affiliate · Beauty Blog',          category: 'Bi-weekly', rev: '$74K',  delta: '↓ 18%', spark: [70,68,65,62,58,55,52,48], status: { type: 'red',    text: 'Today 2:00pm' }, last: 'May 28', tone: 'down' },
+            { logo: '💄', name: 'GlamGlowTips',      sub: 'Creator · Beauty & Skincare',      category: 'Weekly',    rev: '$120K', delta: '↑ 15%', spark: [40,45,52,58,62,68,75,82], status: { type: 'green',  text: 'Jun 20 10:30am' }, last: '3 days ago' },
+            { logo: '💋', name: 'MakeupByMaya',      sub: 'Creator · Cosmetics',              category: 'Bi-weekly', rev: '$95K',  delta: '↑ 12%', spark: [50,55,58,60,65,68,72,78], status: { type: 'green',  text: 'Jun 24 3:00pm' }, last: '4 days ago' },
+            { logo: '💅', name: 'GlowUpMakeup',      sub: 'Creator · Makeup & Nails',         category: 'Weekly',    rev: '$74K',  delta: '↓ 18%', spark: [80,75,72,68,60,52,45,38], status: { type: 'orange', text: 'Jun 24 quarterly' }, last: '2 days ago', tone: 'down' },
+            { logo: '📖', name: 'GlamourGuide',      sub: 'Affiliate · Beauty Blog',          category: 'Bi-weekly', rev: '$55K',  delta: '↑ 2×',  spark: [30,38,45,52,58,68,78,92], status: { type: 'orange', text: 'Jun 27 anniversary' }, last: '6 days ago' },
+            { logo: '🧴', name: 'BeautyCompare',     sub: 'Affiliate · Comparison',           category: 'Monthly',   rev: '$44K',  delta: '↓ 5%',  spark: [60,58,55,52,50,48,45,42], status: { type: 'blue',   text: 'Jul 02 11:00am' }, last: '11 days ago' },
+            { logo: '✨', name: 'TrendSettersCo',    sub: 'Affiliate · Trend Spotting',       category: 'Monthly',   rev: '$112K', delta: '↑ 6%',  spark: [55,58,60,62,65,68,70,72], status: { type: 'green',  text: 'Jul 02 anniversary' }, last: '8 days ago' },
+            { logo: '🧴', name: 'SkincareSecrets',   sub: 'Creator · Skincare',               category: 'Bi-weekly', rev: '$48K',  delta: '↑ 8%',  spark: [40,42,45,48,52,55,58,62], status: { type: 'green',  text: 'Jul 08 sync' }, last: '5 days ago' }
+          ],
+          activity: [
+            { icon: '📅', tone: 'critical', text: '<strong>BudgetFinds Blog</strong> check-in today at 2:00pm — brief is ready.', time: '30 min ago' },
+            { icon: '⚠️', tone: 'warning',  text: '<strong>GlowUpMakeup</strong> revenue down 18% — investigate expired coupons.', time: '2h ago' },
+            { icon: '🎁', tone: 'positive', text: '<strong>GlamourGuide</strong> anniversary in 11 days — bump auto-drafted.', time: '4h ago' },
+            { icon: '✉', tone: '', text: 'Pre-call note drafted in <strong>BudgetFinds</strong> thread.', time: '5h ago' },
+            { icon: '📋', tone: 'warning', text: '<strong>BudgetFinds</strong> contract renewal window opens Jul 1.', time: 'Yesterday' },
+            { icon: '🔔', tone: '', text: '14 days since you spoke to <strong>GlamMag</strong> — send a check-in note?', time: 'Yesterday' }
+          ]
+        },
+
         // V4 — CO-PILOT (COACH): Ask Impact is his partnership coach
         v4: {
           aiRole: 'Coach',
@@ -4610,7 +5322,7 @@
   function switchPersona(rawValue) {
     const parts = String(rawValue || '').split('-');
     const personaKey = parts[0] || 'aisha';
-    const validVariants = ['v1', 'v2', 'v3', 'v4'];
+    const validVariants = ['v1', 'v2', 'v3', 'v4', 'v5'];
     const variant = validVariants.includes(parts[1]) ? parts[1] : 'v1';
 
     AppState.selectedPersona = personaKey;
@@ -4676,6 +5388,14 @@
       document.body.classList.remove('variant-v4');
     }
     renderV4Dashboard();
+
+    // V5 (HubSpot Pattern) — only rendered when active. Also toggles body chrome class.
+    if (variant === 'v5') {
+      document.body.classList.add('variant-v5');
+    } else {
+      document.body.classList.remove('variant-v5');
+    }
+    renderV5Dashboard();
   }
 
   // Update statistic counter widgets
@@ -6296,6 +7016,283 @@
         <div class="v4-card-desc">${s.desc || ''}</div>
         ${p ? `<button class="btn-primary" onclick="${p.action}">${p.text}</button>` : ''}
       </div>`;
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // V5 — HUBSPOT PATTERN
+  // Shared mega-nav + per-persona pinned views, filters, list, activity.
+  // ════════════════════════════════════════════════════════════
+
+  // Mega-nav is shared across personas (the IA is global, content varies).
+  const V5_MEGANAV = [
+    {
+      label: 'Partners',
+      caret: true,
+      columns: [
+        { label: 'Manage', links: [
+          { icon: '👥', title: 'All Partners', desc: 'Browse and segment your roster' },
+          { icon: '💎', title: 'My VIPs', desc: 'Top tier · weekly cadence', badge: '20' },
+          { icon: '🆕', title: 'Onboarding', desc: 'Pending tracking setup', badge: '3' },
+          { icon: '📥', title: 'Applications', desc: '12 awaiting decision', badge: '12' }
+        ] },
+        { label: 'Discover', links: [
+          { icon: '🔍', title: 'Marketplace', desc: 'Browse the impact.com network' },
+          { icon: '🎯', title: 'Creator Search', desc: 'Filter by audience, vertical, EPC' },
+          { icon: '✨', title: 'AI Recommendations', desc: 'Auto-matched to your gaps' }
+        ] },
+        { label: 'Engage', links: [
+          { icon: '✉', title: 'Outreach Queue', desc: 'Drafts and pending replies' },
+          { icon: '🎁', title: 'Bonuses & Incentives', desc: 'Issue and track rewards' },
+          { icon: '📋', title: 'Contracts', desc: 'Renewals, terms, signatures' }
+        ] }
+      ]
+    },
+    {
+      label: 'Analytics',
+      caret: true,
+      columns: [
+        { label: 'Measure', links: [
+          { icon: '📈', title: 'Performance', desc: 'Revenue · clicks · conversions' },
+          { icon: '💰', title: 'Revenue & Payouts', desc: 'Contribution by partner / channel' },
+          { icon: '🎯', title: 'Audience & Funnels', desc: 'Conversion path analysis' }
+        ] },
+        { label: 'Forecast', links: [
+          { icon: '🔮', title: 'Forecast', desc: 'Pacing vs Q3 goal' },
+          { icon: '🧪', title: 'Data Lab', desc: 'Cohorts, A/B, anomaly playgrounds' }
+        ] },
+        { label: 'Benchmark', links: [
+          { icon: '🆚', title: 'Competitive Intel', desc: 'Share of voice, comparator brands' },
+          { icon: '✦', title: 'AI Search Visibility', desc: 'Brand surfacing in LLM answers' },
+          { icon: '🏷', title: 'Industry Insights', desc: 'Category trend reports' }
+        ] }
+      ]
+    },
+    {
+      label: 'Monitoring',
+      caret: true,
+      columns: [
+        { label: 'Brand Safety', links: [
+          { icon: '🛡', title: 'Brand Safety', desc: 'Regulated compliance dashboard' },
+          { icon: '✅', title: 'Compliance & Audits', desc: 'Violations and audit trail' },
+          { icon: '🚫', title: 'Invalid Traffic', desc: 'Bot & fraud signal review' }
+        ] },
+        { label: 'Alerts', links: [
+          { icon: '🔔', title: 'Active Alerts', desc: '4 urgent', badge: '4' },
+          { icon: '🌐', title: 'Domain Mentions', desc: 'Brand citations across the web' },
+          { icon: '📰', title: 'Brand in Articles', desc: 'Press and review monitoring' }
+        ] }
+      ]
+    },
+    { label: 'Campaigns', caret: false },
+    { label: 'Reports', caret: false },
+    { label: 'Automation', caret: false }
+  ];
+
+  function renderV5Dashboard() {
+    const host = document.getElementById('v5-shell');
+    if (!host) return;
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    if (!data || !data.v5 || AppState.variant !== 'v5') {
+      host.innerHTML = '';
+      return;
+    }
+    const v5 = data.v5;
+
+    host.innerHTML = `
+      ${v5RenderMeganav(v5.activeMenu)}
+      ${v5RenderPageHeader(v5)}
+      <div class="v5-body">
+        ${v5RenderFilters(v5.filters)}
+        ${v5RenderListPane(v5)}
+        ${v5RenderActivity(v5.activity)}
+      </div>
+      <button class="v5-help" title="Help & Ask Impact" onclick="showToast('✦ Ask Impact opened.', 'info')">?</button>
+    `;
+  }
+
+  function v5RenderMeganav(activeLabel) {
+    const items = V5_MEGANAV.map(m => {
+      const isActive = m.label === activeLabel;
+      const cols = (m.columns || []).map(col => `
+        <div class="v5-megamenu-col">
+          <div class="v5-megamenu-col-label">${col.label}</div>
+          ${col.links.map(l => `
+            <a class="v5-megamenu-link" onclick="event.preventDefault(); showToast('Opening ${l.title.replace(/'/g, "\\'")}...', 'info')">
+              <span class="v5-megamenu-link-icon">${l.icon}</span>
+              <span class="v5-megamenu-link-text">
+                <span class="v5-megamenu-link-title">${l.title}</span>
+                <span class="v5-megamenu-link-desc">${l.desc}</span>
+              </span>
+              ${l.badge ? `<span class="v5-megamenu-badge">${l.badge}</span>` : ''}
+            </a>`).join('')}
+        </div>`).join('');
+      const megamenu = m.columns ? `<div class="v5-megamenu">${cols}</div>` : '';
+      return `
+        <div class="v5-meganav-item ${isActive ? 'active' : ''}" tabindex="0" onclick="showToast('Switching to ${m.label}...', 'info')">
+          <span>${m.label}</span>
+          ${m.caret ? '<span class="v5-meganav-caret">▾</span>' : ''}
+          ${megamenu}
+        </div>`;
+    }).join('');
+    return `
+      <nav class="v5-meganav">
+        ${items}
+        <span class="v5-meganav-spacer"></span>
+        <div class="v5-meganav-global">
+          <button class="v5-meganav-iconbtn" title="Search" onclick="showToast('Global search...', 'info')">🔍</button>
+          <button class="v5-meganav-iconbtn" title="Notifications" onclick="showToast('3 new notifications.', 'info')">🔔</button>
+          <button class="v5-meganav-iconbtn" title="Settings" onclick="showToast('Account settings...', 'info')">⚙</button>
+        </div>
+      </nav>`;
+  }
+
+  function v5RenderPageHeader(v5) {
+    const views = (v5.views || []).map(v => `
+      <div class="v5-view ${v.id === v5.activeView ? 'active' : ''}" onclick="v5SwitchView('${v.id}', this)">
+        <span>${v.label}</span>
+        <span class="v5-view-count">${v.count}</span>
+      </div>`).join('');
+    const secondary = (v5.secondaryCtas || []).map(c => `<button class="btn-secondary" onclick="${c.action}">${c.text}</button>`).join('');
+    return `
+      <div class="v5-pageheader">
+        <div class="v5-pageheader-top">
+          <div>
+            <div class="v5-pageheader-title">${v5.pageTitle}</div>
+            <div class="v5-pageheader-meta">${v5.pageMeta}</div>
+          </div>
+          <div class="v5-pageheader-actions">
+            ${secondary}
+            <button class="btn-primary" onclick="${v5.primaryCta.action}">${v5.primaryCta.text}</button>
+          </div>
+        </div>
+        <div class="v5-views">
+          ${views}
+          <div class="v5-view-add" onclick="showToast('Create saved view from current filters.', 'info')">＋ Add view</div>
+        </div>
+      </div>`;
+  }
+
+  function v5RenderFilters(f) {
+    if (!f) return '<aside class="v5-filters"></aside>';
+    const applied = (f.applied || []).map(a => `
+      <span class="v5-filter-chip">
+        <span>${a.label}</span>
+        <span class="v5-filter-chip-x" onclick="showToast('Filter removed.', 'info')">✕</span>
+      </span>`).join('');
+    const groups = (f.groups || []).map(g => {
+      const rows = g.items.map(it => `
+        <label class="v5-filter-row">
+          <input type="checkbox" ${it.checked ? 'checked' : ''} onchange="showToast('Filter updated.', 'info')">
+          <span>${it.name}</span>
+          <span class="v5-filter-row-count">${it.count}</span>
+        </label>`).join('');
+      return `
+        <div class="v5-filters-section">
+          <div class="v5-filters-label"><span>${g.label}</span></div>
+          ${rows}
+        </div>`;
+    }).join('');
+    return `
+      <aside class="v5-filters">
+        <div class="v5-filters-section">
+          <input class="v5-filters-search" type="text" placeholder="${f.search}">
+        </div>
+        ${applied ? `<div class="v5-filters-section">
+          <div class="v5-filters-label">
+            <span>Applied</span>
+            <span class="v5-filters-clear" onclick="showToast('All filters cleared.', 'info')">Clear all</span>
+          </div>
+          ${applied}
+        </div>` : ''}
+        ${groups}
+      </aside>`;
+  }
+
+  function v5RenderListPane(v5) {
+    const cols = v5.listColumns || [];
+    const ths = cols.map((c, i) => `<th class="${i === 2 ? 'active' : ''}">${c}${i === 2 ? '<span class="v5-sort">▼</span>' : '<span class="v5-sort">▾</span>'}</th>`).join('');
+    const rows = (v5.rows || []).map(r => `
+      <tr onclick="openDrawer('${r.name.replace(/'/g, "\\'")}')">
+        <td>
+          <div class="v5-cell-partner">
+            <div class="v5-cell-logo">${r.logo}</div>
+            <div>
+              <div class="v5-cell-partner-name">${r.name}</div>
+              <div class="v5-cell-partner-sub">${r.sub}</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="v5-cell-partner-sub">${r.category}</span></td>
+        <td>
+          <span class="v5-cell-rev">${r.rev}</span>
+          <span class="delta ${r.delta.includes('↓') || r.tone === 'down' ? 'delta-down' : (r.delta.includes('↑') || r.delta.includes('×') || r.delta.startsWith('+')) ? 'delta-up' : ''}">${r.delta}</span>
+        </td>
+        <td>${v5BuildSpark(r.spark, r.tone)}</td>
+        <td><span class="tag tag-${r.status.type}">${r.status.text}</span></td>
+        <td><span class="v5-cell-partner-sub">${r.last}</span></td>
+      </tr>`).join('');
+    return `
+      <section class="v5-listpane">
+        <div class="v5-listtoolbar">
+          <div class="v5-listtoolbar-left"><strong>${(v5.rows || []).length}</strong> of ${v5.views.find(v => v.id === v5.activeView)?.count || (v5.rows || []).length} results</div>
+          <div class="v5-listtoolbar-right">
+            <button class="btn-secondary" onclick="showToast('Column picker opened.', 'info')">Edit columns</button>
+            <button class="btn-secondary" onclick="showToast('View options...', 'info')">⋯</button>
+          </div>
+        </div>
+        <div class="v5-list">
+          <table class="v5-list-table">
+            <thead><tr>${ths}</tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <div class="v5-list-footer">
+            <span>Showing ${(v5.rows || []).length} of ${v5.views.find(v => v.id === v5.activeView)?.count || (v5.rows || []).length}</span>
+            <div class="v5-list-pagination">
+              <button>‹</button>
+              <button class="active">1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>›</button>
+            </div>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  function v5BuildSpark(bars, tone) {
+    if (!bars || !bars.length) return '';
+    const max = Math.max(...bars, 1);
+    const html = bars.map((b, i) => `<div class="v5-cell-spark-bar${i === bars.length - 1 ? ' last' : ''}" style="height:${Math.max(12, Math.round((b/max)*100))}%"></div>`).join('');
+    return `<div class="v5-cell-spark${tone === 'down' ? ' down' : ''}">${html}</div>`;
+  }
+
+  function v5RenderActivity(items) {
+    const list = (items || []).map(it => `
+      <div class="v5-activity-item" data-tone="${it.tone || ''}">
+        <div class="v5-activity-dot">${it.icon || '✦'}</div>
+        <div>
+          <div class="v5-activity-text">${it.text}</div>
+          <div class="v5-activity-time">${it.time}</div>
+        </div>
+      </div>`).join('');
+    return `
+      <aside class="v5-activity">
+        <div class="v5-activity-header">
+          <span class="v5-activity-title">Activity</span>
+          <span class="v5-activity-filter" onclick="showToast('Activity filter...', 'info')">Filter</span>
+        </div>
+        ${list}
+      </aside>`;
+  }
+
+  function v5SwitchView(viewId, el) {
+    if (!el) return;
+    document.querySelectorAll('.v5-view').forEach(v => v.classList.remove('active'));
+    el.classList.add('active');
+    const persona = AppState.selectedPersona;
+    AppState.personas[persona].v5.activeView = viewId;
+    showToast(`Switched to "${el.textContent.trim().split(/\s+/).slice(0, -1).join(' ') || viewId}" view.`, 'info');
   }
 
 </script>
