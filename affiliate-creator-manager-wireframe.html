@@ -656,27 +656,31 @@
      v6 = HubSpot Pattern (64px side icon rail with hover-flyout sub-nav).
      v7 = Focus Mode First (picker is the hero; mode-specific composed dashboard).
      v8 = Focus-Adaptive Nav (top + side nav reshape per active focus mode). */
+  /* !important is necessary: child rules sometimes use ID selectors that
+     out-specify class-based gates. The gate enforces a fundamental layout
+     invariant ("this section belongs to ONE variant"), so !important is
+     the appropriate hammer here. */
   .main[data-variant="v1"] .v2-only,
   .main[data-variant="v1"] .v3-only,
   .main[data-variant="v1"] .v4-only,
   .main[data-variant="v1"] .v5-only,
   .main[data-variant="v1"] .v6-only,
   .main[data-variant="v1"] .v7-only,
-  .main[data-variant="v1"] .v8-only { display: none; }
+  .main[data-variant="v1"] .v8-only { display: none !important; }
   .main[data-variant="v2"] .v1-only,
   .main[data-variant="v2"] .v3-only,
   .main[data-variant="v2"] .v4-only,
   .main[data-variant="v2"] .v5-only,
   .main[data-variant="v2"] .v6-only,
   .main[data-variant="v2"] .v7-only,
-  .main[data-variant="v2"] .v8-only { display: none; }
+  .main[data-variant="v2"] .v8-only { display: none !important; }
   .main[data-variant="v3"] .v1-only,
   .main[data-variant="v3"] .v2-only,
   .main[data-variant="v3"] .v4-only,
   .main[data-variant="v3"] .v5-only,
   .main[data-variant="v3"] .v6-only,
   .main[data-variant="v3"] .v7-only,
-  .main[data-variant="v3"] .v8-only { display: none; }
+  .main[data-variant="v3"] .v8-only { display: none !important; }
   .main[data-variant="v4"] .v1-only,
   .main[data-variant="v4"] .v2-only,
   .main[data-variant="v4"] .v3-only,
@@ -686,7 +690,7 @@
   .main[data-variant="v4"] .v8-only,
   .main[data-variant="v4"] .page-header,
   .main[data-variant="v4"] .context-banner,
-  .main[data-variant="v4"] .persona-hero { display: none; }
+  .main[data-variant="v4"] .persona-hero { display: none !important; }
   .main[data-variant="v5"] .v1-only,
   .main[data-variant="v5"] .v2-only,
   .main[data-variant="v5"] .v3-only,
@@ -696,7 +700,7 @@
   .main[data-variant="v5"] .v8-only,
   .main[data-variant="v5"] .page-header,
   .main[data-variant="v5"] .context-banner,
-  .main[data-variant="v5"] .persona-hero { display: none; }
+  .main[data-variant="v5"] .persona-hero { display: none !important; }
   .main[data-variant="v6"] .v1-only,
   .main[data-variant="v6"] .v2-only,
   .main[data-variant="v6"] .v3-only,
@@ -706,7 +710,7 @@
   .main[data-variant="v6"] .v8-only,
   .main[data-variant="v6"] .page-header,
   .main[data-variant="v6"] .context-banner,
-  .main[data-variant="v6"] .persona-hero { display: none; }
+  .main[data-variant="v6"] .persona-hero { display: none !important; }
   .main[data-variant="v7"] .v1-only,
   .main[data-variant="v7"] .v2-only,
   .main[data-variant="v7"] .v3-only,
@@ -716,7 +720,7 @@
   .main[data-variant="v7"] .v8-only,
   .main[data-variant="v7"] .page-header,
   .main[data-variant="v7"] .context-banner,
-  .main[data-variant="v7"] .persona-hero { display: none; }
+  .main[data-variant="v7"] .persona-hero { display: none !important; }
   .main[data-variant="v8"] .v1-only,
   .main[data-variant="v8"] .v2-only,
   .main[data-variant="v8"] .v3-only,
@@ -726,7 +730,7 @@
   .main[data-variant="v8"] .v7-only,
   .main[data-variant="v8"] .page-header,
   .main[data-variant="v8"] .context-banner,
-  .main[data-variant="v8"] .persona-hero { display: none; }
+  .main[data-variant="v8"] .persona-hero { display: none !important; }
   /* In v4 the sidebar and topnav center links collapse — Ask Impact is the nav */
   body.variant-v4 .sidebar { display: none; }
   body.variant-v4 .topnav-links { display: none; }
@@ -753,8 +757,10 @@
   body.variant-v8 .topnav-links { display: none; }
   body.variant-v8 .main { max-width: none; padding: 0; }
 
-  /* ── V2 DASHBOARD ── */
-  #v2-dashboard {
+  /* ── V2 DASHBOARD ──
+     Scoped under .main[data-variant="v2"] so the display:flex doesn't
+     out-specify the variant gate when v2 is hidden in other variants. */
+  .main[data-variant="v2"] #v2-dashboard {
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -2158,16 +2164,18 @@
   .focus-mode-chip-secondary:hover { background: var(--surface-hover); color: var(--accent); }
 
   .focus-mode-popover {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
+    /* Body-level fixed popover so it works in v4-v8 where .page-header is hidden.
+       Position is set inline by openFocusPicker() based on the trigger chip. */
+    position: fixed;
+    top: 80px;
+    left: 24px;
     width: 320px;
     background: var(--background);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
     padding: 8px;
-    z-index: 80;
+    z-index: 700;
     display: none;
     animation: focusPopoverIn 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -2550,7 +2558,8 @@
      replaces the main content with a job-shaped, expressive surface.
      ════════════════════════════════════════════════════════════ */
 
-  #v3-dashboard { display: flex; flex-direction: column; gap: 24px; }
+  /* Same specificity scoping as #v2-dashboard — only style when v3 is active. */
+  .main[data-variant="v3"] #v3-dashboard { display: flex; flex-direction: column; gap: 24px; }
   .v3-section-title {
     font-size: 11px;
     font-weight: 700;
@@ -4678,7 +4687,9 @@
     background: var(--background-subdued);
   }
 
-  /* ── Top focus bar (sticky under the topnav) ── */
+  /* ── Top focus bar (sticky at the top of .main, which already starts below the topnav).
+     Note: .main has overflow-y:auto, which makes sticky offsets relative to .main —
+     NOT the viewport. So top:0 here is the visual top of the content area, not y=0 of the page. */
   .v8-focusbar {
     grid-column: 1 / -1;
     background: linear-gradient(180deg, var(--ai-background) 0%, var(--background) 100%);
@@ -4688,7 +4699,7 @@
     align-items: center;
     gap: 16px;
     position: sticky;
-    top: var(--header-height);
+    top: 0;
     z-index: 20;
   }
   .v8-focusbar-pill {
@@ -5307,6 +5318,15 @@
   </div>
 </div>
 
+<!-- ── FOCUS-MODE POPOVER (body-level so it's reachable from v1/v8 chips alike) ── -->
+<div class="focus-mode-popover" id="focus-mode-popover" onclick="event.stopPropagation()">
+  <div class="focus-mode-popover-header">
+    <span>Switch focus</span>
+    <span class="focus-mode-popover-hint">Reshapes the dashboard</span>
+  </div>
+  <div class="focus-mode-popover-list" id="focus-mode-popover-list"></div>
+</div>
+
 <!-- ── TOAST CONTAINER ── -->
 <div class="toast-container" id="toast-container"></div>
 
@@ -5424,22 +5444,13 @@
         <div class="page-subtitle" id="page-subtitle">You have a partner check-in with HomeGoods Network on Friday — here's what you need.</div>
         <!-- ── PERSISTENT FOCUS-MODE CHIP ── -->
         <div class="focus-mode-chip-row">
-          <button class="focus-mode-chip" id="focus-mode-chip" onclick="event.stopPropagation(); openFocusPicker()" aria-haspopup="true">
+          <button class="focus-mode-chip" id="focus-mode-chip" onclick="event.stopPropagation(); openFocusPicker(this)" aria-haspopup="true">
             <span class="focus-mode-chip-prefix">✦ Focus ·</span>
             <span class="focus-mode-chip-icon">⚡</span>
             <span class="focus-mode-chip-label">Daily Scan</span>
             <span class="focus-mode-chip-caret">▾</span>
           </button>
           <button class="focus-mode-chip-secondary" onclick="openFocusPickerModal()" title="See all focus modes">Browse all 8 →</button>
-
-          <!-- Compact popover (anchored under the chip) -->
-          <div class="focus-mode-popover" id="focus-mode-popover" onclick="event.stopPropagation()">
-            <div class="focus-mode-popover-header">
-              <span>Switch focus</span>
-              <span class="focus-mode-popover-hint">Reshapes the dashboard</span>
-            </div>
-            <div class="focus-mode-popover-list" id="focus-mode-popover-list"></div>
-          </div>
         </div>
       </div>
       <div class="page-header-actions">
@@ -8783,13 +8794,25 @@
     setFocusMode(tempFocusMode);
   }
 
-  // Compact popover attached to the page-header chip
-  function openFocusPicker() {
+  // Compact popover — body-level fixed element so v1 chip and v8 focusbar pill
+  // (and any future trigger) can anchor it. Pass `this` from the click handler.
+  function openFocusPicker(triggerEl) {
     const pop = document.getElementById('focus-mode-popover');
     if (!pop) return;
     tempFocusMode = AppState.focusMode || 'daily_scan';
     renderFocusPopoverList();
     pop.classList.toggle('open');
+    // When opening, anchor under the trigger
+    if (pop.classList.contains('open') && triggerEl && triggerEl.getBoundingClientRect) {
+      const r = triggerEl.getBoundingClientRect();
+      const popWidth = 320;
+      const margin = 8;
+      const vw = window.innerWidth;
+      let left = r.left;
+      if (left + popWidth + margin > vw) left = Math.max(margin, vw - popWidth - margin);
+      pop.style.top = (r.bottom + margin) + 'px';
+      pop.style.left = left + 'px';
+    }
   }
 
   function closeFocusPicker() {
@@ -10251,7 +10274,7 @@
       : '';
     return `
       <div class="v8-focusbar">
-        <button class="v8-focusbar-pill" onclick="event.stopPropagation(); openFocusPicker()">
+        <button class="v8-focusbar-pill" onclick="event.stopPropagation(); openFocusPicker(this)">
           <span class="v8-focusbar-pill-prefix">✦ Focus ·</span>
           <span class="v8-focusbar-pill-icon">${mode.icon}</span>
           <span class="v8-focusbar-pill-label">${mode.label}</span>
