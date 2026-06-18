@@ -654,31 +654,36 @@
      v4 = Co-pilot Console (no sidebar, Ask Impact is the navigation).
      v5 = HubSpot Pattern (top mega-nav, saved views, list-view shell).
      v6 = HubSpot Pattern (64px side icon rail with hover-flyout sub-nav).
-     v7 = Focus Mode First (picker is the hero; mode-specific composed dashboard). */
+     v7 = Focus Mode First (picker is the hero; mode-specific composed dashboard).
+     v8 = Focus-Adaptive Nav (top + side nav reshape per active focus mode). */
   .main[data-variant="v1"] .v2-only,
   .main[data-variant="v1"] .v3-only,
   .main[data-variant="v1"] .v4-only,
   .main[data-variant="v1"] .v5-only,
   .main[data-variant="v1"] .v6-only,
-  .main[data-variant="v1"] .v7-only { display: none; }
+  .main[data-variant="v1"] .v7-only,
+  .main[data-variant="v1"] .v8-only { display: none; }
   .main[data-variant="v2"] .v1-only,
   .main[data-variant="v2"] .v3-only,
   .main[data-variant="v2"] .v4-only,
   .main[data-variant="v2"] .v5-only,
   .main[data-variant="v2"] .v6-only,
-  .main[data-variant="v2"] .v7-only { display: none; }
+  .main[data-variant="v2"] .v7-only,
+  .main[data-variant="v2"] .v8-only { display: none; }
   .main[data-variant="v3"] .v1-only,
   .main[data-variant="v3"] .v2-only,
   .main[data-variant="v3"] .v4-only,
   .main[data-variant="v3"] .v5-only,
   .main[data-variant="v3"] .v6-only,
-  .main[data-variant="v3"] .v7-only { display: none; }
+  .main[data-variant="v3"] .v7-only,
+  .main[data-variant="v3"] .v8-only { display: none; }
   .main[data-variant="v4"] .v1-only,
   .main[data-variant="v4"] .v2-only,
   .main[data-variant="v4"] .v3-only,
   .main[data-variant="v4"] .v5-only,
   .main[data-variant="v4"] .v6-only,
   .main[data-variant="v4"] .v7-only,
+  .main[data-variant="v4"] .v8-only,
   .main[data-variant="v4"] .page-header,
   .main[data-variant="v4"] .context-banner,
   .main[data-variant="v4"] .persona-hero { display: none; }
@@ -688,6 +693,7 @@
   .main[data-variant="v5"] .v4-only,
   .main[data-variant="v5"] .v6-only,
   .main[data-variant="v5"] .v7-only,
+  .main[data-variant="v5"] .v8-only,
   .main[data-variant="v5"] .page-header,
   .main[data-variant="v5"] .context-banner,
   .main[data-variant="v5"] .persona-hero { display: none; }
@@ -697,6 +703,7 @@
   .main[data-variant="v6"] .v4-only,
   .main[data-variant="v6"] .v5-only,
   .main[data-variant="v6"] .v7-only,
+  .main[data-variant="v6"] .v8-only,
   .main[data-variant="v6"] .page-header,
   .main[data-variant="v6"] .context-banner,
   .main[data-variant="v6"] .persona-hero { display: none; }
@@ -706,9 +713,20 @@
   .main[data-variant="v7"] .v4-only,
   .main[data-variant="v7"] .v5-only,
   .main[data-variant="v7"] .v6-only,
+  .main[data-variant="v7"] .v8-only,
   .main[data-variant="v7"] .page-header,
   .main[data-variant="v7"] .context-banner,
   .main[data-variant="v7"] .persona-hero { display: none; }
+  .main[data-variant="v8"] .v1-only,
+  .main[data-variant="v8"] .v2-only,
+  .main[data-variant="v8"] .v3-only,
+  .main[data-variant="v8"] .v4-only,
+  .main[data-variant="v8"] .v5-only,
+  .main[data-variant="v8"] .v6-only,
+  .main[data-variant="v8"] .v7-only,
+  .main[data-variant="v8"] .page-header,
+  .main[data-variant="v8"] .context-banner,
+  .main[data-variant="v8"] .persona-hero { display: none; }
   /* In v4 the sidebar and topnav center links collapse — Ask Impact is the nav */
   body.variant-v4 .sidebar { display: none; }
   body.variant-v4 .topnav-links { display: none; }
@@ -730,6 +748,10 @@
   body.variant-v7 .sidebar { display: none; }
   body.variant-v7 .topnav-links { display: none; }
   body.variant-v7 .main { max-width: none; padding: 0; }
+  /* In v8 the top + side nav adapt to the active focus mode. */
+  body.variant-v8 .sidebar { display: none; }
+  body.variant-v8 .topnav-links { display: none; }
+  body.variant-v8 .main { max-width: none; padding: 0; }
 
   /* ── V2 DASHBOARD ── */
   #v2-dashboard {
@@ -4644,6 +4666,447 @@
 
   /* Onboarding/Brand-safety/Launch reuse the v1 hero builders by wrapping them. */
 
+  /* ════════════════════════════════════════════════════════════
+     V8 — FOCUS-ADAPTIVE NAV
+     Top focus bar + side nav both rebuild per active focus mode.
+     ════════════════════════════════════════════════════════════ */
+
+  .v8-shell {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    min-height: calc(100vh - var(--header-height));
+    background: var(--background-subdued);
+  }
+
+  /* ── Top focus bar (sticky under the topnav) ── */
+  .v8-focusbar {
+    grid-column: 1 / -1;
+    background: linear-gradient(180deg, var(--ai-background) 0%, var(--background) 100%);
+    border-bottom: 1px solid var(--ai-border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: var(--header-height);
+    z-index: 20;
+  }
+  .v8-focusbar-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--background);
+    border: 1.5px solid var(--ai-border);
+    color: var(--ai-foreground);
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(75, 50, 150, 0.12);
+    transition: var(--transition-fast);
+    flex-shrink: 0;
+  }
+  .v8-focusbar-pill:hover {
+    box-shadow: 0 4px 12px rgba(75, 50, 150, 0.22);
+    border-color: var(--ai-foreground);
+  }
+  .v8-focusbar-pill-prefix {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.7;
+  }
+  .v8-focusbar-pill-icon { font-size: 15px; }
+  .v8-focusbar-pill-label { font-size: 13px; font-weight: 700; }
+  .v8-focusbar-pill-caret { font-size: 10px; opacity: 0.55; }
+  .v8-focusbar-pill-edit {
+    margin-left: 4px;
+    font-size: 11px;
+    opacity: 0.7;
+    cursor: pointer;
+  }
+  .v8-focusbar-pill-edit:hover { opacity: 1; }
+
+  .v8-focusbar-sep {
+    width: 1px;
+    height: 22px;
+    background: var(--ai-border);
+    margin: 0 2px;
+  }
+
+  .v8-focusbar-shortcuts {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    overflow-x: auto;
+  }
+  .v8-shortcut {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: 9999px;
+    color: var(--foreground);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition-fast);
+  }
+  .v8-shortcut:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .v8-shortcut-icon { font-size: 13px; }
+  .v8-shortcut-badge {
+    background: var(--negative-bg);
+    color: var(--negative);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 9999px;
+  }
+  .v8-focusbar-customize {
+    background: transparent;
+    border: none;
+    color: var(--text-interactive);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: var(--transition-fast);
+  }
+  .v8-focusbar-customize:hover { background: var(--surface-hover); color: var(--accent); }
+
+  /* ── Side nav ── */
+  .v8-sidenav {
+    background: var(--background);
+    border-right: 1px solid var(--border-default);
+    padding: 18px 14px 24px;
+    overflow-y: auto;
+    align-self: stretch;
+  }
+  .v8-sidenav-group {
+    margin-bottom: 22px;
+  }
+  .v8-sidenav-group-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-subdued);
+    padding: 6px 14px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .v8-sidenav-group-label .v8-sidenav-mode-mini {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 600;
+    color: var(--ai-foreground);
+    font-size: 11px;
+  }
+  .v8-sidenav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 14px;
+    border-radius: var(--radius-button);
+    cursor: pointer;
+    color: var(--foreground);
+    font-weight: 500;
+    font-size: 13px;
+    transition: var(--transition-fast);
+    position: relative;
+  }
+  .v8-sidenav-item:hover { background: var(--surface-hover); }
+  .v8-sidenav-item.active {
+    background: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+    font-weight: 700;
+  }
+  .v8-sidenav-item.active::before {
+    content: '';
+    position: absolute;
+    left: -2px; top: 8px; bottom: 8px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent);
+  }
+  .v8-sidenav-item-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+  .v8-sidenav-item-label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .v8-sidenav-item-badge {
+    background: var(--negative);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 9999px;
+    min-width: 18px;
+    text-align: center;
+  }
+  .v8-sidenav-item.is-focus-tool {
+    background: linear-gradient(135deg, var(--ai-background), transparent);
+  }
+
+  /* ── Content column ── */
+  .v8-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .v8-body {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr) 300px;
+    flex: 1;
+  }
+  @media (max-width: 1200px) {
+    .v8-body { grid-template-columns: 220px minmax(0, 1fr); }
+    .v8-body .v5-activity { display: none; }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     CUSTOM FOCUS BUILDER — right-edge slideout drawer
+     ════════════════════════════════════════════════════════════ */
+
+  .cf-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 22, 33, 0.3);
+    backdrop-filter: blur(3px);
+    z-index: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .cf-overlay.active { opacity: 1; pointer-events: auto; }
+  .cf-drawer {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 540px;
+    max-width: 92vw;
+    background: var(--background);
+    box-shadow: -16px 0 40px rgba(15, 22, 33, 0.18);
+    z-index: 601;
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border-default);
+  }
+  .cf-overlay.active .cf-drawer { transform: translateX(0); }
+
+  .cf-header {
+    padding: 22px 24px 18px;
+    border-bottom: 1px solid var(--border-default);
+    background: linear-gradient(180deg, var(--ai-background) 0%, var(--background) 100%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .cf-header-text { flex: 1; }
+  .cf-header-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--ai-foreground);
+    margin-bottom: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cf-header-title { font-size: 18px; font-weight: 700; color: var(--foreground); letter-spacing: -0.3px; }
+  .cf-header-desc { font-size: 12px; color: var(--text-subdued); margin-top: 4px; line-height: 1.4; }
+  .cf-close {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-default);
+    background: var(--background);
+    cursor: pointer;
+    color: var(--text-subdued);
+    flex-shrink: 0;
+  }
+  .cf-close:hover { background: var(--surface-hover); color: var(--foreground); }
+
+  .cf-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .cf-section { display: flex; flex-direction: column; gap: 10px; }
+  .cf-section-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cf-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-subdued);
+  }
+  .cf-section-counter {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-subdued);
+  }
+  .cf-section-counter.full { color: var(--accent); }
+
+  .cf-input {
+    width: 100%;
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--foreground);
+    background: var(--background);
+    transition: var(--transition-fast);
+  }
+  .cf-input:focus { border-color: var(--ai-foreground); outline: none; }
+
+  .cf-emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+  }
+  .cf-emoji-cell {
+    aspect-ratio: 1;
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--background-subdued);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+  }
+  .cf-emoji-cell:hover { background: var(--background); border-color: var(--accent); }
+  .cf-emoji-cell.selected {
+    background: var(--ai-foreground);
+    border-color: var(--ai-foreground);
+    box-shadow: 0 4px 10px rgba(75, 50, 150, 0.3);
+  }
+
+  .cf-check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 6px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .cf-check {
+    display: grid;
+    grid-template-columns: 22px 28px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .cf-check:hover { background: var(--surface-hover); }
+  .cf-check.checked { background: var(--ai-background); }
+  .cf-check.checked .cf-check-text { color: var(--ai-foreground); font-weight: 700; }
+  .cf-check input { accent-color: var(--ai-foreground); margin: 0; cursor: pointer; }
+  .cf-check.disabled { opacity: 0.4; cursor: not-allowed; }
+  .cf-check-icon {
+    width: 28px; height: 28px;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .cf-check-text { font-size: 13px; color: var(--foreground); }
+
+  .cf-radio-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .cf-radio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-size: 13px;
+  }
+  .cf-radio:hover { border-color: #CBD5E1; background: var(--background-subdued); }
+  .cf-radio.selected {
+    border-color: var(--ai-foreground);
+    background: var(--ai-background);
+    color: var(--ai-foreground);
+    font-weight: 700;
+  }
+  .cf-radio-icon { font-size: 14px; }
+
+  .cf-preview {
+    margin-top: 4px;
+    padding: 14px 16px;
+    background: var(--background-subdued);
+    border: 1px dashed var(--ai-border);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cf-preview-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-subdued);
+  }
+  .cf-preview-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, var(--ai-background), #EDE4FF);
+    border: 1.5px solid var(--ai-border);
+    color: var(--ai-foreground);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .cf-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-default);
+    background: var(--background-subdued);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .cf-footer-actions { display: flex; gap: 8px; }
+
 </style>
 </head>
 <body>
@@ -4769,6 +5232,81 @@
   </div>
 </div>
 
+<!-- ── CUSTOM FOCUS BUILDER (slideout drawer) ── -->
+<div class="cf-overlay" id="cf-overlay" onclick="closeCustomFocusBuilder()">
+  <div class="cf-drawer" id="cf-drawer" onclick="event.stopPropagation()">
+    <div class="cf-header">
+      <div class="cf-header-text">
+        <div class="cf-header-eyebrow">✦ Custom Focus Builder</div>
+        <div class="cf-header-title" id="cf-title">Build your focus</div>
+        <div class="cf-header-desc">Hand-craft a focus mode tuned to your week. Choose top-bar shortcuts, side-nav items, hero, and KPI. Your custom mode will appear alongside the 8 presets in every picker.</div>
+      </div>
+      <button class="cf-close" onclick="closeCustomFocusBuilder()" aria-label="Close">✕</button>
+    </div>
+
+    <div class="cf-body">
+      <!-- 1. Name -->
+      <div class="cf-section">
+        <div class="cf-section-label"><span class="cf-section-title">1 · Name your focus</span></div>
+        <input type="text" class="cf-input" id="cf-name" placeholder="e.g. Monday morning · pre-call · launch crunch" oninput="cfRenderPreview()">
+      </div>
+
+      <!-- 2. Icon -->
+      <div class="cf-section">
+        <div class="cf-section-label"><span class="cf-section-title">2 · Pick an icon</span></div>
+        <div class="cf-emoji-grid" id="cf-emoji-grid"><!-- emoji cells injected --></div>
+      </div>
+
+      <!-- 3. Top shortcuts -->
+      <div class="cf-section">
+        <div class="cf-section-label">
+          <span class="cf-section-title">3 · Top-bar shortcuts</span>
+          <span class="cf-section-counter" id="cf-top-counter">0 of 4</span>
+        </div>
+        <div class="cf-check-list" id="cf-top-list"><!-- shortcuts injected --></div>
+      </div>
+
+      <!-- 4. Side nav items -->
+      <div class="cf-section">
+        <div class="cf-section-label">
+          <span class="cf-section-title">4 · Side-nav items</span>
+          <span class="cf-section-counter" id="cf-side-counter">0 of 6</span>
+        </div>
+        <div class="cf-check-list" id="cf-side-list"><!-- nav items injected --></div>
+      </div>
+
+      <!-- 5. Hero -->
+      <div class="cf-section">
+        <div class="cf-section-label"><span class="cf-section-title">5 · Hero (optional)</span></div>
+        <div class="cf-radio-list" id="cf-hero-list"><!-- hero radios injected --></div>
+      </div>
+
+      <!-- 6. KPI tile -->
+      <div class="cf-section">
+        <div class="cf-section-label"><span class="cf-section-title">6 · Featured KPI tile</span></div>
+        <div class="cf-radio-list" id="cf-kpi-list"><!-- KPI radios injected --></div>
+      </div>
+
+      <!-- Preview -->
+      <div class="cf-preview">
+        <span class="cf-preview-label">Preview</span>
+        <span class="cf-preview-chip" id="cf-preview-chip">
+          <span id="cf-preview-icon">✦</span>
+          <span id="cf-preview-label">My focus</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="cf-footer">
+      <button class="btn-secondary" onclick="resetCustomFocusForm()">Reset</button>
+      <div class="cf-footer-actions">
+        <button class="btn-secondary" onclick="closeCustomFocusBuilder()">Cancel</button>
+        <button class="btn-primary" onclick="saveCustomFocusMode()" id="cf-save-btn">Save & apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ── TOAST CONTAINER ── -->
 <div class="toast-container" id="toast-container"></div>
 
@@ -4797,6 +5335,7 @@
         <option value="aisha-v5">Aisha — v5 · HubSpot Pattern (Top Nav)</option>
         <option value="aisha-v6">Aisha — v6 · HubSpot Pattern (Side Nav)</option>
         <option value="aisha-v7">Aisha — v7 · Focus Mode First</option>
+        <option value="aisha-v8">Aisha — v8 · Focus-Adaptive Nav</option>
       </optgroup>
       <optgroup label="Priya Nguyen (Chewy Brand)">
         <option value="priya-v1">Priya — v1 · Jobs-to-be-done</option>
@@ -4806,6 +5345,7 @@
         <option value="priya-v5">Priya — v5 · HubSpot Pattern (Top Nav)</option>
         <option value="priya-v6">Priya — v6 · HubSpot Pattern (Side Nav)</option>
         <option value="priya-v7">Priya — v7 · Focus Mode First</option>
+        <option value="priya-v8">Priya — v8 · Focus-Adaptive Nav</option>
       </optgroup>
       <optgroup label="Marcus Delgado (Fenty Beauty Brand)">
         <option value="marcus-v1">Marcus — v1 · Jobs-to-be-done</option>
@@ -4815,6 +5355,7 @@
         <option value="marcus-v5">Marcus — v5 · HubSpot Pattern (Top Nav)</option>
         <option value="marcus-v6">Marcus — v6 · HubSpot Pattern (Side Nav)</option>
         <option value="marcus-v7">Marcus — v7 · Focus Mode First</option>
+        <option value="marcus-v8">Marcus — v8 · Focus-Adaptive Nav</option>
       </optgroup>
     </select>
   </div>
@@ -5072,6 +5613,9 @@
     <!-- ── V7 FOCUS-MODE-FIRST SHELL — populated by renderV7Dashboard() -->
     <div class="v7-only v7-shell" id="v7-shell"></div>
 
+    <!-- ── V8 FOCUS-ADAPTIVE NAV SHELL — populated by renderV8Dashboard() -->
+    <div class="v8-only v8-shell" id="v8-shell"></div>
+
     <!-- ── V4 CO-PILOT SHELL (Ask Impact IS the navigation) — populated by renderV4Dashboard() -->
     <div class="v4-only v4-shell" id="v4-shell">
       <!-- Ghost rail -->
@@ -5252,9 +5796,245 @@
     }
   ];
 
+  // Look up a focus mode by id. Searches presets first, then custom modes.
   function getFocusMode(modeId) {
-    return FOCUS_MODES.find(m => m.id === modeId) || FOCUS_MODES[0];
+    const preset = FOCUS_MODES.find(m => m.id === modeId);
+    if (preset) return preset;
+    const custom = (window.AppState && AppState.customFocusModes ? AppState.customFocusModes : []).find(m => m.id === modeId);
+    return custom || FOCUS_MODES[0];
   }
+
+  // List all available modes (presets + custom). Used by every picker surface.
+  function getAllFocusModes() {
+    return [...FOCUS_MODES, ...((window.AppState && AppState.customFocusModes) || [])];
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // V8 NAV RECIPES — one per preset focus mode.
+  // Each recipe carries the top-bar shortcuts and the side-nav focus group
+  // that the v8 chrome should render when that mode is active.
+  // ════════════════════════════════════════════════════════════
+  const FOCUS_NAV_RECIPES = {
+    daily_scan: {
+      topShortcuts: [
+        { icon: '🔍', label: 'Investigate',         badge: '',  action: "showToast('Opening anomaly investigator...', 'info')" },
+        { icon: '🚨', label: 'At-risk partners',    badge: '2', action: "showToast('Filtering at-risk partners...', 'info')" },
+        { icon: '🎁', label: 'Bonus suggestions',   badge: '',  action: "showToast('Opening bonus queue...', 'info')" }
+      ],
+      sideFocusGroup: {
+        label: 'Daily Scan tools',
+        items: [
+          { icon: '⚡', label: 'Anomalies',           badge: '4', active: true, action: "showToast('Anomaly inbox...', 'info')" },
+          { icon: '📥', label: 'Scan inbox',          action: "showToast('Scan inbox...', 'info')" },
+          { icon: '🚨', label: 'At-risk',             badge: '2', action: "showToast('At-risk partners...', 'info')" },
+          { icon: '🎁', label: 'Bonus queue',         action: "showToast('Bonus queue...', 'info')" },
+          { icon: '▶',  label: 'Run full scan',       action: "showToast('Running full portfolio scan...', 'success')" }
+        ]
+      }
+    },
+    checkin_prep: {
+      topShortcuts: [
+        { icon: '📅', label: "Today's brief", badge: '', action: "showToast('Opening today\\'s brief...', 'info')" },
+        { icon: '🗓', label: 'This week',     badge: '3', action: "showToast('Opening this week...', 'info')" },
+        { icon: '📝', label: 'Notes',         badge: '', action: "showToast('Opening partner notes...', 'info')" }
+      ],
+      sideFocusGroup: {
+        label: 'Check-in Prep tools',
+        items: [
+          { icon: '📅', label: 'Calendar',         active: true, action: "showToast('Opening calendar...', 'info')" },
+          { icon: '📋', label: 'Briefs',           badge: '3', action: "showToast('Opening briefs...', 'info')" },
+          { icon: '💬', label: 'Talking points',   action: "showToast('Opening talking points...', 'info')" },
+          { icon: '🎁', label: 'Bonus library',    action: "showToast('Opening bonus library...', 'info')" },
+          { icon: '📄', label: 'Contract drawer',  action: "showToast('Opening contract drawer...', 'info')" }
+        ]
+      }
+    },
+    recruit_sprint: {
+      topShortcuts: [
+        { icon: '🛒', label: 'Marketplace',    badge: '',  action: "showToast('Opening partner marketplace...', 'info')" },
+        { icon: '✉',  label: 'Drafts',         badge: '5', action: "showToast('Opening outreach drafts...', 'info')" },
+        { icon: '📊', label: 'Pipeline',       badge: '',  action: "showToast('Opening recruit pipeline...', 'info')" }
+      ],
+      sideFocusGroup: {
+        label: 'Recruit Sprint tools',
+        items: [
+          { icon: '🔍', label: 'Recruit',           active: true, action: "showToast('Opening recruit dashboard...', 'info')" },
+          { icon: '🛒', label: 'Marketplace',       action: "showToast('Opening marketplace...', 'info')" },
+          { icon: '🎯', label: 'Creator Search',    action: "showToast('Opening creator search...', 'info')" },
+          { icon: '✉',  label: 'Outreach Queue',    badge: '9', action: "showToast('Opening outreach queue...', 'info')" },
+          { icon: '📥', label: 'Applications',      badge: '12', action: "showToast('Opening applications...', 'info')" },
+          { icon: '⚡', label: 'Bulk invite',       action: "showToast('Composing bulk invite...', 'info')" }
+        ]
+      }
+    },
+    creator_campaigns: {
+      topShortcuts: [
+        { icon: '🎬', label: 'Live',    badge: '4', action: "showToast('Opening live campaigns...', 'info')" },
+        { icon: '🎞', label: 'Pending', badge: '1', action: "showToast('Opening pending content...', 'info')" },
+        { icon: '📝', label: 'Drafts',  badge: '',  action: "showToast('Opening campaign drafts...', 'info')" }
+      ],
+      sideFocusGroup: {
+        label: 'Creator Campaigns tools',
+        items: [
+          { icon: '🎬', label: 'Live',              badge: '4', active: true, action: "showToast('Live campaigns...', 'info')" },
+          { icon: '🎞', label: 'Pending content',   badge: '1', action: "showToast('Pending content review...', 'info')" },
+          { icon: '📝', label: 'Drafts',            action: "showToast('Drafts...', 'info')" },
+          { icon: '📈', label: 'Performance',       action: "showToast('Campaign performance...', 'info')" },
+          { icon: '🌟', label: 'Top creators',      action: "showToast('Top creators...', 'info')" }
+        ]
+      }
+    },
+    vip_review: {
+      topShortcuts: [
+        { icon: '💎', label: 'My VIPs',      badge: '',  action: "showToast('Opening VIP 20...', 'info')" },
+        { icon: '🎉', label: 'Anniversaries', badge: '1', action: "showToast('Opening anniversary list...', 'info')" },
+        { icon: '📋', label: 'Renewals',     badge: '2', action: "showToast('Opening renewals queue...', 'info')" }
+      ],
+      sideFocusGroup: {
+        label: 'VIP Review tools',
+        items: [
+          { icon: '💎', label: 'VIP 20',           active: true, action: "showToast('Opening VIP 20...', 'info')" },
+          { icon: '💞', label: 'Heartbeat',        action: "showToast('Opening relationship heartbeat...', 'info')" },
+          { icon: '🎁', label: 'Bonuses',          action: "showToast('Opening bonus log...', 'info')" },
+          { icon: '📄', label: 'Contracts',        badge: '2', action: "showToast('Opening contracts...', 'info')" },
+          { icon: '🗂', label: 'History',          action: "showToast('Opening VIP history...', 'info')" }
+        ]
+      }
+    },
+    campaign_launch: {
+      topShortcuts: [
+        { icon: '📝', label: 'Brief Composer', action: "showToast('Opening brief composer...', 'info')" },
+        { icon: '🎯', label: 'Creator Picker', action: "showToast('Opening creator picker...', 'info')" },
+        { icon: '✅', label: 'Tracking QA',    badge: '3', action: "showToast('Opening tracking QA...', 'info')" }
+      ],
+      sideFocusGroup: {
+        label: 'Campaign Launch tools',
+        items: [
+          { icon: '🚀', label: 'Launch Steps',     active: true, badge: '3', action: "showToast('Launch steps...', 'info')" },
+          { icon: '📝', label: 'Brief',            action: "showToast('Brief composer...', 'info')" },
+          { icon: '🎯', label: 'Creators',         action: "showToast('Creator picker...', 'info')" },
+          { icon: '🎞', label: 'Content review',   action: "showToast('Content review...', 'info')" },
+          { icon: '✅', label: 'Tracking QA',      action: "showToast('Tracking QA...', 'info')" },
+          { icon: '🎉', label: 'Go-live',          action: "showToast('Go-live preview...', 'info')" }
+        ]
+      }
+    },
+    onboarding_wave: {
+      topShortcuts: [
+        { icon: '🔗', label: 'Tracking Status', badge: '2', action: "showToast('Opening tracking status...', 'info')" },
+        { icon: '📦', label: 'Welcome Kits',    badge: '',  action: "showToast('Opening welcome kits...', 'info')" },
+        { icon: '🧪', label: 'Verify Pixels',   badge: '',  action: "showToast('Running pixel verification...', 'info')" }
+      ],
+      sideFocusGroup: {
+        label: 'Onboarding Wave tools',
+        items: [
+          { icon: '✨', label: 'Queue',            active: true, badge: '3', action: "showToast('Opening onboarding queue...', 'info')" },
+          { icon: '🔗', label: 'Tracking',         badge: '2', action: "showToast('Tracking status...', 'info')" },
+          { icon: '📦', label: 'Kits',             action: "showToast('Kits...', 'info')" },
+          { icon: '🎁', label: 'Welcome bonus',    action: "showToast('Welcome bonus queue...', 'info')" },
+          { icon: '✅', label: 'Live partners',    action: "showToast('Live partners...', 'info')" }
+        ]
+      }
+    },
+    brand_safety: {
+      topShortcuts: [
+        { icon: '✅', label: 'Compliance', action: "showToast('Opening compliance dashboard...', 'info')" },
+        { icon: '⚠️', label: 'Violations', badge: '2', action: "showToast('Opening violations...', 'info')" },
+        { icon: '🚫', label: 'Invalid Traffic', badge: '',  action: "showToast('Opening invalid traffic report...', 'info')" }
+      ],
+      sideFocusGroup: {
+        label: 'Brand Safety tools',
+        items: [
+          { icon: '🛡', label: 'Compliance',       active: true, action: "showToast('Compliance...', 'info')" },
+          { icon: '⚠️', label: 'Violations',       badge: '2', action: "showToast('Violations...', 'info')" },
+          { icon: '🚫', label: 'Invalid traffic',  action: "showToast('Invalid traffic...', 'info')" },
+          { icon: '📋', label: 'Audits',           action: "showToast('Audits...', 'info')" },
+          { icon: '🌐', label: 'Domain mentions',  action: "showToast('Domain mentions...', 'info')" },
+          { icon: '📰', label: 'Articles',         action: "showToast('Articles...', 'info')" }
+        ]
+      }
+    }
+  };
+
+  // The static "Browse" side-nav group. Same across modes — represents the
+  // full IA so the user can always escape to anywhere.
+  const V8_BROWSE_GROUP = {
+    label: 'Browse',
+    items: [
+      { icon: '👥', label: 'Partners',    action: "showToast('Opening Partners...', 'info')" },
+      { icon: '📊', label: 'Analytics',   action: "showToast('Opening Analytics...', 'info')" },
+      { icon: '🛡', label: 'Monitoring',  action: "showToast('Opening Monitoring...', 'info')" },
+      { icon: '🎬', label: 'Campaigns',   action: "showToast('Opening Campaigns...', 'info')" },
+      { icon: '📋', label: 'Reports',     action: "showToast('Opening Reports...', 'info')" },
+      { icon: '⚡', label: 'Automation',  action: "showToast('Opening Automation...', 'info')" }
+    ]
+  };
+
+  // ════════════════════════════════════════════════════════════
+  // CUSTOM-FOCUS BUILDER — catalogs of atoms the user can pick from.
+  // ════════════════════════════════════════════════════════════
+  const TOP_SHORTCUT_CATALOG = [
+    { id: 'investigate',     icon: '🔍', label: 'Investigate anomalies',  action: "showToast('Opening anomaly investigator...', 'info')" },
+    { id: 'marketplace',     icon: '🛒', label: 'Open marketplace',       action: "showToast('Opening marketplace...', 'info')" },
+    { id: 'todays_brief',    icon: '📅', label: "Today's brief",          action: "showToast('Opening today\\'s brief...', 'info')" },
+    { id: 'my_vips',         icon: '💎', label: 'My VIPs',                action: "showToast('Opening VIP 20...', 'info')" },
+    { id: 'compliance',      icon: '🛡', label: 'Compliance status',      action: "showToast('Opening compliance...', 'info')" },
+    { id: 'brief_composer',  icon: '📝', label: 'Brief composer',         action: "showToast('Opening brief composer...', 'info')" },
+    { id: 'onboarding_queue',icon: '✨', label: 'Onboarding queue',       action: "showToast('Opening onboarding queue...', 'info')" },
+    { id: 'bulk_invite',     icon: '⚡', label: 'Bulk invite',            action: "showToast('Composing bulk invite...', 'info')" },
+    { id: 'bonus_queue',     icon: '🎁', label: 'Bonus queue',            action: "showToast('Opening bonus queue...', 'info')" },
+    { id: 'run_scan',        icon: '▶',  label: 'Run full scan',          action: "showToast('Running scan...', 'success')" },
+    { id: 'domain_mentions', icon: '🌐', label: 'Domain mentions',        action: "showToast('Opening domain mentions...', 'info')" },
+    { id: 'view_calendar',   icon: '🗓', label: 'View calendar',          action: "showToast('Opening calendar...', 'info')" }
+  ];
+
+  const SIDE_NAV_CATALOG = [
+    { id: 'anomalies',         icon: '⚡', label: 'Anomalies',            action: "showToast('Opening anomalies...', 'info')" },
+    { id: 'scan_inbox',        icon: '📥', label: 'Scan inbox',           action: "showToast('Scan inbox...', 'info')" },
+    { id: 'at_risk',           icon: '🚨', label: 'At-risk partners',     action: "showToast('At-risk partners...', 'info')" },
+    { id: 'recruit_pipeline',  icon: '🔍', label: 'Recruit pipeline',     action: "showToast('Recruit pipeline...', 'info')" },
+    { id: 'marketplace_nav',   icon: '🛒', label: 'Marketplace',          action: "showToast('Marketplace...', 'info')" },
+    { id: 'outreach_queue',    icon: '✉',  label: 'Outreach queue',       action: "showToast('Outreach queue...', 'info')" },
+    { id: 'briefs',            icon: '📋', label: 'Briefs',               action: "showToast('Briefs...', 'info')" },
+    { id: 'vip_20',            icon: '💎', label: 'VIP 20',               action: "showToast('VIP 20...', 'info')" },
+    { id: 'heartbeat',         icon: '💞', label: 'Heartbeat',            action: "showToast('Heartbeat...', 'info')" },
+    { id: 'bonuses',           icon: '🎁', label: 'Bonuses',              action: "showToast('Bonuses...', 'info')" },
+    { id: 'contracts',         icon: '📄', label: 'Contracts',            action: "showToast('Contracts...', 'info')" },
+    { id: 'compliance_nav',    icon: '🛡', label: 'Compliance',           action: "showToast('Compliance...', 'info')" },
+    { id: 'violations',        icon: '⚠️', label: 'Violations',           action: "showToast('Violations...', 'info')" },
+    { id: 'invalid_traffic',   icon: '🚫', label: 'Invalid traffic',      action: "showToast('Invalid traffic...', 'info')" },
+    { id: 'audits',            icon: '📋', label: 'Audits',               action: "showToast('Audits...', 'info')" },
+    { id: 'live_campaigns',    icon: '🎬', label: 'Live campaigns',       action: "showToast('Live campaigns...', 'info')" }
+  ];
+
+  // Hero options for the custom mode — matches renderHeroByType branches.
+  const HERO_CATALOG = [
+    { id: 'none',           icon: '⊘',  label: 'None' },
+    { id: 'scan',           icon: '⚡', label: 'Anomaly scan' },
+    { id: 'checkin',        icon: '📅', label: 'Check-in brief' },
+    { id: 'recruit',        icon: '🔍', label: 'Recruit suggestions' },
+    { id: 'vipReview',      icon: '💎', label: 'VIP review' },
+    { id: 'campaignLaunch', icon: '🚀', label: 'Campaign launch' },
+    { id: 'onboarding',     icon: '✨', label: 'Onboarding wave' },
+    { id: 'brandSafety',    icon: '🛡', label: 'Brand safety' },
+    { id: 'campaigns',      icon: '🎬', label: 'Creator campaigns' }
+  ];
+
+  // KPI options for the custom mode — matches v1ApplyFocusMode KPI logic.
+  const KPI_CATALOG = [
+    { id: 'auto',            label: 'Auto (persona default)' },
+    { id: 'alerts',          label: 'Alerts today',          source: { label: 'Alerts Today', valueKey: 'alertsCount',     deltaHtml: "<span style=\"color:var(--negative);font-weight:600;\">2 urgent</span> <span class=\"stat-sub\">· auto-prioritized</span>" } },
+    { id: 'invites',         label: 'Open invites',          source: { label: 'Open Invites', value: '9',                  deltaHtml: "<span style=\"color:var(--positive);font-weight:600;\">↑ 3 accepted</span> <span class=\"stat-sub\">last 24h</span>" } },
+    { id: 'checkins',        label: 'Upcoming check-ins',    source: { label: 'Upcoming Check-ins', valueKey: 'checkinsCount', deltaHtml: "<span style=\"color:var(--caution);font-weight:600;\">1 today</span> <span class=\"stat-sub\">· briefs ready</span>" } },
+    { id: 'compliance',      label: 'Compliance score',      source: { label: 'Compliance Score', value: '94%',            deltaHtml: "<span style=\"color:var(--positive);font-weight:600;\">↑ 2 pts</span> <span class=\"stat-sub\">vs last sweep</span>" } },
+    { id: 'live_campaigns',  label: 'Live campaigns',        source: { label: 'Live Campaigns', valueKey: 'campaignsLiveCount', deltaHtml: "<span class=\"stat-sub\">4 active · 2 in review</span>" } },
+    { id: 'vip_retention',   label: 'VIP retention',         source: { label: 'VIP Retention', value: '95%',               deltaHtml: "<span style=\"color:var(--positive);font-weight:600;\">19 of 20</span> <span class=\"stat-sub\">healthy</span>" } },
+    { id: 'launch_ready',    label: 'Launch readiness',      source: { label: 'Launch Readiness', value: '78%',            deltaHtml: "<span style=\"color:var(--caution);font-weight:600;\">3 steps left</span>" } },
+    { id: 'onboarding_n',    label: 'In onboarding',         source: { label: 'In Onboarding', value: '3',                 deltaHtml: "<span style=\"color:var(--info-default);font-weight:600;\">2 tracking pending</span>" } }
+  ];
+
+  // Emoji pool for the custom-mode icon picker.
+  const CF_EMOJI_POOL = ['⚡','📊','🔍','💎','🚀','✨','🛡','🎬','🧪','🎯','🔥','⭐','📌','✦','☕','🌅','📋','💡','🎁','📅'];
 
   // ── APP DATA & STATE STORE ──
   const AppState = {
@@ -5262,6 +6042,7 @@
     variant: 'v1',
     focusMode: 'daily_scan',
     focusModeHistory: ['daily_scan'],
+    customFocusModes: [],
     isBannerDismissed: false,
 
     // Active focus mode (orthogonal to persona) — see FOCUS_MODES constant below.
@@ -6517,7 +7298,7 @@
   function switchPersona(rawValue) {
     const parts = String(rawValue || '').split('-');
     const personaKey = parts[0] || 'aisha';
-    const validVariants = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7'];
+    const validVariants = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8'];
     const variant = validVariants.includes(parts[1]) ? parts[1] : 'v1';
 
     AppState.selectedPersona = personaKey;
@@ -6608,9 +7389,17 @@
     }
     renderV7Dashboard();
 
+    // V8 (Focus-Adaptive Nav) — only rendered when active. Also toggles body chrome class.
+    if (variant === 'v8') {
+      document.body.classList.add('variant-v8');
+    } else {
+      document.body.classList.remove('variant-v8');
+    }
+    renderV8Dashboard();
+
     // Apply the active focus mode AFTER all variant-specific renderers have run.
     // v1 → reshuffles hero/cards/KPI/sidebar/banner in place.
-    // v7 → already handled above. Other variants no-op for now.
+    // v7 / v8 → handled above. Other variants no-op for now.
     renderFocusModeChip();
     applyFocusMode(AppState.focusMode);
   }
@@ -8065,6 +8854,7 @@
     const variant = AppState.variant;
     if (variant === 'v1') v1ApplyFocusMode(modeId);
     if (variant === 'v7') renderV7Dashboard();
+    if (variant === 'v8') renderV8Dashboard();
     // v2..v6 do not currently react to focus mode (out of scope per the plan).
   }
 
@@ -9409,6 +10199,523 @@
   function v7BackToPicker() {
     AppState._v7AtPicker = true;
     renderV7Dashboard();
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // V8 — FOCUS-ADAPTIVE NAV
+  // ════════════════════════════════════════════════════════════
+  function renderV8Dashboard() {
+    const host = document.getElementById('v8-shell');
+    if (!host) return;
+    if (AppState.variant !== 'v8') {
+      host.innerHTML = '';
+      return;
+    }
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    // v8 reuses v5 page content. Custom modes can override later by setting persona.v8.
+    const v5 = data.v5 || {};
+    const mode = getFocusMode(AppState.focusMode);
+    // Pick recipe: preset modes come from FOCUS_NAV_RECIPES; custom modes carry their own .navRecipe.
+    const recipe = mode.isCustom && mode.navRecipe
+      ? mode.navRecipe
+      : (FOCUS_NAV_RECIPES[mode.id] || FOCUS_NAV_RECIPES.daily_scan);
+
+    host.innerHTML = `
+      ${v8RenderFocusbar(mode, recipe)}
+      <aside class="v8-sidenav">
+        ${v8RenderSideGroup(recipe.sideFocusGroup, mode, true)}
+        ${v8RenderSideGroup(V8_BROWSE_GROUP, mode, false)}
+      </aside>
+      <section class="v8-content">
+        ${v5RenderPageHeader(v5)}
+        <div class="v8-body">
+          ${v5RenderFilters(v5.filters)}
+          ${v5RenderListPane(v5)}
+          ${v5RenderActivity(v5.activity)}
+        </div>
+      </section>
+      <button class="v5-help" title="Help & Ask Impact" onclick="showToast('✦ Ask Impact opened.', 'info')">?</button>
+    `;
+  }
+
+  function v8RenderFocusbar(mode, recipe) {
+    const shortcuts = (recipe.topShortcuts || []).map(s => `
+      <button class="v8-shortcut" onclick="${s.action}">
+        <span class="v8-shortcut-icon">${s.icon}</span>
+        <span>${s.label}</span>
+        ${s.badge ? `<span class="v8-shortcut-badge">${s.badge}</span>` : ''}
+      </button>`).join('');
+    const editLink = mode.isCustom
+      ? `<span class="v8-focusbar-pill-edit" onclick="event.stopPropagation(); openCustomFocusBuilder('${mode.id}')" title="Edit this custom focus">✎</span>`
+      : '';
+    return `
+      <div class="v8-focusbar">
+        <button class="v8-focusbar-pill" onclick="event.stopPropagation(); openFocusPicker()">
+          <span class="v8-focusbar-pill-prefix">✦ Focus ·</span>
+          <span class="v8-focusbar-pill-icon">${mode.icon}</span>
+          <span class="v8-focusbar-pill-label">${mode.label}</span>
+          ${editLink}
+          <span class="v8-focusbar-pill-caret">▾</span>
+        </button>
+        <div class="v8-focusbar-sep"></div>
+        <div class="v8-focusbar-shortcuts">${shortcuts}</div>
+        <button class="v8-focusbar-customize" onclick="openCustomFocusBuilder()">＋ Customize</button>
+      </div>`;
+  }
+
+  function v8RenderSideGroup(group, mode, isFocusGroup) {
+    if (!group || !group.items) return '';
+    const items = group.items.map(it => `
+      <div class="v8-sidenav-item ${it.active ? 'active' : ''} ${isFocusGroup ? 'is-focus-tool' : ''}" onclick="${it.action || ''}">
+        <span class="v8-sidenav-item-icon">${it.icon || '·'}</span>
+        <span class="v8-sidenav-item-label">${it.label}</span>
+        ${it.badge ? `<span class="v8-sidenav-item-badge">${it.badge}</span>` : ''}
+      </div>`).join('');
+    const headerExtra = isFocusGroup
+      ? `<span class="v8-sidenav-mode-mini">${mode.icon} ${mode.label}</span>`
+      : '';
+    return `
+      <div class="v8-sidenav-group">
+        <div class="v8-sidenav-group-label">
+          <span>${group.label}</span>
+          ${headerExtra}
+        </div>
+        ${items}
+      </div>`;
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // CUSTOM-FOCUS BUILDER
+  // Right-edge slideout drawer. Opens fresh or to edit an existing custom mode.
+  // ════════════════════════════════════════════════════════════
+  function openCustomFocusBuilder(editingId) {
+    const editing = editingId ? AppState.customFocusModes.find(m => m.id === editingId) : null;
+    if (editing) {
+      AppState._customFocusDraft = {
+        editingId: editing.id,
+        name: editing.label,
+        icon: editing.icon,
+        topShortcutIds: (editing.navRecipe && editing.navRecipe.topShortcuts || []).map(t => t._catalogId).filter(Boolean),
+        sideItemIds: (editing.navRecipe && editing.navRecipe.sideFocusGroup && editing.navRecipe.sideFocusGroup.items || []).map(t => t._catalogId).filter(Boolean),
+        hero: editing.hero || 'none',
+        kpi: (editing._kpiCatalogId) || 'auto'
+      };
+      document.getElementById('cf-title').textContent = `Edit "${editing.label}"`;
+      document.getElementById('cf-save-btn').textContent = 'Save changes';
+    } else {
+      AppState._customFocusDraft = {
+        editingId: null,
+        name: '',
+        icon: '✦',
+        topShortcutIds: [],
+        sideItemIds: [],
+        hero: 'scan',
+        kpi: 'auto'
+      };
+      document.getElementById('cf-title').textContent = 'Build your focus';
+      document.getElementById('cf-save-btn').textContent = 'Save & apply';
+    }
+    cfRenderAll();
+    document.getElementById('cf-overlay').classList.add('active');
+  }
+
+  function closeCustomFocusBuilder() {
+    document.getElementById('cf-overlay').classList.remove('active');
+    AppState._customFocusDraft = null;
+  }
+
+  function resetCustomFocusForm() {
+    AppState._customFocusDraft = {
+      editingId: AppState._customFocusDraft ? AppState._customFocusDraft.editingId : null,
+      name: '', icon: '✦',
+      topShortcutIds: [], sideItemIds: [],
+      hero: 'scan', kpi: 'auto'
+    };
+    cfRenderAll();
+    showToast('Form reset.', 'info');
+  }
+
+  function cfRenderAll() {
+    const d = AppState._customFocusDraft;
+    if (!d) return;
+    document.getElementById('cf-name').value = d.name || '';
+    cfRenderEmojiGrid();
+    cfRenderTopShortcuts();
+    cfRenderSideItems();
+    cfRenderHero();
+    cfRenderKpi();
+    cfRenderPreview();
+  }
+
+  function cfRenderEmojiGrid() {
+    const d = AppState._customFocusDraft;
+    const host = document.getElementById('cf-emoji-grid');
+    host.innerHTML = CF_EMOJI_POOL.map(e => `
+      <div class="cf-emoji-cell ${e === d.icon ? 'selected' : ''}" onclick="cfPickIcon('${e}')">${e}</div>
+    `).join('');
+  }
+
+  function cfPickIcon(emoji) {
+    AppState._customFocusDraft.icon = emoji;
+    cfRenderEmojiGrid();
+    cfRenderPreview();
+  }
+
+  function cfRenderTopShortcuts() {
+    const d = AppState._customFocusDraft;
+    const host = document.getElementById('cf-top-list');
+    const counter = document.getElementById('cf-top-counter');
+    const max = 4;
+    const selected = d.topShortcutIds.length;
+    counter.textContent = `${selected} of ${max}`;
+    counter.classList.toggle('full', selected >= max);
+    host.innerHTML = TOP_SHORTCUT_CATALOG.map(s => {
+      const checked = d.topShortcutIds.includes(s.id);
+      const disabled = !checked && selected >= max;
+      return `
+        <label class="cf-check ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}">
+          <input type="checkbox" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''} onchange="cfToggleTopShortcut('${s.id}')">
+          <span class="cf-check-icon">${s.icon}</span>
+          <span class="cf-check-text">${s.label}</span>
+        </label>`;
+    }).join('');
+  }
+
+  function cfToggleTopShortcut(id) {
+    const d = AppState._customFocusDraft;
+    const idx = d.topShortcutIds.indexOf(id);
+    if (idx >= 0) d.topShortcutIds.splice(idx, 1);
+    else if (d.topShortcutIds.length < 4) d.topShortcutIds.push(id);
+    cfRenderTopShortcuts();
+  }
+
+  function cfRenderSideItems() {
+    const d = AppState._customFocusDraft;
+    const host = document.getElementById('cf-side-list');
+    const counter = document.getElementById('cf-side-counter');
+    const max = 6;
+    const selected = d.sideItemIds.length;
+    counter.textContent = `${selected} of ${max}`;
+    counter.classList.toggle('full', selected >= max);
+    host.innerHTML = SIDE_NAV_CATALOG.map(s => {
+      const checked = d.sideItemIds.includes(s.id);
+      const disabled = !checked && selected >= max;
+      return `
+        <label class="cf-check ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}">
+          <input type="checkbox" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''} onchange="cfToggleSideItem('${s.id}')">
+          <span class="cf-check-icon">${s.icon}</span>
+          <span class="cf-check-text">${s.label}</span>
+        </label>`;
+    }).join('');
+  }
+
+  function cfToggleSideItem(id) {
+    const d = AppState._customFocusDraft;
+    const idx = d.sideItemIds.indexOf(id);
+    if (idx >= 0) d.sideItemIds.splice(idx, 1);
+    else if (d.sideItemIds.length < 6) d.sideItemIds.push(id);
+    cfRenderSideItems();
+  }
+
+  function cfRenderHero() {
+    const d = AppState._customFocusDraft;
+    const host = document.getElementById('cf-hero-list');
+    host.innerHTML = HERO_CATALOG.map(h => `
+      <div class="cf-radio ${h.id === d.hero ? 'selected' : ''}" onclick="cfPickHero('${h.id}')">
+        <span class="cf-radio-icon">${h.icon}</span>
+        <span>${h.label}</span>
+      </div>`).join('');
+  }
+
+  function cfPickHero(id) {
+    AppState._customFocusDraft.hero = id;
+    cfRenderHero();
+  }
+
+  function cfRenderKpi() {
+    const d = AppState._customFocusDraft;
+    const host = document.getElementById('cf-kpi-list');
+    host.innerHTML = KPI_CATALOG.map(k => `
+      <div class="cf-radio ${k.id === d.kpi ? 'selected' : ''}" onclick="cfPickKpi('${k.id}')">
+        <span>${k.label}</span>
+      </div>`).join('');
+  }
+
+  function cfPickKpi(id) {
+    AppState._customFocusDraft.kpi = id;
+    cfRenderKpi();
+  }
+
+  function cfRenderPreview() {
+    const d = AppState._customFocusDraft;
+    if (!d) return;
+    d.name = (document.getElementById('cf-name').value || '').trim();
+    document.getElementById('cf-preview-icon').textContent = d.icon || '✦';
+    document.getElementById('cf-preview-label').textContent = d.name || 'My focus';
+  }
+
+  function saveCustomFocusMode() {
+    const d = AppState._customFocusDraft;
+    if (!d) return;
+    d.name = (document.getElementById('cf-name').value || '').trim();
+    if (!d.name) {
+      showToast('Give your focus a name first.', 'warning');
+      document.getElementById('cf-name').focus();
+      return;
+    }
+    if (d.topShortcutIds.length === 0 && d.sideItemIds.length === 0) {
+      showToast('Pick at least one shortcut or side-nav item.', 'warning');
+      return;
+    }
+
+    // Resolve catalog ids back to full atoms, tagging them with _catalogId for round-trip editing.
+    const topShortcuts = d.topShortcutIds.map(id => {
+      const c = TOP_SHORTCUT_CATALOG.find(s => s.id === id);
+      return c ? { _catalogId: c.id, icon: c.icon, label: c.label, action: c.action, badge: '' } : null;
+    }).filter(Boolean);
+    const sideItems = d.sideItemIds.map((id, i) => {
+      const c = SIDE_NAV_CATALOG.find(s => s.id === id);
+      return c ? { _catalogId: c.id, icon: c.icon, label: c.label, action: c.action, active: i === 0 } : null;
+    }).filter(Boolean);
+
+    const kpiEntry = KPI_CATALOG.find(k => k.id === d.kpi);
+    const heroEntry = HERO_CATALOG.find(h => h.id === d.hero);
+
+    const recipe = {
+      navRecipe: {
+        topShortcuts,
+        sideFocusGroup: { label: 'Custom focus tools', items: sideItems }
+      },
+      hero: heroEntry && heroEntry.id !== 'none' ? heroEntry.id : 'scan',
+      _kpiCatalogId: d.kpi,
+      kpi3: kpiEntry && kpiEntry.source ? kpiEntry.source : null,
+      cardSets: ['alerts', 'partners', 'campaigns'],
+      sidebarFocus: 'scan',
+      banner: { tone: 'info', label: `Custom · ${d.name}`, titleTemplate: `Your "${d.name}" focus is active. ${d.name.length > 30 ? '' : 'Customize again any time from the focus chip.'}` }
+    };
+
+    let saved;
+    if (d.editingId) {
+      // Update in place
+      const existing = AppState.customFocusModes.find(m => m.id === d.editingId);
+      if (existing) {
+        Object.assign(existing, {
+          label: d.name,
+          icon: d.icon,
+          desc: 'Custom focus mode',
+          cadence: 'Custom',
+          ...recipe
+        });
+        saved = existing;
+      }
+    } else {
+      saved = {
+        id: `custom_${Date.now()}`,
+        isCustom: true,
+        label: d.name,
+        icon: d.icon,
+        desc: 'Custom focus mode',
+        cadence: 'Custom',
+        ...recipe
+      };
+      AppState.customFocusModes.push(saved);
+    }
+
+    closeCustomFocusBuilder();
+    if (saved) setFocusMode(saved.id);
+    showToast(`Custom focus "${saved.label}" ${d.editingId ? 'updated' : 'created'}.`, 'success');
+  }
+
+  // Extend the v1 popover and the modal to include custom modes + a build-custom entry.
+  // The popover renderer is already in place; we extend it after the fact below.
+  const __origRenderFocusPopoverList = renderFocusPopoverList;
+  renderFocusPopoverList = function() {
+    const host = document.getElementById('focus-mode-popover-list');
+    if (!host) return;
+    const all = getAllFocusModes();
+    const items = all.map(m => `
+      <div class="focus-mode-popover-item ${m.id === AppState.focusMode ? 'active' : ''}"
+           onclick="pickFocusFromPopover('${m.id}')">
+        <span class="focus-mode-popover-icon">${m.icon}</span>
+        <span class="focus-mode-popover-text">
+          <span class="focus-mode-popover-title">${m.label}${m.isCustom ? ' <span style=\"font-size:9px;color:var(--ai-foreground);font-weight:700;\">CUSTOM</span>' : ''}</span>
+          <span class="focus-mode-popover-meta">${m.cadence}</span>
+        </span>
+        ${m.id === AppState.focusMode ? '<span class="focus-mode-popover-check">✓</span>' : ''}
+        ${m.isCustom ? `<span class="focus-mode-popover-check" style="color:var(--text-subdued);cursor:pointer;" onclick="event.stopPropagation(); closeFocusPicker(); openCustomFocusBuilder('${m.id}')">✎</span>` : ''}
+      </div>`).join('');
+    const buildRow = `
+      <div class="focus-mode-popover-item" style="border-top:1px dashed var(--border-default);margin-top:4px;color:var(--ai-foreground);font-weight:700;"
+           onclick="closeFocusPicker(); openCustomFocusBuilder()">
+        <span class="focus-mode-popover-icon" style="background:var(--ai-foreground);color:#fff;border-color:var(--ai-foreground);">＋</span>
+        <span class="focus-mode-popover-text">
+          <span class="focus-mode-popover-title">Build custom focus</span>
+          <span class="focus-mode-popover-meta">Pick shortcuts, hero, KPI</span>
+        </span>
+      </div>`;
+    host.innerHTML = items + buildRow;
+  };
+
+  // Extend the picker MODAL tiles too (the bigger "Browse all 8" grid).
+  const __origRenderFocusPickerTiles = renderFocusPickerTiles;
+  renderFocusPickerTiles = function() {
+    const host = document.getElementById('focus-mode-options');
+    if (!host) return;
+    const all = getAllFocusModes();
+    const tiles = all.map(m => `
+      <div class="focus-mode-tile ${m.id === tempFocusMode ? 'selected' : ''}"
+           data-mode="${m.id}"
+           onclick="selectFocusOption(this, '${m.id}')">
+        <div class="focus-mode-tile-icon">${m.icon}</div>
+        <div class="focus-mode-tile-body">
+          <div class="focus-mode-tile-title">${m.label}${m.isCustom ? ' · <span style="color:var(--ai-foreground);font-weight:700;font-size:10px;">CUSTOM</span>' : ''}</div>
+          <div class="focus-mode-tile-desc">${m.desc}</div>
+          <div class="focus-mode-tile-cadence">${m.cadence}</div>
+        </div>
+        <div class="focus-mode-tile-check">✓</div>
+      </div>`).join('');
+    const buildTile = `
+      <div class="focus-mode-tile" style="border-style:dashed;border-color:var(--ai-foreground);"
+           onclick="closeFocusPickerModal(); openCustomFocusBuilder();">
+        <div class="focus-mode-tile-icon" style="background:var(--ai-foreground);color:#fff;border-color:var(--ai-foreground);">＋</div>
+        <div class="focus-mode-tile-body">
+          <div class="focus-mode-tile-title" style="color:var(--ai-foreground);">Build custom focus</div>
+          <div class="focus-mode-tile-desc">Hand-craft shortcuts, side nav, hero, and KPI.</div>
+          <div class="focus-mode-tile-cadence">Custom</div>
+        </div>
+        <div class="focus-mode-tile-check">＋</div>
+      </div>`;
+    host.innerHTML = tiles + buildTile;
+  };
+
+  // Extend the v7 picker grid to include custom modes + a build-custom tile.
+  const __origRenderV7Picker = renderV7Picker;
+  renderV7Picker = function() {
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    const alertsN = (data.alerts || []).length;
+    const checkinsN = (data.checkins || []).length;
+    const recruitN = (data.recruit || []).length;
+    const onboardingN = (AppState.modeData.onboardingWave.queue || []).length;
+    let recommendedId = 'daily_scan';
+    if (data.sidebarFocus === 'checkin') recommendedId = 'checkin_prep';
+    else if (data.sidebarFocus === 'recruit') recommendedId = 'recruit_sprint';
+    const liveCounters = {
+      daily_scan:      { value: alertsN,    label: alertsN === 1 ? 'alert today' : 'alerts today',   tone: alertsN >= 3 ? 'urgent' : '' },
+      checkin_prep:    { value: checkinsN,  label: checkinsN === 1 ? 'check-in' : 'check-ins',       tone: '' },
+      recruit_sprint:  { value: recruitN,   label: 'candidates ready',                                tone: '' },
+      creator_campaigns: { value: (data.campaigns || []).length, label: 'campaigns', tone: '' },
+      vip_review:      { value: (data.topPartners || []).length, label: 'VIPs in view', tone: '' },
+      campaign_launch: { value: AppState.modeData.campaignLaunch.steps.filter(s => !s.done).length, label: 'steps left', tone: 'urgent' },
+      onboarding_wave: { value: onboardingN, label: 'in queue', tone: '' },
+      brand_safety:    { value: AppState.modeData.brandSafety.violations.filter(v => v.tone === 'critical' || v.tone === 'warning').length, label: 'items to triage', tone: 'urgent' }
+    };
+    const allModes = getAllFocusModes();
+    const tiles = allModes.map(m => {
+      const c = liveCounters[m.id] || { value: 0, label: m.isCustom ? 'custom' : '' };
+      const rec = m.id === recommendedId && !m.isCustom;
+      const editPencil = m.isCustom ? `<span style="position:absolute;top:8px;right:32px;color:var(--text-subdued);font-size:14px;cursor:pointer;" onclick="event.stopPropagation(); openCustomFocusBuilder('${m.id}')" title="Edit">✎</span>` : '';
+      return `
+        <div class="v7-picker-tile ${rec ? 'recommended' : ''}" onclick="v7PickMode('${m.id}')">
+          ${rec ? '<span class="v7-picker-tile-recommended-pill">✦ Recommended</span>' : ''}
+          ${m.isCustom ? '<span class="v7-picker-tile-recommended-pill" style="background:var(--accent);left:auto;right:16px;">CUSTOM</span>' : ''}
+          ${editPencil}
+          <div class="v7-picker-tile-icon">${m.icon}</div>
+          <div class="v7-picker-tile-label">${m.label}</div>
+          <div class="v7-picker-tile-desc">${m.desc}</div>
+          <div class="v7-picker-tile-stats">
+            <span class="v7-picker-tile-stat ${c.tone || ''}">${c.value || ''} ${c.label}</span>
+            <span class="v7-picker-tile-cadence">${m.cadence}</span>
+          </div>
+        </div>`;
+    }).join('');
+    const buildTile = `
+      <div class="v7-picker-tile" style="border-style:dashed;border-color:var(--ai-foreground);background:linear-gradient(135deg, var(--ai-background) 0%, var(--background) 60%);" onclick="openCustomFocusBuilder()">
+        <div class="v7-picker-tile-icon" style="background:var(--ai-foreground);color:#fff;border-color:var(--ai-foreground);">＋</div>
+        <div class="v7-picker-tile-label" style="color:var(--ai-foreground);">Build custom focus</div>
+        <div class="v7-picker-tile-desc">Hand-craft shortcuts, side nav, hero, and KPI tailored to your week.</div>
+        <div class="v7-picker-tile-stats">
+          <span class="v7-picker-tile-stat" style="color:var(--ai-foreground);">＋ New mode</span>
+          <span class="v7-picker-tile-cadence">Custom</span>
+        </div>
+      </div>`;
+    const recents = (AppState.focusModeHistory || []).filter(id => id).slice(0, 4);
+    const recentChips = recents.length === 0 ? '' : `
+      <div class="v7-picker-recents">
+        <span>Recently picked:</span>
+        ${recents.map(id => {
+          const m = getFocusMode(id);
+          return `<span class="v7-picker-recent-chip" onclick="v7PickMode('${id}')"><span>${m.icon}</span>${m.label}</span>`;
+        }).join('')}
+      </div>`;
+    return `
+      <div class="v7-picker">
+        <div class="v7-picker-header">
+          <div class="v7-picker-greeting">Hello, ${persona === 'aisha' ? 'Aisha' : persona === 'priya' ? 'Priya' : 'Marcus'}. What are you focused on?</div>
+          <div class="v7-picker-sub">
+            <span>You logged in at 8:42 am · the platform changed overnight.</span>
+            <span class="v7-picker-sub-stat">⚡ ${alertsN} alerts</span>
+            <span class="v7-picker-sub-stat">📅 ${checkinsN} check-ins this week</span>
+            <span class="v7-picker-sub-stat">🆕 ${onboardingN} onboarding</span>
+          </div>
+        </div>
+        <div class="v7-picker-grid">${tiles}${buildTile}</div>
+        ${recentChips}
+      </div>`;
+  };
+
+  // Extend the v7 composed-view dispatcher so custom modes render a sensible page.
+  const __origRenderV7ComposedView = renderV7ComposedView;
+  renderV7ComposedView = function(modeId) {
+    const mode = getFocusMode(modeId);
+    if (mode && mode.isCustom) {
+      return v7RenderCustomView(mode);
+    }
+    return __origRenderV7ComposedView(modeId);
+  };
+
+  function v7RenderCustomView(mode) {
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    // Hero block — call the existing renderHeroByType into a temp host.
+    let heroHtml = '';
+    if (mode.hero && mode.hero !== 'none') {
+      const tmp = document.createElement('div');
+      tmp.id = 'persona-hero-tmp';
+      // renderHeroByType reads #persona-hero, so swap it briefly.
+      const real = document.getElementById('persona-hero');
+      const originalId = real ? real.id : null;
+      if (real) real.id = 'persona-hero-real-stash';
+      tmp.id = 'persona-hero';
+      document.body.appendChild(tmp);
+      renderHeroByType(mode.hero);
+      heroHtml = `<div class="v7-wrap">${tmp.innerHTML}</div>`;
+      tmp.remove();
+      if (real && originalId) real.id = originalId;
+    }
+
+    const recipe = mode.navRecipe || {};
+    const shortcuts = (recipe.topShortcuts || []).map(s => `
+      <div class="v7-scan-card" onclick="${s.action || ''}">
+        <div class="v7-scan-card-head"><span class="v7-scan-card-emoji">${s.icon}</span></div>
+        <div class="v7-scan-card-title">${s.label}</div>
+        <div class="v7-scan-card-meta">Quick action from your custom focus</div>
+      </div>`).join('');
+    const sideItems = (recipe.sideFocusGroup && recipe.sideFocusGroup.items || []).map(s => `
+      <div class="v7-scan-card" onclick="${s.action || ''}">
+        <div class="v7-scan-card-head"><span class="v7-scan-card-emoji">${s.icon}</span></div>
+        <div class="v7-scan-card-title">${s.label}</div>
+        <div class="v7-scan-card-meta">Side-nav item · pinned by you</div>
+      </div>`).join('');
+    return `
+      <div class="v7-view">
+        <div class="v7-view-title">${mode.icon} ${mode.label}</div>
+        <div class="v7-view-meta">Custom focus · click ✎ in the picker to edit</div>
+        ${heroHtml}
+        ${shortcuts ? `<div class="v7-wrap"><h3>Top shortcuts</h3><div class="v7-scan-board">${shortcuts}</div></div>` : ''}
+        ${sideItems ? `<div class="v7-wrap"><h3>Side-nav items</h3><div class="v7-scan-board">${sideItems}</div></div>` : ''}
+      </div>`;
   }
 
 </script>
