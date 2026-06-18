@@ -653,27 +653,32 @@
      v3 = adventurous per-persona reimagining (keeps current sidebar).
      v4 = Co-pilot Console (no sidebar, Ask Impact is the navigation).
      v5 = HubSpot Pattern (top mega-nav, saved views, list-view shell).
-     v6 = HubSpot Pattern (64px side icon rail with hover-flyout sub-nav). */
+     v6 = HubSpot Pattern (64px side icon rail with hover-flyout sub-nav).
+     v7 = Focus Mode First (picker is the hero; mode-specific composed dashboard). */
   .main[data-variant="v1"] .v2-only,
   .main[data-variant="v1"] .v3-only,
   .main[data-variant="v1"] .v4-only,
   .main[data-variant="v1"] .v5-only,
-  .main[data-variant="v1"] .v6-only { display: none; }
+  .main[data-variant="v1"] .v6-only,
+  .main[data-variant="v1"] .v7-only { display: none; }
   .main[data-variant="v2"] .v1-only,
   .main[data-variant="v2"] .v3-only,
   .main[data-variant="v2"] .v4-only,
   .main[data-variant="v2"] .v5-only,
-  .main[data-variant="v2"] .v6-only { display: none; }
+  .main[data-variant="v2"] .v6-only,
+  .main[data-variant="v2"] .v7-only { display: none; }
   .main[data-variant="v3"] .v1-only,
   .main[data-variant="v3"] .v2-only,
   .main[data-variant="v3"] .v4-only,
   .main[data-variant="v3"] .v5-only,
-  .main[data-variant="v3"] .v6-only { display: none; }
+  .main[data-variant="v3"] .v6-only,
+  .main[data-variant="v3"] .v7-only { display: none; }
   .main[data-variant="v4"] .v1-only,
   .main[data-variant="v4"] .v2-only,
   .main[data-variant="v4"] .v3-only,
   .main[data-variant="v4"] .v5-only,
   .main[data-variant="v4"] .v6-only,
+  .main[data-variant="v4"] .v7-only,
   .main[data-variant="v4"] .page-header,
   .main[data-variant="v4"] .context-banner,
   .main[data-variant="v4"] .persona-hero { display: none; }
@@ -682,6 +687,7 @@
   .main[data-variant="v5"] .v3-only,
   .main[data-variant="v5"] .v4-only,
   .main[data-variant="v5"] .v6-only,
+  .main[data-variant="v5"] .v7-only,
   .main[data-variant="v5"] .page-header,
   .main[data-variant="v5"] .context-banner,
   .main[data-variant="v5"] .persona-hero { display: none; }
@@ -690,9 +696,19 @@
   .main[data-variant="v6"] .v3-only,
   .main[data-variant="v6"] .v4-only,
   .main[data-variant="v6"] .v5-only,
+  .main[data-variant="v6"] .v7-only,
   .main[data-variant="v6"] .page-header,
   .main[data-variant="v6"] .context-banner,
   .main[data-variant="v6"] .persona-hero { display: none; }
+  .main[data-variant="v7"] .v1-only,
+  .main[data-variant="v7"] .v2-only,
+  .main[data-variant="v7"] .v3-only,
+  .main[data-variant="v7"] .v4-only,
+  .main[data-variant="v7"] .v5-only,
+  .main[data-variant="v7"] .v6-only,
+  .main[data-variant="v7"] .page-header,
+  .main[data-variant="v7"] .context-banner,
+  .main[data-variant="v7"] .persona-hero { display: none; }
   /* In v4 the sidebar and topnav center links collapse — Ask Impact is the nav */
   body.variant-v4 .sidebar { display: none; }
   body.variant-v4 .topnav-links { display: none; }
@@ -710,6 +726,10 @@
   body.variant-v6 .sidebar { display: none; }
   body.variant-v6 .topnav-links { display: none; }
   body.variant-v6 .main { max-width: none; padding: 0; }
+  /* In v7 the focus picker IS the dashboard. Same chrome rules as v5/v6. */
+  body.variant-v7 .sidebar { display: none; }
+  body.variant-v7 .topnav-links { display: none; }
+  body.variant-v7 .main { max-width: none; padding: 0; }
 
   /* ── V2 DASHBOARD ── */
   #v2-dashboard {
@@ -2057,6 +2077,450 @@
     opacity: 1;
   }
   .toast-icon { font-size: 16px; }
+
+  /* ════════════════════════════════════════════════════════════
+     FOCUS MODES — chip in the page header, popover, modal tiles
+     ════════════════════════════════════════════════════════════ */
+
+  .page-header-left { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+  .focus-mode-chip-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    position: relative;
+  }
+  .focus-mode-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, var(--ai-background), #EDE4FF);
+    border: 1.5px solid var(--ai-border);
+    color: var(--ai-foreground);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(75, 50, 150, 0.12);
+    transition: var(--transition-fast);
+  }
+  .focus-mode-chip:hover {
+    background: linear-gradient(135deg, #EDE4FF, #DAC5FF);
+    box-shadow: 0 4px 12px rgba(75, 50, 150, 0.22);
+    transform: translateY(-1px);
+  }
+  .focus-mode-chip-prefix {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+  .focus-mode-chip-icon { font-size: 15px; line-height: 1; }
+  .focus-mode-chip-label { font-size: 13px; font-weight: 700; }
+  .focus-mode-chip-caret { font-size: 10px; opacity: 0.55; }
+
+  .focus-mode-chip-secondary {
+    background: transparent;
+    border: none;
+    color: var(--text-interactive);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+  }
+  .focus-mode-chip-secondary:hover { background: var(--surface-hover); color: var(--accent); }
+
+  .focus-mode-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 320px;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    padding: 8px;
+    z-index: 80;
+    display: none;
+    animation: focusPopoverIn 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .focus-mode-popover.open { display: block; }
+  @keyframes focusPopoverIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .focus-mode-popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px 6px;
+    border-bottom: 1px solid var(--border-default);
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-subdued);
+  }
+  .focus-mode-popover-hint { font-weight: 500; text-transform: none; letter-spacing: 0; }
+  .focus-mode-popover-list { display: flex; flex-direction: column; gap: 2px; }
+  .focus-mode-popover-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .focus-mode-popover-item:hover { background: var(--surface-hover); }
+  .focus-mode-popover-item.active { background: var(--sidebar-accent); }
+  .focus-mode-popover-icon {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .focus-mode-popover-item.active .focus-mode-popover-icon {
+    background: var(--ai-background);
+    border-color: var(--ai-border);
+  }
+  .focus-mode-popover-text { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+  .focus-mode-popover-title { font-size: 13px; font-weight: 700; color: var(--foreground); }
+  .focus-mode-popover-meta { font-size: 11px; color: var(--text-subdued); }
+  .focus-mode-popover-check { color: var(--accent); font-weight: 700; }
+
+  /* Focus-mode picker modal (bigger 8-tile grid) */
+  .modal-focus { width: 680px; max-width: 90vw; }
+  .focus-mode-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 16px 0 24px;
+  }
+  .focus-mode-tile {
+    position: relative;
+    display: grid;
+    grid-template-columns: 44px 1fr 20px;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 16px;
+    border: 2px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    background: var(--background);
+  }
+  .focus-mode-tile:hover { border-color: #CBD5E1; background: var(--background-subdued); }
+  .focus-mode-tile.selected {
+    border-color: var(--ai-foreground);
+    background: linear-gradient(135deg, var(--ai-background), #FFFFFF);
+    box-shadow: 0 4px 12px rgba(75, 50, 150, 0.18);
+  }
+  .focus-mode-tile-icon {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-md);
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .focus-mode-tile.selected .focus-mode-tile-icon {
+    background: var(--ai-foreground);
+    color: #fff;
+    border-color: var(--ai-foreground);
+  }
+  .focus-mode-tile-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .focus-mode-tile-title { font-size: 14px; font-weight: 700; color: var(--foreground); }
+  .focus-mode-tile-desc { font-size: 12px; color: var(--text-subdued); line-height: 1.35; }
+  .focus-mode-tile-cadence {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ai-foreground);
+    background: var(--ai-background);
+    border: 1px solid var(--ai-border);
+    border-radius: 9999px;
+    padding: 2px 8px;
+    align-self: flex-start;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .focus-mode-tile-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border-default);
+    color: transparent;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+  }
+  .focus-mode-tile.selected .focus-mode-tile-check {
+    background: var(--ai-foreground);
+    border-color: var(--ai-foreground);
+    color: #fff;
+  }
+
+  /* ── V1 mode-specific heroes ── */
+  .vip-hero {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 18px;
+    align-items: center;
+  }
+  .vip-hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 22px;
+    border-right: 1px solid var(--border-default);
+  }
+  .vip-hero-stat-value { font-size: 28px; font-weight: 700; color: var(--positive); letter-spacing: -0.4px; }
+  .vip-hero-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-subdued); }
+  .vip-hero-avatars { display: flex; align-items: center; gap: -8px; }
+  .vip-hero-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--sidebar-accent);
+    border: 2px solid var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-left: -10px;
+  }
+  .vip-hero-avatar:first-child { margin-left: 0; }
+  .vip-hero-avatar[data-state="risk"] { box-shadow: 0 0 0 2px var(--negative); }
+  .vip-hero-avatar[data-state="watch"] { box-shadow: 0 0 0 2px var(--caution); }
+  .vip-hero-avatar[data-state="healthy"] { box-shadow: 0 0 0 2px var(--positive); }
+  .vip-hero-summary { font-size: 13px; color: var(--text-default); line-height: 1.5; }
+  .vip-hero-summary strong { font-weight: 700; }
+
+  .launch-hero {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+  .launch-hero-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .launch-hero-title { font-size: 16px; font-weight: 700; color: var(--foreground); }
+  .launch-hero-meta { font-size: 12px; color: var(--text-subdued); margin-top: 2px; }
+  .launch-hero-readiness {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-subdued);
+  }
+  .launch-hero-ring {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) calc(var(--pct, 78) * 1%), var(--muted) 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--foreground);
+    position: relative;
+  }
+  .launch-hero-ring::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: var(--background);
+  }
+  .launch-hero-ring span { position: relative; z-index: 1; }
+  .launch-hero-steps {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .launch-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--background-subdued);
+    font-size: 13px;
+  }
+  .launch-step.done { color: var(--text-subdued); }
+  .launch-step.done .launch-step-title { text-decoration: line-through; }
+  .launch-step-check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .launch-step.done .launch-step-check {
+    background: var(--positive);
+    border-color: var(--positive);
+    color: #fff;
+  }
+  .launch-step-body { flex: 1; min-width: 0; }
+  .launch-step-title { font-weight: 600; color: var(--foreground); }
+  .launch-step-meta { font-size: 11px; color: var(--text-subdued); }
+
+  .onboard-hero {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+  }
+  .onboard-hero-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .onboard-hero-title { font-size: 15px; font-weight: 700; color: var(--foreground); }
+  .onboard-hero-meta { font-size: 12px; color: var(--text-subdued); margin-top: 2px; }
+  .onboard-list { display: flex; flex-direction: column; gap: 8px; }
+  .onboard-row {
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--background-subdued);
+  }
+  .onboard-row[data-state="live"]     { border-left: 3px solid var(--positive); }
+  .onboard-row[data-state="kit"]      { border-left: 3px solid var(--caution); }
+  .onboard-row[data-state="tracking"] { border-left: 3px solid var(--negative); }
+  .onboard-avatar {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .onboard-name { font-size: 13px; font-weight: 700; color: var(--foreground); }
+  .onboard-meta { font-size: 11px; color: var(--text-subdued); }
+
+  .safety-hero {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+  }
+  .safety-hero-top {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 22px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .safety-score {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: conic-gradient(var(--positive) calc(var(--pct, 94) * 1%), var(--negative-bg) 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .safety-score::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: var(--background);
+  }
+  .safety-score-value {
+    position: relative;
+    z-index: 1;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--positive);
+    letter-spacing: -0.5px;
+  }
+  .safety-score-label {
+    position: relative;
+    z-index: 1;
+    font-size: 9px;
+    color: var(--text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: -2px;
+  }
+  .safety-hero-summary { font-size: 13px; line-height: 1.5; }
+  .safety-hero-summary strong { font-weight: 700; }
+  .safety-violations { display: flex; flex-direction: column; gap: 8px; }
+  .safety-violation {
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--background-subdued);
+  }
+  .safety-violation[data-tone="critical"] { border-left: 3px solid var(--negative); }
+  .safety-violation[data-tone="warning"]  { border-left: 3px solid var(--caution); }
+  .safety-violation[data-tone="positive"] { border-left: 3px solid var(--positive); }
+  .safety-violation-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .safety-violation-title { font-size: 13px; font-weight: 700; color: var(--foreground); }
+  .safety-violation-meta { font-size: 11px; color: var(--text-subdued); }
+
+  .creatorcamp-hero {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: center;
+  }
+  .creatorcamp-hero-stat-value { font-size: 24px; font-weight: 700; color: var(--accent); letter-spacing: -0.3px; }
+  .creatorcamp-hero-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-subdued); }
+  .creatorcamp-hero-summary { font-size: 13px; color: var(--text-default); line-height: 1.5; }
+  .creatorcamp-hero-summary strong { font-weight: 700; }
 
   /* ════════════════════════════════════════════════════════════
      V3 DASHBOARDS — adventurous per-persona reimaginings.
@@ -3876,42 +4340,326 @@
     .v6-body .v5-activity { display: none; }
   }
 
+  /* ════════════════════════════════════════════════════════════
+     V7 — FOCUS MODE FIRST
+     Picker is the dashboard. Pick a mode → composed view.
+     ════════════════════════════════════════════════════════════ */
+
+  .v7-shell {
+    min-height: calc(100vh - var(--header-height));
+    background: var(--background-subdued);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Picker view ── */
+  .v7-picker {
+    flex: 1;
+    padding: 36px 40px 48px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .v7-picker-header {
+    margin-bottom: 28px;
+  }
+  .v7-picker-greeting {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .v7-picker-sub {
+    font-size: 14px;
+    color: var(--text-subdued);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .v7-picker-sub-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .v7-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 1100px) { .v7-picker-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 820px)  { .v7-picker-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .v7-picker-tile {
+    position: relative;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 22px 20px;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 200px;
+  }
+  .v7-picker-tile:hover {
+    border-color: var(--ai-foreground);
+    box-shadow: 0 12px 32px rgba(75, 50, 150, 0.15);
+    transform: translateY(-3px);
+  }
+  .v7-picker-tile-icon {
+    width: 52px; height: 52px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--ai-background), #EDE4FF);
+    border: 1px solid var(--ai-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+  }
+  .v7-picker-tile.recommended {
+    border-color: var(--ai-foreground);
+    background: linear-gradient(135deg, var(--ai-background) 0%, var(--background) 60%);
+  }
+  .v7-picker-tile-recommended-pill {
+    position: absolute;
+    top: -10px; left: 16px;
+    background: var(--ai-foreground);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .v7-picker-tile-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.1px;
+  }
+  .v7-picker-tile-desc {
+    font-size: 12px;
+    color: var(--text-subdued);
+    line-height: 1.45;
+    flex: 1;
+  }
+  .v7-picker-tile-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-default);
+  }
+  .v7-picker-tile-stat {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .v7-picker-tile-stat.urgent { color: var(--negative); }
+  .v7-picker-tile-stat.positive { color: var(--positive); }
+  .v7-picker-tile-cadence {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .v7-picker-recents {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border-default);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--text-subdued);
+  }
+  .v7-picker-recent-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: 9999px;
+    cursor: pointer;
+    color: var(--foreground);
+    font-weight: 600;
+    transition: var(--transition-fast);
+  }
+  .v7-picker-recent-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── Mode bar (after picking a mode) ── */
+  .v7-modebar {
+    background: var(--background);
+    border-bottom: 1px solid var(--border-default);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: var(--header-height);
+    z-index: 10;
+  }
+  .v7-modebar-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-interactive);
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+    background: transparent;
+    border: none;
+  }
+  .v7-modebar-back:hover { background: var(--surface-hover); }
+  .v7-modebar-active {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, var(--ai-background), #EDE4FF);
+    border: 1px solid var(--ai-border);
+    color: var(--ai-foreground);
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .v7-modebar-active-icon { font-size: 14px; }
+  .v7-modebar-others {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow-x: auto;
+    flex: 1;
+  }
+  .v7-modebar-other-chip {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid var(--border-default);
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-subdued);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition-fast);
+  }
+  .v7-modebar-other-chip:hover { background: var(--surface-hover); color: var(--foreground); border-color: var(--accent); }
+
+  /* ── Mode composed views ── */
+  .v7-view {
+    padding: 26px 32px 40px;
+    flex: 1;
+    overflow-y: auto;
+  }
+  .v7-view-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+  .v7-view-meta {
+    font-size: 13px;
+    color: var(--text-subdued);
+    margin-bottom: 22px;
+  }
+  .v7-view-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 1000px) { .v7-view-grid-2 { grid-template-columns: 1fr; } }
+
+  /* Daily Scan board (severity-sorted cards) */
+  .v7-scan-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .v7-scan-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    border-left: 4px solid var(--accent);
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .v7-scan-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .v7-scan-card[data-tone="critical"] { border-left-color: var(--negative); }
+  .v7-scan-card[data-tone="warning"]  { border-left-color: var(--caution); }
+  .v7-scan-card[data-tone="positive"] { border-left-color: var(--positive); }
+  .v7-scan-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .v7-scan-card-emoji { font-size: 22px; }
+  .v7-scan-card-severity {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: var(--muted);
+    color: var(--muted-foreground);
+  }
+  .v7-scan-card[data-tone="critical"] .v7-scan-card-severity { background: var(--negative-bg); color: var(--negative); }
+  .v7-scan-card[data-tone="warning"]  .v7-scan-card-severity { background: var(--caution-bg); color: var(--caution); }
+  .v7-scan-card[data-tone="positive"] .v7-scan-card-severity { background: var(--positive-bg); color: var(--positive); }
+  .v7-scan-card-title { font-size: 14px; font-weight: 700; color: var(--foreground); margin-bottom: 6px; }
+  .v7-scan-card-meta { font-size: 12px; color: var(--text-subdued); line-height: 1.45; }
+  .v7-scan-card-actions { margin-top: 10px; }
+
+  /* Wrappers for reused renderers — give them v7 padding */
+  .v7-wrap { background: var(--background); border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: 22px; }
+  .v7-wrap h3 { font-size: 14px; font-weight: 700; color: var(--text-subdued); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
+
+  /* Pipeline reused from v4 — slight visual restyle for v7 */
+  .v7-view .v4-pipeline { background: var(--background-subdued); padding: 16px; border-radius: var(--radius-lg); border: 1px solid var(--border-default); }
+
+  /* Onboarding/Brand-safety/Launch reuse the v1 hero builders by wrapping them. */
+
 </style>
 </head>
 <body>
 
-<!-- ── ROLE SELECT CONFIRM MODAL ── -->
-<div class="modal-overlay" id="modal-role-confirm">
-  <div class="modal">
-    <div style="font-size:32px;margin-bottom:12px;">👋</div>
-    <div class="modal-title">What is your primary focus this week?</div>
-    <div class="modal-desc">We will adapt the dashboard surfaces and prioritize your jobs-to-be-done.</div>
-    <div class="modal-options">
-      <div class="modal-option selected" onclick="selectRoleOption(this, 'aisha')">
-        <div class="modal-option-icon">🤝</div>
-        <div>
-          <div class="modal-option-title">Affiliate Creator Manager</div>
-          <div class="modal-option-desc">Manage check-ins, recruit partners, issue bonuses</div>
-        </div>
-      </div>
-      <div class="modal-option" onclick="selectRoleOption(this, 'priya')">
-        <div class="modal-option-icon">🎯</div>
-        <div>
-          <div class="modal-option-title">Creator & Campaign Lead</div>
-          <div class="modal-option-desc">Recruitment focus, review drafts, creator campaigns</div>
-        </div>
-      </div>
-      <div class="modal-option" onclick="selectRoleOption(this, 'marcus')">
-        <div class="modal-option-icon">📊</div>
-        <div>
-          <div class="modal-option-title">Affiliate Program Lead</div>
-          <div class="modal-option-desc">Meticulous relationship monitoring, check-ins, reviews</div>
-        </div>
-      </div>
+<!-- ── FOCUS MODE PICKER MODAL ── -->
+<div class="modal-overlay" id="modal-focus-picker">
+  <div class="modal modal-focus">
+    <div style="font-size:32px;margin-bottom:12px;">✦</div>
+    <div class="modal-title">Pick your focus for this session</div>
+    <div class="modal-desc">Each focus mode reshapes the dashboard around the job you're doing — hero, alerts, KPIs, and recommended actions all adapt. You can change this any time from the chip in the page header.</div>
+    <div class="focus-mode-options" id="focus-mode-options">
+      <!-- Tiles populated by JS from FOCUS_MODES -->
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeRoleConfirmModal()">Not now</button>
-      <button class="btn-primary" onclick="confirmRoleSelection()">Confirm Focus</button>
+      <button class="btn-secondary" onclick="closeFocusPickerModal()">Skip for now</button>
+      <button class="btn-primary" onclick="confirmFocusSelection()">Apply focus</button>
     </div>
   </div>
 </div>
@@ -4048,6 +4796,7 @@
         <option value="aisha-v4">Aisha — v4 · Co-pilot (Analyst)</option>
         <option value="aisha-v5">Aisha — v5 · HubSpot Pattern (Top Nav)</option>
         <option value="aisha-v6">Aisha — v6 · HubSpot Pattern (Side Nav)</option>
+        <option value="aisha-v7">Aisha — v7 · Focus Mode First</option>
       </optgroup>
       <optgroup label="Priya Nguyen (Chewy Brand)">
         <option value="priya-v1">Priya — v1 · Jobs-to-be-done</option>
@@ -4056,6 +4805,7 @@
         <option value="priya-v4">Priya — v4 · Co-pilot (Scout)</option>
         <option value="priya-v5">Priya — v5 · HubSpot Pattern (Top Nav)</option>
         <option value="priya-v6">Priya — v6 · HubSpot Pattern (Side Nav)</option>
+        <option value="priya-v7">Priya — v7 · Focus Mode First</option>
       </optgroup>
       <optgroup label="Marcus Delgado (Fenty Beauty Brand)">
         <option value="marcus-v1">Marcus — v1 · Jobs-to-be-done</option>
@@ -4064,6 +4814,7 @@
         <option value="marcus-v4">Marcus — v4 · Co-pilot (Coach)</option>
         <option value="marcus-v5">Marcus — v5 · HubSpot Pattern (Top Nav)</option>
         <option value="marcus-v6">Marcus — v6 · HubSpot Pattern (Side Nav)</option>
+        <option value="marcus-v7">Marcus — v7 · Focus Mode First</option>
       </optgroup>
     </select>
   </div>
@@ -4127,9 +4878,28 @@
 
     <!-- PAGE TITLE HEADER -->
     <div class="page-header">
-      <div>
+      <div class="page-header-left">
         <h1 class="page-title" id="page-title">Good morning, Aisha 👋</h1>
         <div class="page-subtitle" id="page-subtitle">You have a partner check-in with HomeGoods Network on Friday — here's what you need.</div>
+        <!-- ── PERSISTENT FOCUS-MODE CHIP ── -->
+        <div class="focus-mode-chip-row">
+          <button class="focus-mode-chip" id="focus-mode-chip" onclick="event.stopPropagation(); openFocusPicker()" aria-haspopup="true">
+            <span class="focus-mode-chip-prefix">✦ Focus ·</span>
+            <span class="focus-mode-chip-icon">⚡</span>
+            <span class="focus-mode-chip-label">Daily Scan</span>
+            <span class="focus-mode-chip-caret">▾</span>
+          </button>
+          <button class="focus-mode-chip-secondary" onclick="openFocusPickerModal()" title="See all focus modes">Browse all 8 →</button>
+
+          <!-- Compact popover (anchored under the chip) -->
+          <div class="focus-mode-popover" id="focus-mode-popover" onclick="event.stopPropagation()">
+            <div class="focus-mode-popover-header">
+              <span>Switch focus</span>
+              <span class="focus-mode-popover-hint">Reshapes the dashboard</span>
+            </div>
+            <div class="focus-mode-popover-list" id="focus-mode-popover-list"></div>
+          </div>
+        </div>
       </div>
       <div class="page-header-actions">
         <button class="btn-secondary" onclick="showToast('Syncing Google / Outlook Calendars...', 'info')">📅 View Calendar</button>
@@ -4190,7 +4960,7 @@
     </div>
 
     <!-- WIDGET COLUMN GRID -->
-    <div class="section">
+    <div class="section" id="section-alerts" data-card-set="alerts">
       <div class="grid-2">
 
         <!-- ALERTS TRIAGE BOARD -->
@@ -4219,7 +4989,7 @@
     </div>
 
     <!-- RECRUIT SUGGESTIONS + TOP PERFORMANCE SCAN -->
-    <div class="section">
+    <div class="section" id="section-partners" data-card-set="partners">
       <div class="grid-2">
 
         <!-- TOP PARTNERS -->
@@ -4248,7 +5018,7 @@
     </div>
 
     <!-- CREATOR CAMPAIGN TRACKER -->
-    <div class="section" id="card-campaigns">
+    <div class="section" id="card-campaigns" data-card-set="campaigns">
       <div class="section-header">
         <div class="section-title">🎬 Creator Campaigns <span class="section-pill" id="campaigns-count">4 active</span></div>
         <div style="display:flex;gap:8px;">
@@ -4298,6 +5068,9 @@
 
     <!-- ── V6 HUBSPOT-PATTERN SIDE-NAV SHELL — populated by renderV6Dashboard() -->
     <div class="v6-only v6-shell" id="v6-shell"></div>
+
+    <!-- ── V7 FOCUS-MODE-FIRST SHELL — populated by renderV7Dashboard() -->
+    <div class="v7-only v7-shell" id="v7-shell"></div>
 
     <!-- ── V4 CO-PILOT SHELL (Ask Impact IS the navigation) — populated by renderV4Dashboard() -->
     <div class="v4-only v4-shell" id="v4-shell">
@@ -4374,12 +5147,179 @@
 
 <!-- ── JAVASCRIPT STATE ENGINE & CONTROLLER ── -->
 <script>
+  // ════════════════════════════════════════════════════════════
+  // FOCUS MODES — 8 JTBD-aligned modes the user can pick.
+  // Each mode is a layout recipe. Orthogonal to persona: any persona
+  // can be in any mode. v1 reshuffles its existing cards; v7 renders
+  // a fully composed dashboard per mode.
+  // ════════════════════════════════════════════════════════════
+  const FOCUS_MODES = [
+    {
+      id: 'daily_scan',
+      label: 'Daily Scan',
+      icon: '⚡',
+      desc: 'Triage anomalies and at-risk partners across all programs.',
+      cadence: 'Mon–Fri AM',
+      hero: 'scan',
+      cardSets: ['alerts', 'partners', 'campaigns'],
+      sidebarFocus: 'scan',
+      kpi3: { label: 'Alerts Today', valueKey: 'alertsCount', deltaHtml: "<span style=\"color:var(--negative);font-weight:600;\">2 urgent</span> <span class=\"stat-sub\">· auto-prioritized</span>" },
+      banner: { tone: 'critical', label: 'Daily Scan · Live', titleTemplate: '{{alertsCount}} active alerts this morning. {{topAlertTitle}}' }
+    },
+    {
+      id: 'checkin_prep',
+      label: 'Check-in Prep',
+      icon: '📅',
+      desc: 'Auto-generated briefs for upcoming partner calls.',
+      cadence: '24h before each call',
+      hero: 'checkin',
+      cardSets: ['alerts', 'partners', 'campaigns'],
+      sidebarFocus: 'checkin',
+      kpi3: { label: 'Upcoming Check-ins', valueKey: 'checkinsCount', deltaHtml: "<span style=\"color:var(--caution);font-weight:600;\">1 today</span> <span class=\"stat-sub\">· briefs ready</span>" },
+      banner: { tone: 'info', label: 'Check-in Prep · Today', titleTemplate: '{{checkinsCount}} upcoming check-ins. {{nextCheckin}}' }
+    },
+    {
+      id: 'recruit_sprint',
+      label: 'Recruit Sprint',
+      icon: '🔍',
+      desc: 'Discovery, outreach pipeline, and rising talent.',
+      cadence: 'Quarterly push',
+      hero: 'recruit',
+      cardSets: ['partners', 'alerts', 'campaigns'],
+      sidebarFocus: 'recruit',
+      kpi3: { label: 'Open Invites', value: '9', deltaHtml: "<span style=\"color:var(--positive);font-weight:600;\">↑ 3 accepted</span> <span class=\"stat-sub\">last 24h</span>" },
+      banner: { tone: 'success', label: 'Recruit Sprint · Active', titleTemplate: 'Pipeline running. {{recruitCount}} AI-vetted candidates ready to invite.' }
+    },
+    {
+      id: 'creator_campaigns',
+      label: 'Creator Campaigns',
+      icon: '🎬',
+      desc: 'Live campaign tracking, content review, creator performance.',
+      cadence: 'Always-on',
+      hero: 'campaigns',
+      cardSets: ['campaigns', 'partners', 'alerts'],
+      sidebarFocus: 'campaigns',
+      kpi3: { label: 'Live Campaigns', valueKey: 'campaignsLiveCount', deltaHtml: "<span class=\"stat-sub\">4 active · 2 in review</span>" },
+      banner: { tone: 'info', label: 'Creator Campaigns · Live', titleTemplate: '{{campaignsLiveCount}} campaigns currently live. {{topCampaign}}' }
+    },
+    {
+      id: 'vip_review',
+      label: 'VIP Review',
+      icon: '💎',
+      desc: 'Top-tier relationship health, retention, and rewards.',
+      cadence: 'Weekly (Mondays)',
+      hero: 'vipReview',
+      cardSets: ['partners', 'alerts', 'campaigns'],
+      sidebarFocus: 'checkin',
+      kpi3: { label: 'VIP Retention', value: '95%', deltaHtml: "<span style=\"color:var(--positive);font-weight:600;\">19 of 20</span> <span class=\"stat-sub\">healthy this quarter</span>" },
+      banner: { tone: 'info', label: 'VIP Review · This Week', titleTemplate: '12 VIPs are healthy. 2 watching. 1 needs attention before Friday.' }
+    },
+    {
+      id: 'campaign_launch',
+      label: 'Campaign Launch',
+      icon: '🚀',
+      desc: 'Plan, brief, and ship a new creator campaign.',
+      cadence: 'Pre-launch week',
+      hero: 'campaignLaunch',
+      cardSets: ['campaigns', 'partners', 'alerts'],
+      sidebarFocus: 'campaigns',
+      kpi3: { label: 'Launch Readiness', value: '78%', deltaHtml: "<span style=\"color:var(--caution);font-weight:600;\">3 steps left</span> <span class=\"stat-sub\">before Jul 15 go-live</span>" },
+      banner: { tone: 'warning', label: 'Campaign Launch · Back to School Tech', titleTemplate: 'Launch in 9 days. 3 checklist items left — brief draft, creator brief approval, tracking QA.' }
+    },
+    {
+      id: 'onboarding_wave',
+      label: 'Onboarding Wave',
+      icon: '✨',
+      desc: 'New accepted partners — tracking, kits, welcome bonuses.',
+      cadence: 'After recruit drives',
+      hero: 'onboarding',
+      cardSets: ['partners', 'alerts', 'campaigns'],
+      sidebarFocus: 'recruit',
+      kpi3: { label: 'In Onboarding', value: '3', deltaHtml: "<span style=\"color:var(--info-default);font-weight:600;\">2 tracking pending</span> <span class=\"stat-sub\">· 1 ready to launch</span>" },
+      banner: { tone: 'info', label: 'Onboarding Wave · 3 active', titleTemplate: '3 partners onboarding. Tracking link pending for 2 of them — fix to unblock first conversion.' }
+    },
+    {
+      id: 'brand_safety',
+      label: 'Brand Safety Sweep',
+      icon: '🛡',
+      desc: 'Compliance, violations, invalid traffic, brand mentions.',
+      cadence: 'Monthly',
+      hero: 'brandSafety',
+      cardSets: ['alerts', 'partners', 'campaigns'],
+      sidebarFocus: 'scan',
+      kpi3: { label: 'Compliance Score', value: '94%', deltaHtml: "<span style=\"color:var(--positive);font-weight:600;\">↑ 2 pts</span> <span class=\"stat-sub\">vs last sweep</span>" },
+      banner: { tone: 'warning', label: 'Brand Safety · This Month', titleTemplate: '2 partners flagged for violations. 1 tracking redirect needs HTTPS renewal.' }
+    }
+  ];
+
+  function getFocusMode(modeId) {
+    return FOCUS_MODES.find(m => m.id === modeId) || FOCUS_MODES[0];
+  }
+
   // ── APP DATA & STATE STORE ──
   const AppState = {
     selectedPersona: 'aisha',
     variant: 'v1',
+    focusMode: 'daily_scan',
+    focusModeHistory: ['daily_scan'],
     isBannerDismissed: false,
-    
+
+    // Active focus mode (orthogonal to persona) — see FOCUS_MODES constant below.
+    focusMode: 'daily_scan',
+    // Persona-agnostic data scoped to focus modes that need their own content
+    // beyond what the persona already provides (alerts/checkins/recruit/topPartners).
+    modeData: {
+      brand_safety: {
+        score: 94,
+        violations: [
+          { partner: 'TechDeals Pro',          issue: 'Coupon code expired', severity: 'medium', icon: '⚠️' },
+          { partner: 'StyleBlogger Network',   issue: 'Tracking redirect chain too long', severity: 'low', icon: '🔗' },
+          { partner: 'BeautyCompare',          issue: 'Disclosure copy missing on 1 post', severity: 'medium', icon: '📝' }
+        ],
+        invalidTrafficPct: 0.3,
+        invalidTrafficDelta: '↓ 0.1pp vs last month',
+        domainMentions: 12,
+        articleMentions: 8
+      },
+      campaign_launch: {
+        campaign: 'Back-to-School 2026',
+        partner: 'Walmart',
+        launchDate: 'Jul 15, 2026',
+        daysOut: 9,
+        steps: [
+          { label: 'Brief approved by brand', done: true },
+          { label: 'Creators shortlisted',     done: true },
+          { label: 'Content drafts received',  done: false, urgent: true },
+          { label: 'Tracking links generated', done: false },
+          { label: 'Launch checklist signed off', done: false }
+        ],
+        creators: [
+          { logo: '🏠', name: 'HomeGoods Network', role: 'Hero post + 2 stories' },
+          { logo: '🌿', name: 'EcoLiving Blog',    role: 'Long-form review' },
+          { logo: '✈️', name: 'Budget Travel Hub', role: 'Stories carousel' }
+        ]
+      },
+      onboarding: {
+        partners: [
+          { logo: '🛋', name: 'CozyHomeFinds',     status: 'Tracking link pending', tone: 'warning', step: 2, total: 4 },
+          { logo: '🍳', name: 'KitchenWithKayla',  status: 'Welcome bonus issued',  tone: 'positive', step: 3, total: 4 },
+          { logo: '🎮', name: 'GadgetGuru',        status: 'Awaiting agreement',    tone: 'info',     step: 1, total: 4 }
+        ]
+      },
+      vip_review: {
+        vips: [
+          { logo: '🏠', name: 'HomeGoods Network', state: 'healthy', meta: '↑ 18% MTD', suggested: 'Continue Friday cadence' },
+          { logo: '🌿', name: 'EcoLiving Blog',    state: 'healthy', meta: '↑ 9% MTD',  suggested: 'No action needed' },
+          { logo: '👶', name: 'MomLifeCreator',    state: 'healthy', meta: '↑ 2× target', suggested: 'Issue loyalty bonus' },
+          { logo: '💄', name: 'GlamGlowTips',      state: 'healthy', meta: '↑ 15% MTD', suggested: 'Anniversary in 14d' },
+          { logo: '💋', name: 'MakeupByMaya',      state: 'healthy', meta: '↑ 12% MTD', suggested: 'No action needed' },
+          { logo: '💅', name: 'GlowUpMakeup',      state: 'risk',    meta: '↓ 18% MTD', suggested: 'Refresh discount codes' },
+          { logo: '📖', name: 'GlamourGuide',      state: 'healthy', meta: '↑ 2× target', suggested: 'Issue loyalty bump' },
+          { logo: '🧴', name: 'BeautyCompare',     state: 'watch',   meta: '↓ 5% MTD',  suggested: 'Send check-in note' }
+        ]
+      }
+    },
+
     // In-memory data store for relationship logs/notes (Job 3/5)
     notes: {
       'HomeGoods Network': [
@@ -5509,15 +6449,64 @@
     }
   };
 
+  // ════════════════════════════════════════════════════════════
+  // MODE-SCOPED DATA — shared across personas for modes that don't
+  // have direct persona data (Brand Safety, Campaign Launch, Onboarding Wave).
+  // ════════════════════════════════════════════════════════════
+  AppState.modeData = {
+    brandSafety: {
+      score: '94%',
+      scoreLabel: 'Compliance Score',
+      scoreDelta: '↑ 2 pts vs last sweep',
+      violations: [
+        { icon: '🛡', tone: 'critical', title: '2 partners flagged this month', meta: 'Misleading claims · returns above category avg', cta: 'Review' },
+        { icon: '🚫', tone: 'warning', title: 'Invalid traffic spike — Walmart Electronics', meta: '12% bot ratio · likely affiliate ad-fraud', cta: 'Investigate' },
+        { icon: '🔐', tone: 'warning', title: '2 tracking redirects need HTTPS renewal', meta: 'SSL certs expire in 14 days', cta: 'Fix HTTPS' },
+        { icon: '✅', tone: 'positive', title: 'All audits passed last week', meta: '12 of 12 compliance checks · auto-cleared', cta: 'View report' }
+      ]
+    },
+    campaignLaunch: {
+      campaign: 'Back to School Tech',
+      golive: 'Jul 15',
+      readiness: 78,
+      steps: [
+        { done: true,  title: 'Campaign brief drafted',     meta: 'Approved by marketing Jun 12' },
+        { done: true,  title: 'Creator shortlist finalised', meta: '8 creators · avg fit 87%' },
+        { done: true,  title: 'Budget allocated',           meta: '$120K · CPA targets locked' },
+        { done: false, title: 'Creative brief approval',    meta: 'Pending: legal review of 3 product claims' },
+        { done: false, title: 'Tracking QA pass',           meta: 'Test links pending verification' },
+        { done: false, title: 'Go-live announcement draft', meta: 'Email + social ready for Jul 15' }
+      ],
+      creators: [
+        { logo: '💄', name: 'GlamGlowTips', meta: '92% fit · $14 EPC', tag: 'Locked' },
+        { logo: '💋', name: 'MakeupByMaya', meta: '88% fit · $16 EPC', tag: 'Locked' },
+        { logo: '💅', name: 'GlowUpMakeup', meta: '85% fit · $11 EPC', tag: 'Confirmed' },
+        { logo: '📖', name: 'GlamourGuide', meta: '83% fit · $9 EPC',  tag: 'Confirmed' },
+        { logo: '🧴', name: 'BeautyCompare', meta: '78% fit · $8 EPC', tag: 'Awaiting' }
+      ]
+    },
+    onboardingWave: {
+      queue: [
+        { logo: '🛋', name: 'CozyHomeFinds',  state: 'tracking',  meta: 'Accepted Jun 14 · tracking link not yet active', cta: 'Verify Link' },
+        { logo: '🍳', name: 'KitchenWithKayla', state: 'kit',     meta: 'Welcome kit shipped Jun 13 · awaiting confirmation', cta: 'Resend Kit' },
+        { logo: '🎮', name: 'GadgetGuru',     state: 'live',      meta: 'First click logged Jun 14 · ready for bonus', cta: 'Issue Welcome Bonus' },
+        { logo: '🐕', name: 'BarkingLotReviews', state: 'tracking', meta: 'Tracking pending · pixel firing check needed', cta: 'Verify Link' },
+        { logo: '🐈', name: 'MeowLifestyle',  state: 'kit',       meta: 'Brief sent · creator reviewing terms', cta: 'Follow Up' }
+      ]
+    }
+  };
+
   // ── INITIALIZATION ──
   window.addEventListener('DOMContentLoaded', () => {
-    // Show role selector pop-up on first load
-    setTimeout(() => {
-      openRoleConfirmModal();
-    }, 400);
-
-    // Initial render
+    // Initial render — switchPersona internally calls applyFocusMode for v1.
     switchPersona('aisha-v1');
+
+    // Show the focus-mode picker shortly after load — the persistent chip
+    // makes this less obtrusive than the old role modal, but we still
+    // invite a deliberate choice on first session.
+    setTimeout(() => {
+      openFocusPickerModal();
+    }, 400);
   });
 
   // ── CONTROLLER FUNCTIONS ──
@@ -5528,7 +6517,7 @@
   function switchPersona(rawValue) {
     const parts = String(rawValue || '').split('-');
     const personaKey = parts[0] || 'aisha';
-    const validVariants = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
+    const validVariants = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7'];
     const variant = validVariants.includes(parts[1]) ? parts[1] : 'v1';
 
     AppState.selectedPersona = personaKey;
@@ -5610,6 +6599,20 @@
       document.body.classList.remove('variant-v6');
     }
     renderV6Dashboard();
+
+    // V7 (Focus Mode First) — only rendered when active. Also toggles body chrome class.
+    if (variant === 'v7') {
+      document.body.classList.add('variant-v7');
+    } else {
+      document.body.classList.remove('variant-v7');
+    }
+    renderV7Dashboard();
+
+    // Apply the active focus mode AFTER all variant-specific renderers have run.
+    // v1 → reshuffles hero/cards/KPI/sidebar/banner in place.
+    // v7 → already handled above. Other variants no-op for now.
+    renderFocusModeChip();
+    applyFocusMode(AppState.focusMode);
   }
 
   // Update statistic counter widgets
@@ -5760,6 +6763,353 @@
       host.innerHTML = '';
     }
   }
+
+  // ════════════════════════════════════════════════════════════
+  // V1 APPLY FOCUS MODE
+  // Reshuffles in-place: hero (persona-hero), card-set order, KPI #3,
+  // sidebar focus highlight, and context banner.
+  // ════════════════════════════════════════════════════════════
+  function v1ApplyFocusMode(modeId) {
+    if (AppState.variant !== 'v1') return;
+    const mode = getFocusMode(modeId);
+
+    // 1) Hero swap — dispatches by mode.hero type, reading from persona OR modeData.
+    renderHeroByType(mode.hero);
+
+    // 2) Card set order — physically reorder the section wrappers inside .v1-only
+    const v1Container = document.querySelector('.v1-only');
+    if (v1Container) {
+      (mode.cardSets || []).forEach(setName => {
+        const id = setName === 'campaigns' ? 'card-campaigns' : `section-${setName}`;
+        const el = document.getElementById(id);
+        if (el) v1Container.appendChild(el);
+      });
+    }
+
+    // 3) KPI #3 — replaces the persona's default kpi3 with the mode's.
+    const kpi = mode.kpi3 || {};
+    const labelEl = document.getElementById('stat-creators-label');
+    const valueEl = document.getElementById('stat-creators');
+    const deltaEl = document.getElementById('stat-creators-delta');
+    if (labelEl) labelEl.innerText = kpi.label || 'Active Creators';
+    if (valueEl) {
+      // valueKey lets us pull a live number from current state
+      let val = kpi.value;
+      if (kpi.valueKey) val = computeFocusKpiValue(kpi.valueKey);
+      valueEl.innerText = val || '—';
+    }
+    if (deltaEl) deltaEl.innerHTML = kpi.deltaHtml || '';
+
+    // 4) Sidebar focus highlight — moves the ring to the matching nav-job-* item.
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('focus-highlight'));
+    if (mode.sidebarFocus) {
+      const sideEl = document.getElementById(`nav-job-${mode.sidebarFocus}`);
+      if (sideEl) sideEl.classList.add('focus-highlight');
+      const mainEl = document.getElementById('main-content');
+      if (mainEl) mainEl.setAttribute('data-focus', mode.sidebarFocus);
+    }
+
+    // 5) Context banner — overwrites tone + label + title with mode-specific copy.
+    if (mode.banner && !AppState.isBannerDismissed) {
+      const banner = document.getElementById('context-banner');
+      if (banner) {
+        banner.style.display = 'flex';
+        banner.setAttribute('data-tone', mode.banner.tone || 'info');
+        const iconEl = document.getElementById('context-banner-icon');
+        if (iconEl) iconEl.innerHTML = TONE_ICONS[mode.banner.tone] || TONE_ICONS.info;
+        const labelEl = document.getElementById('context-banner-label');
+        if (labelEl) labelEl.innerText = mode.banner.label;
+        const titleEl = document.getElementById('context-banner-title');
+        if (titleEl) titleEl.innerText = expandBannerTemplate(mode.banner.titleTemplate || '');
+      }
+    }
+  }
+
+  // Compute live KPI values from current state — used by mode kpi3 valueKey.
+  function computeFocusKpiValue(key) {
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    if (key === 'alertsCount') return String((data.alerts || []).length);
+    if (key === 'checkinsCount') return String((data.checkins || []).length);
+    if (key === 'campaignsLiveCount') return String((data.campaigns || []).filter(c => c.tagText === 'Live').length);
+    if (key === 'recruitCount') return String((data.recruit || []).length);
+    return '—';
+  }
+
+  // Expand a small templating dialect used in mode.banner.titleTemplate.
+  function expandBannerTemplate(tpl) {
+    if (!tpl) return '';
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    return tpl
+      .replace('{{alertsCount}}', (data.alerts || []).length)
+      .replace('{{topAlertTitle}}', (data.alerts && data.alerts[0] && data.alerts[0].title) || '')
+      .replace('{{checkinsCount}}', (data.checkins || []).length)
+      .replace('{{nextCheckin}}', (data.checkins && data.checkins[0]) ? `Next: ${data.checkins[0].partner} (${data.checkins[0].time})` : '')
+      .replace('{{recruitCount}}', (data.recruit || []).length)
+      .replace('{{campaignsLiveCount}}', (data.campaigns || []).filter(c => c.tagText === 'Live').length)
+      .replace('{{topCampaign}}', (data.campaigns && data.campaigns[0]) ? `Top: ${data.campaigns[0].name}` : '');
+  }
+
+  // Dispatcher for hero rendering by mode.hero type.
+  // Reuses existing builders for scan/checkin/recruit; adds new builders below.
+  function renderHeroByType(heroType) {
+    const host = document.getElementById('persona-hero');
+    if (!host) return;
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+
+    // Reset
+    host.hidden = false;
+    host.innerHTML = '';
+
+    if (heroType === 'scan')        return renderScanHero(host, data);
+    if (heroType === 'checkin')     return renderCheckinHero(host, data);
+    if (heroType === 'recruit')     return renderRecruitHero(host, data);
+    if (heroType === 'vipReview')   return renderVipReviewHero(host, data);
+    if (heroType === 'campaignLaunch') return renderCampaignLaunchHero(host);
+    if (heroType === 'onboarding')  return renderOnboardingHero(host);
+    if (heroType === 'brandSafety') return renderBrandSafetyHero(host);
+    if (heroType === 'campaigns')   return renderCreatorCampaignsHero(host, data);
+
+    host.hidden = true;
+  }
+
+  function renderScanHero(host, data) {
+    const h = data.scanHero || {
+      icon: '⚡',
+      title: 'Daily Scan ready',
+      desc: 'No high-priority anomalies right now. Review your top performers in the panels below.',
+      ctaText: 'Run scan',
+      ctaAction: "showToast('Re-running full portfolio scan...', 'info')"
+    };
+    host.innerHTML = `
+      <div class="scan-hero">
+        <div class="scan-hero-icon">${h.icon}</div>
+        <div class="scan-hero-content">
+          <div class="scan-hero-title">${h.title}</div>
+          <div class="scan-hero-desc">${h.desc}</div>
+        </div>
+        <div class="scan-hero-cta">
+          <button class="btn-primary" onclick="${h.ctaAction}">${h.ctaText}</button>
+        </div>
+      </div>`;
+  }
+
+  function renderCheckinHero(host, data) {
+    // Synthesize a brief from the persona's first upcoming check-in if no preset.
+    let b = data.checkinBrief;
+    if (!b && data.checkins && data.checkins[0]) {
+      const c = data.checkins[0];
+      const top = (data.topPartners || []).find(p => p.name === c.partner) || {};
+      b = {
+        partner: c.partner,
+        logo: top.logo || '🤝',
+        meta: c.time,
+        tagType: top.tagType || 'blue',
+        tagText: top.tagText || 'Upcoming',
+        metrics: [
+          { label: 'Next sync', value: c.dateM + ' ' + c.dateD, note: c.time, tone: '' },
+          { label: 'Status', value: top.tagText || 'Active', note: top.delta || '', tone: '' },
+          { label: 'MTD Revenue', value: top.rev || '—', note: top.delta || '', tone: (top.delta && top.delta.includes('↓')) ? 'warn' : '' }
+        ],
+        actions: [
+          { emoji: '📋', text: `Review last 6 months of ${c.partner} performance.` },
+          { emoji: '💬', text: `Open dialogue on click trends.` },
+          { emoji: '🎁', text: `Consider performance bonus if Q-target on track.` }
+        ]
+      };
+    }
+    if (!b) { host.hidden = true; return; }
+    const metricCells = b.metrics.map(m => `
+      <div class="brief-metric">
+        <div class="brief-metric-label">${m.label}</div>
+        <div class="brief-metric-value">${m.value}</div>
+        <div class="brief-metric-note ${m.tone || ''}">${m.note || ''}</div>
+      </div>`).join('');
+    const actionItems = b.actions.map(a => `
+      <div class="brief-action-item">
+        <span class="brief-action-emoji">${a.emoji}</span>
+        <span class="brief-action-text">${a.text}</span>
+      </div>`).join('');
+    host.innerHTML = `
+      <div class="brief-hero">
+        <div class="brief-hero-header">
+          <div class="brief-hero-title-area">
+            <div class="brief-hero-logo">${b.logo}</div>
+            <div>
+              <div class="brief-hero-title">${b.partner} — Check-in Brief</div>
+              <div class="brief-hero-sub">${b.meta}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="tag tag-${b.tagType}">${b.tagText}</span>
+            <button class="btn-primary" onclick="openDrawer('${b.partner}')">Open Full Brief →</button>
+          </div>
+        </div>
+        <div class="brief-hero-body">${metricCells}</div>
+        <div class="brief-actions">
+          <div class="brief-actions-title">✨ AI Suggested Talking Points</div>
+          <div class="brief-actions-list">${actionItems}</div>
+        </div>
+      </div>`;
+  }
+
+  function renderRecruitHero(host, data) {
+    const h = data.recruitHero || { title: '🔍 Suggested Partners to Recruit', subtitle: 'AI-vetted candidates ready to invite.' };
+    const cards = (data.recruit || []).map(item => `
+      <div class="recruit-hero-card">
+        <div class="recruit-hero-top">
+          <div class="recruit-hero-avatar">${item.avatar}</div>
+          <div>
+            <div class="recruit-hero-name">${item.name}</div>
+            <div class="recruit-hero-meta">${item.meta}</div>
+          </div>
+        </div>
+        <div class="recruit-hero-stats">
+          <div class="recruit-hero-stat"><div class="recruit-hero-stat-value">${item.eng}</div><div class="recruit-hero-stat-label">Eng. Rate</div></div>
+          <div class="recruit-hero-stat"><div class="recruit-hero-stat-value">${item.epc}</div><div class="recruit-hero-stat-label">Est. EPC</div></div>
+          <div class="recruit-hero-stat recruit-hero-stat-fit"><div class="recruit-hero-stat-value">${item.fit}</div><div class="recruit-hero-stat-label">Fit Score</div></div>
+        </div>
+        <button class="btn-primary" id="btn-rec-${item.id}" onclick="invitePartner('${item.id}', '${item.name.replace(/'/g, "\\'")}')">＋ Invite</button>
+      </div>`).join('');
+    host.innerHTML = `
+      <div class="recruit-hero">
+        <div class="recruit-hero-header">
+          <div>
+            <div class="recruit-hero-title">${h.title}</div>
+            <div class="recruit-hero-sub">${h.subtitle}</div>
+          </div>
+          <button class="btn-secondary" onclick="focusJob('recruit')">View full marketplace →</button>
+        </div>
+        <div class="recruit-hero-grid">${cards}</div>
+      </div>`;
+  }
+
+  function renderVipReviewHero(host, data) {
+    // Show top 8 partners as avatars with state ring + a 1-line summary.
+    const partners = (data.topPartners || []).slice(0, 8);
+    const avatars = partners.map(p => {
+      let state = 'healthy';
+      if (p.tagType === 'red')    state = 'risk';
+      if (p.tagType === 'orange') state = 'watch';
+      return `<div class="vip-hero-avatar" data-state="${state}" title="${p.name}" onclick="openDrawer('${p.name.replace(/'/g, "\\'")}')">${p.logo}</div>`;
+    }).join('');
+    const atRisk = partners.filter(p => p.tagType === 'red').length;
+    const watching = partners.filter(p => p.tagType === 'orange').length;
+    host.innerHTML = `
+      <div class="vip-hero">
+        <div class="vip-hero-stat">
+          <div class="vip-hero-stat-value">${partners.length}/${partners.length}</div>
+          <div class="vip-hero-stat-label">VIPs in view · this week</div>
+        </div>
+        <div>
+          <div class="vip-hero-summary"><strong>${atRisk}</strong> at-risk · <strong>${watching}</strong> watching · <strong>${partners.length - atRisk - watching}</strong> healthy. Click any avatar to open the brief.</div>
+          <div class="vip-hero-avatars" style="margin-top:10px;">${avatars}</div>
+        </div>
+      </div>`;
+  }
+
+  function renderCampaignLaunchHero(host) {
+    const d = AppState.modeData.campaignLaunch;
+    const steps = d.steps.map(s => `
+      <div class="launch-step ${s.done ? 'done' : ''}">
+        <div class="launch-step-check">${s.done ? '✓' : ''}</div>
+        <div class="launch-step-body">
+          <div class="launch-step-title">${s.title}</div>
+          <div class="launch-step-meta">${s.meta}</div>
+        </div>
+      </div>`).join('');
+    host.innerHTML = `
+      <div class="launch-hero">
+        <div class="launch-hero-header">
+          <div>
+            <div class="launch-hero-title">🚀 ${d.campaign} · Launch ${d.golive}</div>
+            <div class="launch-hero-meta">${d.steps.filter(s => !s.done).length} steps remaining · ${d.creators.length} creators confirmed</div>
+          </div>
+          <div class="launch-hero-readiness">
+            <div class="launch-hero-ring" style="--pct: ${d.readiness};"><span>${d.readiness}%</span></div>
+            <div>Launch readiness</div>
+          </div>
+        </div>
+        <div class="launch-hero-steps">${steps}</div>
+      </div>`;
+  }
+
+  function renderOnboardingHero(host) {
+    const d = AppState.modeData.onboardingWave;
+    const rows = d.queue.map(q => `
+      <div class="onboard-row" data-state="${q.state}">
+        <div class="onboard-avatar">${q.logo}</div>
+        <div>
+          <div class="onboard-name">${q.name}</div>
+          <div class="onboard-meta">${q.meta}</div>
+        </div>
+        <button class="btn-secondary" onclick="showToast('${q.cta} for ${q.name.replace(/'/g, "\\'")}...', 'info')">${q.cta}</button>
+      </div>`).join('');
+    host.innerHTML = `
+      <div class="onboard-hero">
+        <div class="onboard-hero-header">
+          <div>
+            <div class="onboard-hero-title">✨ Onboarding Wave · ${d.queue.length} partners</div>
+            <div class="onboard-hero-meta">Tracking · welcome kits · welcome bonuses</div>
+          </div>
+          <button class="btn-primary" onclick="showToast('Opening onboarding console...', 'info')">Open Console →</button>
+        </div>
+        <div class="onboard-list">${rows}</div>
+      </div>`;
+  }
+
+  function renderBrandSafetyHero(host) {
+    const d = AppState.modeData.brandSafety;
+    const violations = d.violations.map(v => `
+      <div class="safety-violation" data-tone="${v.tone || ''}">
+        <div class="safety-violation-icon">${v.icon}</div>
+        <div>
+          <div class="safety-violation-title">${v.title}</div>
+          <div class="safety-violation-meta">${v.meta}</div>
+        </div>
+        <button class="btn-secondary" onclick="showToast('${v.cta} flow...', 'info')">${v.cta}</button>
+      </div>`).join('');
+    host.innerHTML = `
+      <div class="safety-hero">
+        <div class="safety-hero-top">
+          <div class="safety-score" style="--pct: 94;">
+            <span class="safety-score-value">${d.score}</span>
+          </div>
+          <div>
+            <div class="safety-hero-summary"><strong>${d.scoreLabel}: ${d.score}</strong> <span style="color:var(--positive);font-weight:600;">${d.scoreDelta}</span></div>
+            <div style="font-size:12px;color:var(--text-subdued);margin-top:4px;">Monthly brand-safety sweep. Two partners flagged, one tracking redirect needs renewal — listed below.</div>
+          </div>
+        </div>
+        <div class="safety-violations">${violations}</div>
+      </div>`;
+  }
+
+  function renderCreatorCampaignsHero(host, data) {
+    const campaigns = data.campaigns || [];
+    const live = campaigns.filter(c => c.tagText === 'Live').length;
+    const upcoming = campaigns.filter(c => c.tagText === 'Upcoming').length;
+    const needs = campaigns.filter(c => c.tagText === 'Needs Review').length;
+    const topCampaign = campaigns[0];
+    host.innerHTML = `
+      <div class="creatorcamp-hero">
+        <div>
+          <div class="creatorcamp-hero-stat-value">${live}</div>
+          <div class="creatorcamp-hero-stat-label">Live this week</div>
+        </div>
+        <div class="creatorcamp-hero-summary">
+          <strong>${upcoming} upcoming</strong> · <strong>${needs} needs review</strong> · top performer ${topCampaign ? `<strong>${topCampaign.name}</strong> at ${topCampaign.rev || '—'}` : '—'}. AI flagged content drafts for review below.
+        </div>
+        <div>
+          <button class="btn-primary" onclick="focusJob('campaigns')">Open Campaigns →</button>
+        </div>
+      </div>`;
+  }
+
+  // Public name used by mode dispatcher; we keep the old function in place for back-compat
+  // (it's still called once on initial render in updateStatsDisplay path).
+  // (renderPersonaHero is now superseded by renderHeroByType when v1ApplyFocusMode runs.)
 
   // ── V2 DASHBOARD RENDERERS ──
   // Orchestrator: reads the persona's `v2.layout` array and dispatches to
@@ -6595,30 +7945,127 @@
     }
   }
 
-  // ── ROLE SELECT CONFIRM MODAL ──
-  let tempRole = 'aisha';
+  // ════════════════════════════════════════════════════════════
+  // FOCUS-MODE PICKER MODAL & POPOVER
+  // The modal opens on first load (and from the avatar) — full 8-tile grid.
+  // The popover is anchored to the page-header chip — quick swap, no overlay.
+  // ════════════════════════════════════════════════════════════
+  let tempFocusMode = 'daily_scan';
 
-  function openRoleConfirmModal() {
-    document.getElementById('modal-role-confirm').classList.add('active');
+  // Back-compat aliases — older `onclick` attrs may still call these names.
+  function openRoleConfirmModal() { openFocusPickerModal(); }
+  function closeRoleConfirmModal() { closeFocusPickerModal(); }
+
+  function openFocusPickerModal() {
+    tempFocusMode = AppState.focusMode || 'daily_scan';
+    renderFocusPickerTiles();
+    document.getElementById('modal-focus-picker').classList.add('active');
   }
 
-  function closeRoleConfirmModal() {
-    document.getElementById('modal-role-confirm').classList.remove('active');
+  function closeFocusPickerModal() {
+    document.getElementById('modal-focus-picker').classList.remove('active');
   }
 
-  function selectRoleOption(el, roleKey) {
-    document.querySelectorAll('.modal-option').forEach(opt => opt.classList.remove('selected'));
-    el.classList.add('selected');
-    tempRole = roleKey;
+  function renderFocusPickerTiles() {
+    const host = document.getElementById('focus-mode-options');
+    if (!host) return;
+    host.innerHTML = FOCUS_MODES.map(m => `
+      <div class="focus-mode-tile ${m.id === tempFocusMode ? 'selected' : ''}"
+           data-mode="${m.id}"
+           onclick="selectFocusOption(this, '${m.id}')">
+        <div class="focus-mode-tile-icon">${m.icon}</div>
+        <div class="focus-mode-tile-body">
+          <div class="focus-mode-tile-title">${m.label}</div>
+          <div class="focus-mode-tile-desc">${m.desc}</div>
+          <div class="focus-mode-tile-cadence">${m.cadence}</div>
+        </div>
+        <div class="focus-mode-tile-check">✓</div>
+      </div>`).join('');
   }
 
-  function confirmRoleSelection() {
-    closeRoleConfirmModal();
-    // Modal picks a persona; preserve current variant when sticking with the same persona.
-    const sameRole = (AppState.selectedPersona === tempRole);
-    const currentVariant = sameRole ? AppState.variant : 'v1';
-    switchPersona(`${tempRole}-${currentVariant}`);
-    showToast(`Focus role updated to ${tempRole === 'aisha' ? 'Affiliate Creator' : tempRole === 'priya' ? 'Campaign Lead' : 'Program Lead'}`, 'success');
+  function selectFocusOption(el, modeId) {
+    document.querySelectorAll('.focus-mode-tile').forEach(t => t.classList.remove('selected'));
+    if (el) el.classList.add('selected');
+    tempFocusMode = modeId;
+  }
+
+  function confirmFocusSelection() {
+    closeFocusPickerModal();
+    setFocusMode(tempFocusMode);
+  }
+
+  // Compact popover attached to the page-header chip
+  function openFocusPicker() {
+    const pop = document.getElementById('focus-mode-popover');
+    if (!pop) return;
+    tempFocusMode = AppState.focusMode || 'daily_scan';
+    renderFocusPopoverList();
+    pop.classList.toggle('open');
+  }
+
+  function closeFocusPicker() {
+    const pop = document.getElementById('focus-mode-popover');
+    if (pop) pop.classList.remove('open');
+  }
+
+  function renderFocusPopoverList() {
+    const host = document.getElementById('focus-mode-popover-list');
+    if (!host) return;
+    host.innerHTML = FOCUS_MODES.map(m => `
+      <div class="focus-mode-popover-item ${m.id === AppState.focusMode ? 'active' : ''}"
+           onclick="pickFocusFromPopover('${m.id}')">
+        <span class="focus-mode-popover-icon">${m.icon}</span>
+        <span class="focus-mode-popover-text">
+          <span class="focus-mode-popover-title">${m.label}</span>
+          <span class="focus-mode-popover-meta">${m.cadence}</span>
+        </span>
+        ${m.id === AppState.focusMode ? '<span class="focus-mode-popover-check">✓</span>' : ''}
+      </div>`).join('');
+  }
+
+  function pickFocusFromPopover(modeId) {
+    closeFocusPicker();
+    setFocusMode(modeId);
+  }
+
+  // Dismiss popover when clicking outside
+  document.addEventListener('click', e => {
+    const pop = document.getElementById('focus-mode-popover');
+    const chip = document.getElementById('focus-mode-chip');
+    if (!pop || !pop.classList.contains('open')) return;
+    if (pop.contains(e.target) || (chip && chip.contains(e.target))) return;
+    closeFocusPicker();
+  });
+
+  // Single entry point — updates state, chip label, and applies the recipe.
+  function setFocusMode(modeId) {
+    const mode = getFocusMode(modeId);
+    AppState.focusMode = mode.id;
+    if (!AppState.focusModeHistory) AppState.focusModeHistory = [];
+    // Track recents (most recent first, capped at 5, unique)
+    AppState.focusModeHistory = [mode.id, ...AppState.focusModeHistory.filter(id => id !== mode.id)].slice(0, 5);
+    renderFocusModeChip();
+    applyFocusMode(mode.id);
+    showToast(`Focus: ${mode.icon} ${mode.label}`, 'info');
+  }
+
+  // Update the v1 page-header chip's icon + label
+  function renderFocusModeChip() {
+    const chip = document.getElementById('focus-mode-chip');
+    if (!chip) return;
+    const mode = getFocusMode(AppState.focusMode);
+    const iconEl = chip.querySelector('.focus-mode-chip-icon');
+    const labelEl = chip.querySelector('.focus-mode-chip-label');
+    if (iconEl) iconEl.textContent = mode.icon;
+    if (labelEl) labelEl.textContent = mode.label;
+  }
+
+  // Orchestrator: applies the active focus mode to the active variant.
+  function applyFocusMode(modeId) {
+    const variant = AppState.variant;
+    if (variant === 'v1') v1ApplyFocusMode(modeId);
+    if (variant === 'v7') renderV7Dashboard();
+    // v2..v6 do not currently react to focus mode (out of scope per the plan).
   }
 
   // ════════════════════════════════════════════════════════════
@@ -7695,6 +9142,274 @@
     flyout.classList.remove('pinned');
     v6CloseFlyout();
   });
+
+  // ════════════════════════════════════════════════════════════
+  // V7 — FOCUS MODE FIRST
+  // Picker view (8 tiles) → composed view per mode.
+  // ════════════════════════════════════════════════════════════
+  // Internal state: when the user is at the picker we hide the composed view.
+  AppState._v7AtPicker = true;
+
+  function renderV7Dashboard() {
+    const host = document.getElementById('v7-shell');
+    if (!host) return;
+    if (AppState.variant !== 'v7') {
+      host.innerHTML = '';
+      AppState._v7AtPicker = true;
+      return;
+    }
+    if (AppState._v7AtPicker) {
+      host.innerHTML = renderV7Picker();
+    } else {
+      host.innerHTML = renderV7ModeBar() + renderV7ComposedView(AppState.focusMode);
+    }
+  }
+
+  function renderV7Picker() {
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+    const greeting = (data.greeting || 'Welcome 👋').replace(/[👋👀✨].*$/, '').trim();
+    const alertsN = (data.alerts || []).length;
+    const checkinsN = (data.checkins || []).length;
+    const recruitN = (data.recruit || []).length;
+    const onboardingN = (AppState.modeData.onboardingWave.queue || []).length;
+
+    // Recommend the mode with the loudest signal in this persona's data
+    let recommendedId = 'daily_scan';
+    if (data.sidebarFocus === 'checkin') recommendedId = 'checkin_prep';
+    else if (data.sidebarFocus === 'recruit') recommendedId = 'recruit_sprint';
+
+    // Live counters per mode
+    const liveCounters = {
+      daily_scan:      { value: alertsN,    label: alertsN === 1 ? 'alert today'    : 'alerts today',   tone: alertsN >= 3 ? 'urgent' : '' },
+      checkin_prep:    { value: checkinsN,  label: checkinsN === 1 ? 'check-in'     : 'check-ins',      tone: '' },
+      recruit_sprint:  { value: recruitN,   label: 'candidates ready',                                tone: '' },
+      creator_campaigns: { value: (data.campaigns || []).length, label: 'campaigns', tone: '' },
+      vip_review:      { value: (data.topPartners || []).length, label: 'VIPs in view', tone: '' },
+      campaign_launch: { value: AppState.modeData.campaignLaunch.steps.filter(s => !s.done).length, label: 'steps left',   tone: 'urgent' },
+      onboarding_wave: { value: onboardingN, label: 'in queue',         tone: '' },
+      brand_safety:    { value: AppState.modeData.brandSafety.violations.filter(v => v.tone === 'critical' || v.tone === 'warning').length, label: 'items to triage', tone: 'urgent' }
+    };
+
+    const tiles = FOCUS_MODES.map(m => {
+      const c = liveCounters[m.id] || { value: 0, label: '' };
+      const rec = m.id === recommendedId;
+      return `
+        <div class="v7-picker-tile ${rec ? 'recommended' : ''}" onclick="v7PickMode('${m.id}')">
+          ${rec ? '<span class="v7-picker-tile-recommended-pill">✦ Recommended</span>' : ''}
+          <div class="v7-picker-tile-icon">${m.icon}</div>
+          <div class="v7-picker-tile-label">${m.label}</div>
+          <div class="v7-picker-tile-desc">${m.desc}</div>
+          <div class="v7-picker-tile-stats">
+            <span class="v7-picker-tile-stat ${c.tone || ''}">${c.value} ${c.label}</span>
+            <span class="v7-picker-tile-cadence">${m.cadence}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Recents (most recent first, exclude the active one)
+    const recents = (AppState.focusModeHistory || []).filter(id => id).slice(0, 4);
+    const recentChips = recents.length === 0 ? '' : `
+      <div class="v7-picker-recents">
+        <span>Recently picked:</span>
+        ${recents.map(id => {
+          const m = getFocusMode(id);
+          return `<span class="v7-picker-recent-chip" onclick="v7PickMode('${id}')"><span>${m.icon}</span>${m.label}</span>`;
+        }).join('')}
+      </div>`;
+
+    return `
+      <div class="v7-picker">
+        <div class="v7-picker-header">
+          <div class="v7-picker-greeting">Hello, ${persona === 'aisha' ? 'Aisha' : persona === 'priya' ? 'Priya' : 'Marcus'}. What are you focused on?</div>
+          <div class="v7-picker-sub">
+            <span>You logged in at 8:42 am · the platform changed overnight.</span>
+            <span class="v7-picker-sub-stat">⚡ ${alertsN} alerts</span>
+            <span class="v7-picker-sub-stat">📅 ${checkinsN} check-ins this week</span>
+            <span class="v7-picker-sub-stat">🆕 ${onboardingN} onboarding</span>
+          </div>
+        </div>
+        <div class="v7-picker-grid">${tiles}</div>
+        ${recentChips}
+      </div>`;
+  }
+
+  function renderV7ModeBar() {
+    const active = getFocusMode(AppState.focusMode);
+    const others = FOCUS_MODES.filter(m => m.id !== active.id);
+    const chips = others.map(m => `<button class="v7-modebar-other-chip" onclick="v7PickMode('${m.id}')"><span>${m.icon}</span>${m.label}</button>`).join('');
+    return `
+      <div class="v7-modebar">
+        <button class="v7-modebar-back" onclick="v7BackToPicker()">← Back to focus picker</button>
+        <span class="v7-modebar-active">
+          <span class="v7-modebar-active-icon">${active.icon}</span>
+          <span>${active.label}</span>
+        </span>
+        <div class="v7-modebar-others">${chips}</div>
+      </div>`;
+  }
+
+  function renderV7ComposedView(modeId) {
+    const mode = getFocusMode(modeId);
+    const persona = AppState.selectedPersona;
+    const data = AppState.personas[persona];
+
+    // Build the per-mode body
+    let body = '';
+    if (modeId === 'daily_scan') body = renderV7ScanView(data);
+    else if (modeId === 'checkin_prep') body = renderV7CheckinView(data);
+    else if (modeId === 'recruit_sprint') body = renderV7RecruitView(data);
+    else if (modeId === 'creator_campaigns') body = renderV7CampaignsView(data);
+    else if (modeId === 'vip_review') body = renderV7VipView(data);
+    else if (modeId === 'campaign_launch') body = renderV7LaunchView();
+    else if (modeId === 'onboarding_wave') body = renderV7OnboardView();
+    else if (modeId === 'brand_safety') body = renderV7SafetyView();
+
+    return `
+      <div class="v7-view">
+        <div class="v7-view-title">${mode.icon} ${mode.label}</div>
+        <div class="v7-view-meta">${mode.desc} · ${mode.cadence}</div>
+        ${body}
+      </div>`;
+  }
+
+  function renderV7ScanView(data) {
+    const cards = (data.alerts || []).map(a => `
+      <div class="v7-scan-card" data-tone="${a.type === 'red' ? 'critical' : a.type === 'orange' ? 'warning' : a.type === 'green' ? 'positive' : ''}" onclick="${a.action}">
+        <div class="v7-scan-card-head">
+          <span class="v7-scan-card-emoji">${a.icon}</span>
+          <span class="v7-scan-card-severity">${a.type === 'red' ? 'Critical' : a.type === 'orange' ? 'Warning' : a.type === 'green' ? 'Win' : 'Info'}</span>
+        </div>
+        <div class="v7-scan-card-title">${a.title}</div>
+        <div class="v7-scan-card-meta">${a.desc}</div>
+        <div class="v7-scan-card-actions"><button class="btn-secondary" onclick="event.stopPropagation(); ${a.action}">${a.actionText}</button></div>
+      </div>`).join('');
+    return `<div class="v7-scan-board">${cards}</div>`;
+  }
+
+  function renderV7CheckinView(data) {
+    // Reuse Marcus's v3 timeline if it exists for this persona; otherwise build from checkins[]
+    if (data.v3 && data.v3.meetings) {
+      return `<div class="v7-wrap">${renderV3PreCallTimeline(data.v3)}</div>`;
+    }
+    // Synthesize timeline-style cards from data.checkins
+    const meetings = (data.checkins || []).map((c, i) => {
+      const top = (data.topPartners || []).find(p => p.name === c.partner) || {};
+      return `
+        <div class="pc-meeting" data-status="${i === 0 ? 'today' : 'upcoming'}">
+          <div class="pc-meeting-date">
+            <div class="pc-meeting-month">${c.dateM}</div>
+            <div class="pc-meeting-day">${c.dateD}</div>
+            <div class="pc-meeting-time">${(c.time.split('·')[0] || '').trim()}</div>
+          </div>
+          <div class="pc-meeting-body">
+            <div class="pc-meeting-header">
+              <div class="pc-meeting-title"><div class="pc-meeting-partner-logo">${top.logo || '🤝'}</div>${c.partner}</div>
+            </div>
+            <div class="pc-meeting-meta">${c.time} · ${c.meta}</div>
+            <div class="pc-meeting-actions">
+              <button class="btn-primary" onclick="openDrawer('${c.partner.replace(/'/g, "\\'")}')">Open Brief →</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+    return `<div class="pc-timeline">${meetings}</div>`;
+  }
+
+  function renderV7RecruitView(data) {
+    // Reuse Priya's v4 pipeline if present; otherwise build a 3-up from data.recruit
+    if (data.v4 && data.v4.surfaces && data.v4.surfaces.pipeline) {
+      return renderV4Pipeline(data.v4.surfaces.pipeline);
+    }
+    const cards = (data.recruit || []).map(item => `
+      <div class="recruit-hero-card">
+        <div class="recruit-hero-top">
+          <div class="recruit-hero-avatar">${item.avatar}</div>
+          <div>
+            <div class="recruit-hero-name">${item.name}</div>
+            <div class="recruit-hero-meta">${item.meta}</div>
+          </div>
+        </div>
+        <div class="recruit-hero-stats">
+          <div class="recruit-hero-stat"><div class="recruit-hero-stat-value">${item.eng}</div><div class="recruit-hero-stat-label">Eng. Rate</div></div>
+          <div class="recruit-hero-stat"><div class="recruit-hero-stat-value">${item.epc}</div><div class="recruit-hero-stat-label">Est. EPC</div></div>
+          <div class="recruit-hero-stat recruit-hero-stat-fit"><div class="recruit-hero-stat-value">${item.fit}</div><div class="recruit-hero-stat-label">Fit Score</div></div>
+        </div>
+        <button class="btn-primary" onclick="invitePartner('${item.id}', '${item.name.replace(/'/g, "\\'")}')">＋ Invite</button>
+      </div>`).join('');
+    return `<div class="recruit-hero" style="margin:0;"><div class="recruit-hero-grid">${cards}</div></div>`;
+  }
+
+  function renderV7CampaignsView(data) {
+    const rows = (data.campaigns || []).map(c => `
+      <tr onclick="showToast('Opening ${c.name.replace(/'/g, "\\'")}...', 'info')" style="cursor:pointer;">
+        <td><strong>${c.name}</strong><div style="font-size:11px;color:var(--text-subdued);">${c.date}</div></td>
+        <td>${c.creators}</td>
+        <td><strong>${c.rev}</strong> ${c.revDelta ? `<span class="${c.revDelta.includes('↓') ? 'delta-down' : 'delta-up'}" style="font-size:11px;font-weight:600;">${c.revDelta}</span>` : ''}</td>
+        <td>${c.conv}</td>
+        <td><span class="tag tag-${c.tagType}">${c.tagText}</span></td>
+      </tr>`).join('');
+    return `
+      <div class="v7-wrap">
+        <h3>Active and upcoming creator campaigns</h3>
+        <table class="campaigns-table">
+          <thead><tr><th>Campaign</th><th>Creators</th><th>Revenue</th><th>Conversions</th><th>Status</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  function renderV7VipView(data) {
+    // Reuse Marcus's v4 vipGrid if present; otherwise synthesize from topPartners
+    if (data.v4 && data.v4.surfaces && data.v4.surfaces.vipGrid) {
+      return renderV4VipGrid(data.v4.surfaces.vipGrid);
+    }
+    const tiles = (data.topPartners || []).map(p => {
+      const state = p.tagType === 'red' ? 'risk' : p.tagType === 'orange' ? 'watch' : 'healthy';
+      return `
+        <div class="v4-vip-tile" data-state="${state}" onclick="openDrawer('${p.name.replace(/'/g, "\\'")}')">
+          <div class="v4-vip-avatar">${p.logo}</div>
+          <div class="v4-vip-name">${p.name}</div>
+          <div class="v4-vip-meta">${p.rev} · ${p.delta}</div>
+          <div class="v4-vip-suggested">${p.tagText}</div>
+        </div>`;
+    }).join('');
+    return `<div class="v4-vip-grid">${tiles}</div>`;
+  }
+
+  function renderV7LaunchView() {
+    const host = document.createElement('div');
+    renderCampaignLaunchHero(host);
+    return `<div class="v7-wrap">${host.innerHTML}</div>`;
+  }
+
+  function renderV7OnboardView() {
+    const host = document.createElement('div');
+    renderOnboardingHero(host);
+    return `<div class="v7-wrap">${host.innerHTML}</div>`;
+  }
+
+  function renderV7SafetyView() {
+    const host = document.createElement('div');
+    renderBrandSafetyHero(host);
+    return `<div class="v7-wrap">${host.innerHTML}</div>`;
+  }
+
+  // Transitions
+  function v7PickMode(modeId) {
+    AppState.focusMode = modeId;
+    AppState.focusModeHistory = [modeId, ...(AppState.focusModeHistory || []).filter(id => id !== modeId)].slice(0, 5);
+    AppState._v7AtPicker = false;
+    renderFocusModeChip();
+    renderV7Dashboard();
+    const m = getFocusMode(modeId);
+    showToast(`Focus: ${m.icon} ${m.label}`, 'info');
+  }
+
+  function v7BackToPicker() {
+    AppState._v7AtPicker = true;
+    renderV7Dashboard();
+  }
 
 </script>
 </body>
