@@ -20,7 +20,16 @@ interface PrimaryItem {
 }
 
 const navStructure: PrimaryItem[] = [
-  { label: "Dashboard", path: "/" },
+  {
+    label: "Briefing & Dashboards",
+    defaultExpanded: true,
+    secondary: [
+      { label: "Daily Briefing", path: "/dashboard/digest" },
+      { label: "Recruiting Radar", path: "/dashboard/radar" },
+      { label: "Campaign Command", path: "/dashboard/command" },
+      { label: "Focus Mode", path: "/one-program-1/affiliate-creator-manager-wireframe.html" },
+    ],
+  },
   {
     label: "Partners",
     path: "/partners",
@@ -45,11 +54,12 @@ const navStructure: PrimaryItem[] = [
     ],
   },
   {
-    label: "Reports",
+    label: "Analytics",
     secondary: [
       { label: "Overview", path: "/reports/overview" },
       { label: "Partner Intelligence", path: "/reports/partner-intelligence" },
       { label: "Data Lab", path: "/reports/data-lab" },
+      { label: "Action Explorer", path: "/reports/action-explorer" },
       { label: "Program Performance", path: "/reports/performance" },
       { label: "By Partner", path: "/reports/performance/by-partner", indent: true },
       { label: "By Day", path: "/reports/performance/by-day", indent: true },
@@ -185,7 +195,7 @@ export function LeftNav() {
                 <div className="overflow-hidden">
                   <div className="flex flex-col gap-[10px] pb-1">
                     {item.secondary!.map((sub) => {
-                      const isSubActive = sub.label === activeSecondary;
+                      const isSubActive = sub.label === activeSecondary || (sub.path && location.pathname === sub.path);
                       return (
                         <button
                           key={sub.label}
@@ -198,7 +208,13 @@ export function LeftNav() {
                           }}
                           onClick={() => {
                             setActiveSecondary(sub.label);
-                            if (sub.path) navigate(sub.path);
+                            if (sub.path) {
+                              if (sub.path.endsWith(".html") || sub.path.startsWith("http")) {
+                                window.location.href = sub.path;
+                              } else {
+                                navigate(sub.path);
+                              }
+                            }
                           }}
                         >
                           <span

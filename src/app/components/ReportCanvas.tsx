@@ -1273,6 +1273,12 @@ function ReportCanvasInner({ initialChartType }: ReportCanvasProps) {
     }>;
   } | null>(null);
 
+  // Declared up here (before handleSaveRuleBuilder) so the useCallback deps
+  // array below doesn't reference it before initialization (TDZ ReferenceError).
+  const updateWidget = useCallback((id: string, patch: Partial<Widget>) => {
+    setWidgets((prev) => prev.map((w) => (w.id === id ? { ...w, ...patch } : w)));
+  }, []);
+
   const handleSaveRuleBuilder = useCallback(() => {
     if (!ruleBuilderDrawer) return;
     updateWidget(ruleBuilderDrawer.widgetId, {
@@ -1384,10 +1390,6 @@ function ReportCanvasInner({ initialChartType }: ReportCanvasProps) {
       );
     },
   });
-
-  const updateWidget = useCallback((id: string, patch: Partial<Widget>) => {
-    setWidgets((prev) => prev.map((w) => (w.id === id ? { ...w, ...patch } : w)));
-  }, []);
 
   const resizeWidget = useCallback((id: string, newW: number, newH: number) => {
     setWidgets((prev) => prev.map((w) => (w.id === id ? { ...w, w: newW, h: newH } : w)));

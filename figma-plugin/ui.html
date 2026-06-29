@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Reporting Mock Generator</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --surface: #f7f7f8;
+        --surface-2: #ffffff;
+        --border: #e5e5ea;
+        --text: #1a1a1f;
+        --text-muted: #6b6b76;
+        --accent: #0d99ff;
+        --accent-hover: #0b87e0;
+        --danger: #d4373b;
+        --radius: 8px;
+        --radius-sm: 6px;
+        --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font);
+        font-size: 12px;
+        color: var(--text);
+        background: var(--bg);
+      }
+
+      .app {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+      }
+
+      .status-bar {
+        border-top: 1px solid var(--border);
+        padding: 8px 16px;
+        font-size: 11px;
+        color: var(--text-muted);
+        background: var(--surface);
+      }
+
+      .status-bar.error {
+        color: var(--danger);
+      }
+
+      .section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px;
+        margin-bottom: 16px;
+      }
+
+      .section h2 {
+        margin: 0 0 4px 0;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .section .subtitle {
+        margin: 0 0 12px 0;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+      }
+
+      .field label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+      }
+
+      .row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .row > * {
+        flex: 1;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      select {
+        width: 100%;
+        height: 30px;
+        padding: 0 10px;
+        font-family: var(--font);
+        font-size: 12px;
+        color: var(--text);
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        outline: none;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: var(--accent);
+      }
+
+      button {
+        height: 32px;
+        padding: 0 14px;
+        font-family: var(--font);
+        font-size: 12px;
+        font-weight: 500;
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: var(--accent-hover);
+      }
+
+      button.secondary {
+        background: var(--surface-2);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      button.secondary:hover {
+        background: var(--surface);
+      }
+
+      button.icon {
+        height: 28px;
+        width: 28px;
+        padding: 0;
+        font-size: 14px;
+        line-height: 1;
+        background: var(--surface-2);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        flex: 0 0 28px;
+      }
+
+      button.icon:hover {
+        color: var(--danger);
+        border-color: var(--danger);
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .column-row {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 6px;
+        align-items: center;
+      }
+
+      .column-row input {
+        flex: 2;
+      }
+
+      .column-row select {
+        flex: 1;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .actions button {
+        flex: 1;
+      }
+
+      .hint {
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="scroll">
+        <!-- CHART SECTION -->
+        <div class="section" id="chart-section">
+          <h2>Chart</h2>
+          <p class="subtitle">
+            Insert a native vector chart styled with Styleguide V2 / Vnext
+            tokens.
+          </p>
+
+          <div class="field">
+            <label for="chart-type">Chart type</label>
+            <select id="chart-type">
+              <option value="LineChart">LineChart</option>
+              <option value="BarChart">BarChart</option>
+              <option value="AreaChart">AreaChart</option>
+              <option value="PieChart">PieChart</option>
+              <option value="ScatterChart">ScatterChart</option>
+              <option value="ComposedChart">ComposedChart</option>
+              <option value="RadarChart">RadarChart</option>
+              <option value="RadialBarChart">RadialBarChart</option>
+              <option value="Treemap">Treemap</option>
+              <option value="Funnel">Funnel</option>
+              <option value="Sankey">Sankey</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="series-count">Series</label>
+              <input
+                id="series-count"
+                type="number"
+                min="1"
+                max="4"
+                value="1"
+              />
+            </div>
+            <div class="field">
+              <label for="point-count">Data points</label>
+              <input
+                id="point-count"
+                type="number"
+                min="3"
+                max="12"
+                value="6"
+              />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="insert-chart">Insert chart</button>
+          </div>
+        </div>
+
+        <!-- DATA TABLE SECTION -->
+        <div class="section" id="table-section">
+          <h2>Data Table</h2>
+          <p class="subtitle">
+            Insert the library Table component with per-column row types.
+          </p>
+
+          <div class="field">
+            <label for="row-count">Rows</label>
+            <input id="row-count" type="number" min="1" max="50" value="5" />
+          </div>
+
+          <div class="field">
+            <label>Columns</label>
+            <div id="columns-list">
+              <!-- column rows injected by script -->
+            </div>
+            <div class="actions">
+              <button class="secondary" id="add-column">+ Add column</button>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="insert-table">Insert table</button>
+          </div>
+
+          <p class="hint">
+            Cell types: Text = string labels, Dollar = USD currency-formatted,
+            Number = thousand-separated.
+          </p>
+        </div>
+      </div>
+
+      <div class="status-bar" id="status">Initializing…</div>
+    </div>
+
+    <script>
+      const COLUMN_TYPES = ["Text", "Dollar", "Number"];
+      let columnIdCounter = 0;
+      let ready = false;
+
+      const $ = (sel) => document.querySelector(sel);
+      const status = $("#status");
+      const insertChartBtn = $("#insert-chart");
+      const insertTableBtn = $("#insert-table");
+      const columnsList = $("#columns-list");
+
+      function setStatus(text, isError) {
+        status.textContent = text;
+        status.classList.toggle("error", !!isError);
+      }
+
+      function makeColumnRow(headerValue, typeValue) {
+        const id = ++columnIdCounter;
+        const row = document.createElement("div");
+        row.className = "column-row";
+        row.dataset.id = String(id);
+
+        const headerInput = document.createElement("input");
+        headerInput.type = "text";
+        headerInput.placeholder = "Header";
+        headerInput.value = headerValue || "";
+        headerInput.dataset.field = "header";
+
+        const typeSelect = document.createElement("select");
+        typeSelect.dataset.field = "type";
+        for (const t of COLUMN_TYPES) {
+          const opt = document.createElement("option");
+          opt.value = t;
+          opt.textContent = t;
+          if (t === typeValue) opt.selected = true;
+          typeSelect.appendChild(opt);
+        }
+
+        const remove = document.createElement("button");
+        remove.className = "icon";
+        remove.title = "Remove column";
+        remove.textContent = "×";
+        remove.addEventListener("click", () => {
+          if (columnsList.children.length > 1) {
+            row.remove();
+          }
+        });
+
+        row.appendChild(headerInput);
+        row.appendChild(typeSelect);
+        row.appendChild(remove);
+        columnsList.appendChild(row);
+      }
+
+      function readColumns() {
+        const rows = Array.from(columnsList.querySelectorAll(".column-row"));
+        return rows.map((row, idx) => {
+          const header = row.querySelector('[data-field="header"]').value.trim();
+          const type = row.querySelector('[data-field="type"]').value;
+          return {
+            header: header || `Column ${idx + 1}`,
+            type: COLUMN_TYPES.includes(type) ? type : "Text",
+          };
+        });
+      }
+
+      // Seed default columns
+      makeColumnRow("Account", "Text");
+      makeColumnRow("Revenue", "Dollar");
+      makeColumnRow("Units", "Number");
+
+      $("#add-column").addEventListener("click", () => {
+        makeColumnRow("", "Text");
+      });
+
+      insertChartBtn.addEventListener("click", () => {
+        if (!ready) return;
+        const payload = {
+          chartType: $("#chart-type").value,
+          seriesCount: clampInt($("#series-count").value, 1, 4, 1),
+          pointCount: clampInt($("#point-count").value, 3, 12, 6),
+        };
+        parent.postMessage(
+          { pluginMessage: { type: "insert-chart", payload } },
+          "*",
+        );
+      });
+
+      insertTableBtn.addEventListener("click", () => {
+        if (!ready) return;
+        const payload = {
+          rows: clampInt($("#row-count").value, 1, 50, 5),
+          columns: readColumns(),
+        };
+        if (payload.columns.length === 0) {
+          setStatus("Add at least one column.", true);
+          return;
+        }
+        parent.postMessage(
+          { pluginMessage: { type: "insert-table", payload } },
+          "*",
+        );
+      });
+
+      function clampInt(v, min, max, fallback) {
+        const n = parseInt(v, 10);
+        if (!Number.isFinite(n)) return fallback;
+        return Math.min(max, Math.max(min, n));
+      }
+
+      function setReady(isReady) {
+        ready = isReady;
+        insertChartBtn.disabled = !isReady;
+        insertTableBtn.disabled = !isReady;
+      }
+      setReady(false);
+
+      window.addEventListener("message", (event) => {
+        const msg = event.data && event.data.pluginMessage;
+        if (!msg) return;
+        if (msg.type === "ready") {
+          setReady(true);
+          setStatus(msg.detail || "Ready.");
+        } else if (msg.type === "status") {
+          setStatus(msg.detail || "");
+        } else if (msg.type === "error") {
+          setStatus(msg.detail || "Something went wrong.", true);
+        }
+      });
+    </script>
+  </body>
+</html>

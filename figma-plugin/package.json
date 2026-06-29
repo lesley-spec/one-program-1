@@ -1,0 +1,16 @@
+{
+  "name": "reporting-mock-generator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Figma plugin that generates reporting mocks (recharts-style charts + library-driven data tables) using the Styleguide V2 library in Vnext mode.",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch --preserveWatchOutput",
+    "dev": "tsc -p tsconfig.json --watch --preserveWatchOutput",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.108.0",
+    "typescript": "^5.4.5"
+  }
+}

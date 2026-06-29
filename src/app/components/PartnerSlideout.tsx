@@ -349,7 +349,7 @@ interface PartnerSlideoutProps {
   onNavigate: (name: string) => void;
 }
 
-type RightTab = "properties" | "insights" | "details" | "contact";
+type RightTab = "properties" | "insights" | "details" | "contact" | "checkin";
 
 /* ═══════════════════════════════════════════════════════════
    Component
@@ -361,10 +361,23 @@ export function PartnerSlideout({ partnerName, partnerNames, open, onClose, onNa
   const [noteText, setNoteText] = useState("");
   const panelRef = useRef<HTMLDivElement>(null);
 
+  // States for JTBD Check-in Preparation
+  const [checklist, setChecklist] = useState<Record<string, boolean>>({});
+  const [checkinCadence, setCheckinCadence] = useState<string>("Weekly");
+  const [bonusInput, setBonusInput] = useState<string>("");
+  const [commissionInput, setCommissionInput] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [localActivity, setLocalActivity] = useState<ActivityItem[]>([]);
+
   const partner = getPartnerDetail(partnerName);
   const currentIdx = partnerNames.indexOf(partnerName);
   const canPrev = currentIdx > 0;
   const canNext = currentIdx < partnerNames.length - 1;
+
+  const triggerLocalToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   /* Close on Escape */
   useEffect(() => {
@@ -379,7 +392,12 @@ export function PartnerSlideout({ partnerName, partnerNames, open, onClose, onNa
     setRightTab("properties");
     setDescExpanded(false);
     setNoteText("");
-  }, [partnerName]);
+    setChecklist({});
+    setCheckinCadence("Weekly");
+    setBonusInput("");
+    setCommissionInput("");
+    setLocalActivity(partner.activity);
+  }, [partnerName, partner]);
 
   if (!open) return null;
 
@@ -543,11 +561,26 @@ export function PartnerSlideout({ partnerName, partnerNames, open, onClose, onNa
               placeholder="Type to add an internal note"
               value={noteText}
               onChange={(e) => setNoteText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (!noteText.trim()) return;
+                  const newAct: ActivityItem = {
+                    user: "Christine Adams",
+                    action: "added an internal note:",
+                    detail: noteText,
+                    date: "Today",
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                  };
+                  setLocalActivity(prev => [newAct, ...prev]);
+                  setNoteText("");
+                  triggerLocalToast("Internal note added!");
+                }
+              }}
             />
           </div>
 
           {/* Activity items */}
-          {partner.activity.map((act, i) => (
+          {localActivity.map((act, i) => (
             <div key={i}>
               <div className="flex gap-[10px] px-[24px] py-[10px]">
                 {/* Avatar */}
@@ -574,7 +607,7 @@ export function PartnerSlideout({ partnerName, partnerNames, open, onClose, onNa
                   )}
                 </div>
               </div>
-              {i < partner.activity.length - 1 && (
+              {i < localActivity.length - 1 && (
                 <div className="mx-[24px]" style={{ borderBottom: "1px solid var(--border)" }} />
               )}
             </div>
@@ -604,6 +637,7 @@ export function PartnerSlideout({ partnerName, partnerNames, open, onClose, onNa
                   { id: "insights", label: "Insights" },
                   { id: "details", label: "Details" },
                   { id: "contact", label: "Contact" },
+                  { id: "checkin", label: "Check-in Prep" },
                 ] as { id: RightTab; label: string }[]
               ).map((tab) => (
                 <button
@@ -743,6 +777,177 @@ export function PartnerSlideout({ partnerName, partnerNames, open, onClose, onNa
                   >
                     Send Message
                   </button>
+                </div>
+              </div>
+            )}
+
+            {/* Check-in Prep Tab */}
+            {rightTab === "checkin" && (
+              <div className="flex flex-col gap-[20px] relative">
+                {/* Local Toast Alert */}
+                {toastMessage && (
+                  <div className="absolute -top-3 right-0 z-[300] bg-card border border-accent rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <span className="size-5 rounded-full bg-accent/15 text-accent flex items-center justify-center text-[10px] font-bold">✓</span>
+                    <span className="text-foreground text-xs font-semibold">{toastMessage}</span>
+                  </div>
+                )}
+
+                <div>
+                  <h3 style={{ fontFamily: FONT, fontSize: "var(--text-base)", fontWeight: 700, color: "var(--foreground)", marginBottom: "4px" }}>
+                    Preparing for Check-in Briefing
+                  </h3>
+                  <p style={{ fontFamily: FONT, fontSize: "var(--text-sm)", color: "var(--muted-foreground)", margin: 0 }}>
+                    Review talking points, follow the prep checklist, and adjust terms directly.
+                  </p>
+                </div>
+
+                {/* Cadence selection */}
+                <div className="bg-card p-[16px] rounded-xl border border-border flex flex-col gap-[10px]">
+                  <span style={{ fontFamily: FONT, fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--foreground)" }}>Check-in Cadence</span>
+                  <div className="flex gap-[6px] bg-muted p-[4px] rounded-lg border">
+                    {["Weekly", "Bi-weekly", "Monthly", "Quarterly"].map((cad) => (
+                      <button
+                        key={cad}
+                        className="flex-1 py-[6px] text-xs font-semibold rounded-md cursor-pointer transition-colors"
+                        style={{
+                          background: checkinCadence === cad ? "var(--card)" : "transparent",
+                          color: checkinCadence === cad ? "var(--accent)" : "var(--muted-foreground)",
+                          border: "none",
+                          boxShadow: checkinCadence === cad ? "0px 1px 2px rgba(0,0,0,0.06)" : "none"
+                        }}
+                        onClick={() => {
+                          setCheckinCadence(cad);
+                          triggerLocalToast(`Check-in cadence set to ${cad}`);
+                        }}
+                      >
+                        {cad}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Check-in Prep Checklist */}
+                <div className="bg-card p-[16px] rounded-xl border border-border flex flex-col gap-[12px]">
+                  <div className="flex items-center justify-between border-b pb-2">
+                    <span style={{ fontFamily: FONT, fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--foreground)" }}>Check-in Checklist</span>
+                    <span style={{ fontFamily: FONT, fontSize: "var(--text-sm)", color: "var(--muted-foreground)" }}>
+                      {Object.values(checklist).filter(Boolean).length} / 4 completed
+                    </span>
+                  </div>
+                  {[
+                    { key: "chk-1", text: `Review current performance (Revenue: ${partner.businessModel === "Coupon / Deals" || partner.businessModel === "Content Commerce" ? "$34,560" : "$1,450"})` },
+                    { key: "chk-2", text: "Verify active marketing channels in Properties tab" },
+                    { key: "chk-3", text: "Verify coupon codes and active tracking links" },
+                    { key: "chk-4", text: "Log check-in discussion notes and action items" }
+                  ].map((chk) => (
+                    <label key={chk.key} className="flex items-center gap-[10px] cursor-pointer hover:opacity-85 select-none">
+                      <input
+                        type="checkbox"
+                        checked={!!checklist[chk.key]}
+                        className="rounded border-border text-accent focus:ring-accent size-[15px] cursor-pointer"
+                        onChange={(e) => {
+                          setChecklist(prev => ({ ...prev, [chk.key]: e.target.checked }));
+                          if (e.target.checked) {
+                            triggerLocalToast("Item completed!");
+                          }
+                        }}
+                      />
+                      <span style={{ fontFamily: FONT, fontSize: "var(--text-sm)", color: "var(--foreground)", fontWeight: checklist[chk.key] ? "500" : "normal", textDecoration: checklist[chk.key] ? "line-through" : "none", opacity: checklist[chk.key] ? 0.6 : 1 }}>
+                        {chk.text}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+
+                {/* Talking Points */}
+                <div className="bg-card p-[16px] rounded-xl border border-border flex flex-col gap-[10px]">
+                  <span style={{ fontFamily: FONT, fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--foreground)" }}>Talking Points & Insights</span>
+                  <ul className="flex flex-col gap-[8px] pl-[18px] list-disc" style={{ fontFamily: FONT, fontSize: "var(--text-sm)", color: "var(--muted-foreground)", margin: 0 }}>
+                    {partner.name === "CNN Digital" || partner.name === "CouponFollow" || partner.name === "Honey / PayPal" ? (
+                      <>
+                        <li>Highlight exceptional revenue performance (+18% growth this month).</li>
+                        <li>Propose extending the current contract into new product categories.</li>
+                        <li>Ask about Q3 editorial calendar slots for premium home page placement.</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>Discuss the recent performance decline (-14% revenue drop).</li>
+                        <li>Inquire about placement quality and potential conversion issues.</li>
+                        <li>Propose a temporary welcome/performance bonus to incentivize outreach.</li>
+                      </>
+                    )}
+                  </ul>
+                </div>
+
+                {/* Inline Quick Actions */}
+                <div className="bg-card p-[16px] rounded-xl border border-border flex flex-col gap-[14px]">
+                  <span style={{ fontFamily: FONT, fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--foreground)" }}>Inline Partner Actions</span>
+                  
+                  {/* Action 1: Issue Bonus */}
+                  <div className="flex flex-col gap-[6px]">
+                    <label style={{ fontFamily: FONT, fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--muted-foreground)" }}>Issue Performance Bonus</label>
+                    <div className="flex gap-[8px]">
+                      <input
+                        type="text"
+                        placeholder="e.g. $500"
+                        className="flex-1 h-[34px] px-[10px] bg-card text-foreground border border-border"
+                        style={{ borderRadius: "var(--radius)", fontFamily: FONT, fontSize: "var(--text-sm)" }}
+                        value={bonusInput}
+                        onChange={(e) => setBonusInput(e.target.value)}
+                      />
+                      <button
+                        onClick={() => {
+                          if (!bonusInput.trim()) return;
+                          const amount = bonusInput;
+                          const newAct: ActivityItem = {
+                            user: "Christine Adams",
+                            action: `issued a performance bonus of ${amount}`,
+                            date: "Today",
+                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                          };
+                          setLocalActivity(prev => [newAct, ...prev]);
+                          setBonusInput("");
+                          triggerLocalToast(`Bonus of ${amount} successfully issued!`);
+                        }}
+                        className="px-[12px] h-[34px] bg-accent hover:bg-accent/95 text-white font-semibold rounded-lg text-xs cursor-pointer border-none"
+                      >
+                        Issue Bonus
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Action 2: Update Baseline Terms */}
+                  <div className="flex flex-col gap-[6px] border-t pt-3">
+                    <label style={{ fontFamily: FONT, fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--muted-foreground)" }}>Adjust Baseline Commission</label>
+                    <div className="flex gap-[8px]">
+                      <input
+                        type="text"
+                        placeholder="e.g. 8.5%"
+                        className="flex-1 h-[34px] px-[10px] bg-card text-foreground border border-border"
+                        style={{ borderRadius: "var(--radius)", fontFamily: FONT, fontSize: "var(--text-sm)" }}
+                        value={commissionInput}
+                        onChange={(e) => setCommissionInput(e.target.value)}
+                      />
+                      <button
+                        onClick={() => {
+                          if (!commissionInput.trim()) return;
+                          const rate = commissionInput;
+                          const newAct: ActivityItem = {
+                            user: "Christine Adams",
+                            action: `updated contract commission terms to ${rate}`,
+                            date: "Today",
+                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                          };
+                          setLocalActivity(prev => [newAct, ...prev]);
+                          setCommissionInput("");
+                          triggerLocalToast(`Contract commission set to ${rate}!`);
+                        }}
+                        className="px-[12px] h-[34px] bg-accent hover:bg-accent/95 text-white font-semibold rounded-lg text-xs cursor-pointer border-none"
+                      >
+                        Update Baseline
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

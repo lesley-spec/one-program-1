@@ -4,7 +4,7 @@ import imgBrandProfilePicture from "figma:asset/7582cfd7dca9a384cd94bd5dbf01449b
 import { AvatarDropdown } from "./AvatarDropdown";
 import { FinanceDropdown } from "./FinanceDropdown";
 import { useState, type ReactNode } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 type Page = "dashboard" | "contracts";
 
@@ -75,8 +75,19 @@ interface AppShellProps {
 
 export function AppShell({ leftNav, children }: AppShellProps) {
   const navigate = useNavigate();
-  const activeProduct = "engage";
+  const location = useLocation();
   const [leftNavCollapsed, setLeftNavCollapsed] = useState(false);
+
+  let activeProduct = "engage";
+  if (location.pathname.startsWith("/partners")) {
+    activeProduct = "discover";
+  } else if (location.pathname.startsWith("/reports") || location.pathname.startsWith("/transactions") || location.pathname.startsWith("/finance")) {
+    activeProduct = "optimize";
+  } else if (location.pathname.startsWith("/contracts")) {
+    activeProduct = "protect";
+  } else if (location.pathname.includes("radar") || location.pathname.includes("partner-intelligence")) {
+    activeProduct = "insights";
+  }
 
   return (
     <div className="h-screen flex flex-col" style={{ background: "var(--sidebar)" }}>
@@ -200,7 +211,11 @@ export function AppShell({ leftNav, children }: AppShellProps) {
                   key={item.id}
                   className="flex flex-col items-center justify-center py-2 w-16 cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => {
-                    if (item.id === "engage") navigate("/dashboard");
+                    if (item.id === "engage") navigate("/dashboard/digest");
+                    else if (item.id === "discover") navigate("/partners");
+                    else if (item.id === "optimize") navigate("/reports/overview");
+                    else if (item.id === "protect") navigate("/contracts");
+                    else if (item.id === "insights") navigate("/reports/partner-intelligence");
                   }}
                 >
                   <div

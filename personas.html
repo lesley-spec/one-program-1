@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impact.com — Affiliate & Creator Channel Personas</title>
+<meta name="description" content="Detailed personas and jobs-to-be-done for the affiliate and creator channel ecosystem at Impact.com, covering both brand-side and partner-side users.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── DESIGN TOKENS ── */
+:root {
+  --bg: #FFFFFF;
+  --bg-subdued: #F6F8FC;
+  --bg-deep: #0D1117;
+  --fg: #25282F;
+  --muted: #F0F1F3;
+  --muted-fg: #606672;
+  --accent: #0077DB;
+  --accent-hover: #005FAF;
+  --border: #E0E9F0;
+  --border-strong: #CACFD3;
+  --text-subdued: #8A959D;
+  --text-disabled: #CACFD3;
+  --surface-hover: #EDF1F9;
+
+  /* Persona palettes */
+  --aisha-bg: #D6EBFF; --aisha-fg: #1D66DE; --aisha-accent: #0077DB;
+  --priya-bg: #CFF7F0; --priya-fg: #047857; --priya-accent: #0EA5A4;
+  --marcus-bg: #EDE4FF; --marcus-fg: #4B3296; --marcus-accent: #8A63D2;
+  --rachel-bg: #FFF0D6; --rachel-fg: #9A6700; --rachel-accent: #D4930D;
+  --jordan-bg: #FFE0E6; --jordan-fg: #BE185D; --jordan-accent: #E11D6D;
+  --sade-bg: #FCEAFF; --sade-fg: #7E22CE; --sade-accent: #A855F7;
+  --david-bg: #DCF5E6; --david-fg: #166534; --david-accent: #16A34A;
+  --elena-bg: #FFE4D6; --elena-fg: #9A3412; --elena-accent: #EA580C;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 24px rgba(0,0,0,.08);
+  --shadow-xl: 0 8px 40px rgba(0,0,0,.12);
+
+  --radius: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 9999px;
+
+  --ease: cubic-bezier(.4,0,.2,1);
+  --ease-bounce: cubic-bezier(.34,1.56,.64,1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-subdued);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* ── STICKY NAV ── */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+}
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  gap: 24px;
+}
+.nav-logo { height: 22px; width: auto; display: block; }
+.nav-links { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-fg);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  transition: all .2s var(--ease);
+}
+.nav-link:hover { color: var(--fg); background: var(--muted); }
+.nav-link.active { color: var(--accent); background: var(--aisha-bg); }
+
+/* ── HERO ── */
+.hero {
+  padding: 72px 32px 56px;
+  text-align: center;
+  background: linear-gradient(180deg, #fff 0%, var(--bg-subdued) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -120px; left: 50%;
+  width: 600px; height: 600px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(0,119,219,.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  color: var(--fg);
+  letter-spacing: -0.8px;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.hero-sub {
+  font-size: 15px;
+  color: var(--muted-fg);
+  max-width: 640px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+/* Side pills */
+.side-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.side-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all .25s var(--ease);
+  border: 1.5px solid transparent;
+}
+.side-pill.brand {
+  background: var(--aisha-bg);
+  color: var(--aisha-fg);
+  border-color: rgba(29,102,222,.15);
+}
+.side-pill.brand:hover {
+  background: #c0dfff;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.side-pill.partner {
+  background: var(--jordan-bg);
+  color: var(--jordan-fg);
+  border-color: rgba(190,24,93,.15);
+}
+.side-pill.partner:hover {
+  background: #ffcdd8;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── SECTION ── */
+.section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 32px;
+}
+.section-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 800;
+  color: var(--fg);
+  letter-spacing: -0.5px;
+}
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-subdued);
+  max-width: 560px;
+  margin: 8px auto 0;
+  line-height: 1.6;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.divider-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+}
+
+/* ── PERSONA CARD ── */
+.persona-card {
+  background: var(--bg);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 32px;
+  transition: box-shadow .3s var(--ease), transform .3s var(--ease);
+}
+.persona-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Card accent bar */
+.card-accent-bar {
+  height: 4px;
+  width: 100%;
+}
+
+/* Card header */
+.card-header {
+  padding: 32px 36px 28px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  align-items: start;
+  border-bottom: 1px solid var(--border);
+}
+.avatar-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  flex-shrink: 0;
+}
+.header-info { display: flex; flex-direction: column; gap: 4px; }
+.persona-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--fg);
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+.persona-title {
+  font-size: 13px;
+  color: var(--text-subdued);
+  font-weight: 500;
+}
+.persona-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 4px;
+  width: fit-content;
+}
+.header-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-self: center;
+}
+.meta-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--muted);
+  color: var(--muted-fg);
+  white-space: nowrap;
+}
+.meta-chip .meta-val {
+  font-weight: 800;
+  color: var(--fg);
+}
+
+/* Stats row */
+.stats-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.stat-cell {
+  flex: 1;
+  padding: 16px 24px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  min-width: 120px;
+}
+.stat-cell:last-child { border-right: none; }
+.stat-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--fg);
+  letter-spacing: -0.3px;
+}
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-subdued);
+  margin-top: 2px;
+}
+
+/* Card body */
+.card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.card-column {
+  padding: 28px 36px;
+}
+.card-column:first-child {
+  border-right: 1px solid var(--border);
+}
+
+.block { margin-bottom: 24px; }
+.block:last-child { margin-bottom: 0; }
+
+.block-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-subdued);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.block-label-icon {
+  font-size: 12px;
+}
+
+/* Quote */
+.quote-block {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--fg);
+  line-height: 1.65;
+  padding: 14px 18px;
+  border-left: 3px solid var(--border);
+  background: var(--bg-subdued);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* Context */
+.context-text {
+  font-size: 13px;
+  color: var(--muted-fg);
+  line-height: 1.7;
+}
+
+/* JTBD table */
+.jtbd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.jtbd-table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-subdued);
+  padding: 8px 10px;
+  border-bottom: 1.5px solid var(--border-strong);
+  background: var(--bg-subdued);
+}
+.jtbd-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg);
+  vertical-align: top;
+  line-height: 1.4;
+}
+.jtbd-table tr:last-child td { border-bottom: none; }
+.jtbd-table .job-name { font-weight: 700; white-space: nowrap; }
+
+/* List items */
+.point-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.point-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+.point-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.point-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+
+/* Tags */
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Card footer */
+.card-footer {
+  background: var(--bg-subdued);
+  border-top: 1px solid var(--border);
+  padding: 20px 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+.footer-block {}
+.footer-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-subdued);
+  margin-bottom: 8px;
+}
+.footer-text {
+  font-size: 13px;
+  color: var(--fg);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.ui-impl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.ui-impl-item {
+  font-size: 12px;
+  color: var(--fg);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.4;
+}
+.ui-impl-item::before {
+  content: "→";
+  color: var(--text-subdued);
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+/* Workflow timeline */
+.workflow-timeline {
+  display: flex;
+  gap: 0;
+  position: relative;
+  margin-top: 4px;
+}
+.workflow-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  padding: 0 4px;
+}
+.workflow-step::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+}
+.workflow-step:first-child::before { left: 50%; }
+.workflow-step:last-child::before { right: 50%; }
+.step-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  margin: 0 auto 6px;
+  position: relative;
+  z-index: 1;
+}
+.step-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted-fg);
+  line-height: 1.3;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .card-header {
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+  }
+  .header-meta {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .card-body {
+    grid-template-columns: 1fr;
+  }
+  .card-column:first-child {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-footer {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .stats-row { flex-wrap: wrap; }
+  .stat-cell { min-width: 100px; }
+  .hero h1 { font-size: 28px; }
+}
+@media (max-width: 600px) {
+  .site-nav { padding: 0 16px; }
+  .section { padding: 32px 16px; }
+  .card-header { padding: 24px 20px 20px; }
+  .card-column { padding: 20px; }
+  .card-footer { padding: 16px 20px; }
+  .hero { padding: 48px 16px 40px; }
+  .nav-links { gap: 2px; }
+  .workflow-timeline { flex-wrap: wrap; gap: 8px; }
+  .workflow-step::before { display: none; }
+}
+
+/* ── PARTNER NAV ACTIVE ── */
+.nav-link.active-partner { color: var(--jordan-fg); background: var(--jordan-bg); }
+
+/* ── COMPARISON MATRIX ── */
+.matrix-section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 64px 32px 48px;
+}
+.matrix-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.matrix-grid {
+  background: var(--bg);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.matrix-table thead th {
+  background: var(--bg-deep);
+  color: #fff;
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-bottom: 2px solid rgba(255,255,255,.1);
+  white-space: nowrap;
+}
+.matrix-table thead th:first-child {
+  border-radius: var(--radius-xl) 0 0 0;
+}
+.matrix-table thead th:last-child {
+  border-radius: 0 var(--radius-xl) 0 0;
+}
+.matrix-table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+  color: var(--fg);
+}
+.matrix-table tbody tr:last-child td { border-bottom: none; }
+.matrix-table tbody tr:hover td { background: var(--surface-hover); }
+.matrix-name {
+  font-weight: 800;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.matrix-name-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.matrix-side-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+  margin-top: 2px;
+}
+.matrix-cell-highlight {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ── DESIGN PRINCIPLES ── */
+.principles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 32px;
+}
+.principle-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: all .25s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.principle-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.principle-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.principle-number {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-subdued);
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.principle-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--fg);
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+.principle-desc {
+  font-size: 13px;
+  color: var(--muted-fg);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.principle-personas {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.principle-persona-chip {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+/* ── BACK TO TOP ── */
+.back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-deep);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: all .3s var(--ease);
+  z-index: 99;
+}
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  background: var(--bg-deep);
+  color: rgba(255,255,255,.6);
+  padding: 48px 32px;
+  text-align: center;
+  margin-top: 32px;
+}
+.footer-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.footer-logo {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.footer-tagline {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.footer-meta {
+  font-size: 11px;
+  color: rgba(255,255,255,.35);
+}
+
+/* ── RESPONSIVE MATRIX ── */
+@media (max-width: 900px) {
+  .matrix-table { font-size: 11px; }
+  .matrix-table thead th, .matrix-table tbody td { padding: 10px 12px; }
+  .principles-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .matrix-section { padding: 32px 16px; }
+  .matrix-grid { overflow-x: auto; }
+  .matrix-table { min-width: 800px; }
+  .site-footer { padding: 32px 16px; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .persona-card { transition: none; }
+  .side-pill { transition: none; }
+  .nav-link { transition: none; }
+  .back-to-top { transition: none; }
+  .principle-card { transition: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav class="site-nav" id="site-nav" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="affiliate-creator-manager-wireframe.html" aria-label="impact.com dashboard"><img class="nav-logo" src="assets/impact-logo.svg" alt="impact.com" width="70" height="22"></a>
+    <div class="nav-links" role="tablist">
+      <a class="nav-link active" href="#brand-side" id="nav-brand">Brand Side</a>
+      <a class="nav-link" href="#aisha" id="nav-aisha">Aisha</a>
+      <a class="nav-link" href="#priya" id="nav-priya">Priya</a>
+      <a class="nav-link" href="#marcus" id="nav-marcus">Marcus</a>
+      <a class="nav-link" href="#rachel" id="nav-rachel">Rachel</a>
+      <a class="nav-link" href="#partner-side" id="nav-partner">Partner Side</a>
+      <a class="nav-link" href="#jordan" id="nav-jordan">Jordan</a>
+      <a class="nav-link" href="#sade" id="nav-sade">Sade</a>
+      <a class="nav-link" href="#david" id="nav-david">David</a>
+      <a class="nav-link" href="#elena" id="nav-elena">Elena</a>
+      <a class="nav-link" href="#matrix" id="nav-matrix">Matrix</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">impact.com · Channel Research · June 2026</div>
+  <h1>Affiliate & Creator<br>Channel Personas</h1>
+  <p class="hero-sub">Eight detailed personas across the partnership ecosystem — four brand-side managers and four partner-side channel archetypes — each with jobs-to-be-done, pain points, and direct UI/navigation implications.</p>
+  <div class="side-nav">
+    <a href="#brand-side" class="side-pill brand">🏢 Brand Side — 4 Personas</a>
+    <a href="#partner-side" class="side-pill partner">🎨 Partner Side — 4 Personas</a>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- BRAND SIDE                                                        -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<section class="section" id="brand-side">
+  <div class="section-header">
+    <div class="section-eyebrow" style="color:var(--aisha-fg)">Brand Side · Advertisers</div>
+    <div class="section-title">The People Who Run the Programs</div>
+    <div class="section-subtitle">These are the brand-side users who recruit partners, manage relationships, run campaigns, and hit revenue targets. They're the primary users of the Affiliate Creator Manager dashboard.</div>
+  </div>
+
+  <!-- ── AISHA ── -->
+  <article class="persona-card" id="aisha">
+    <div class="card-accent-bar" style="background:linear-gradient(90deg,var(--aisha-accent),#4E9AE8)"></div>
+    <div class="card-header">
+      <div class="avatar-circle" style="background:var(--aisha-bg)">👩🏾</div>
+      <div class="header-info">
+        <div class="persona-name">Aisha Thompson</div>
+        <div class="persona-title">Senior Affiliate & Creator Partnerships Manager</div>
+        <div class="persona-brand-badge" style="background:var(--aisha-bg);color:var(--aisha-fg)">🛒 Walmart · Age 34</div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip"><span class="meta-val">148</span> Partners</div>
+        <div class="meta-chip"><span class="meta-val">34</span> Creators</div>
+        <div class="meta-chip"><span class="meta-val">5+</span> Programs</div>
+        <div class="meta-chip"><span class="meta-val">Daily</span> Login</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-value">$2.4M</div><div class="stat-label">Quarterly Target</div></div>
+      <div class="stat-cell"><div class="stat-value">5+</div><div class="stat-label">Programs Managed</div></div>
+      <div class="stat-cell"><div class="stat-value">3</div><div class="stat-label">Categories</div></div>
+      <div class="stat-cell"><div class="stat-value">7:30 AM</div><div class="stat-label">Typical Login</div></div>
+      <div class="stat-cell"><div class="stat-value">4.2</div><div class="stat-label">Avg Toggles / Session</div></div>
+    </div>
+    <div class="card-body">
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">💬</span> In Her Own Words</div>
+          <div class="quote-block" style="border-left-color:var(--aisha-accent)">"I know something's wrong before I even open the platform — I just can't find where the problem is fast enough."</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🧠</span> Context & Behavior</div>
+          <div class="context-text">Aisha manages Walmart's affiliate program across hundreds of partners alongside a growing roster of creator campaigns for seasonal promotions. She juggles a large portfolio across multiple categories — grocery, electronics, fashion — and spends her mornings doing a portfolio scan before her day fills up with internal calls. Her biggest frustration is that she can't see her full portfolio without toggling between programs, and she often misses performance dips until they become problems. She loves data but hates hunting for it.</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">⚡</span> Jobs to be Done</div>
+          <table class="jtbd-table">
+            <thead><tr><th>Job</th><th>Trigger</th><th>What She Needs</th></tr></thead>
+            <tbody>
+              <tr><td class="job-name">Daily portfolio scan</td><td>Start of day, Mon AM</td><td>Anomaly alerts, top/bottom performers, urgent flags across all programs</td></tr>
+              <tr><td class="job-name">Partner check-in prep</td><td>Calendar event</td><td>Auto-generated performance brief with trends, talking points, incentive recs</td></tr>
+              <tr><td class="job-name">Creator campaign monitoring</td><td>Campaign live</td><td>Content performance by creator, engagement metrics, attribution</td></tr>
+              <tr><td class="job-name">Identify at-risk partners</td><td>Performance dip detected</td><td>Proactive flags for declining performance, no recent activity, missed targets</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🚨</span> Pain Points</div>
+          <div class="point-list">
+            <div class="point-item"><div class="point-dot" style="background:var(--aisha-accent)"></div>Has to toggle between programs — loses context every time she switches</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--aisha-accent)"></div>Misses performance dips until they're already full-blown problems</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--aisha-accent)"></div>No unified view across her affiliate + creator portfolio</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--aisha-accent)"></div>Alert fatigue from non-actionable notifications mixed with critical ones</div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🎯</span> Motivations</div>
+          <div class="tag-row">
+            <span class="tag" style="background:var(--aisha-bg);color:var(--aisha-fg)">Hit quarterly revenue</span>
+            <span class="tag" style="background:var(--aisha-bg);color:var(--aisha-fg)">Retain top partners</span>
+            <span class="tag" style="background:var(--aisha-bg);color:var(--aisha-fg)">Spot dips early</span>
+            <span class="tag" style="background:var(--aisha-bg);color:var(--aisha-fg)">Find breakout creators</span>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔁</span> Daily Workflow</div>
+          <div class="workflow-timeline">
+            <div class="workflow-step"><div class="step-dot" style="background:var(--aisha-bg);color:var(--aisha-fg)">1</div><div class="step-label">Morning scan</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--aisha-bg);color:var(--aisha-fg)">2</div><div class="step-label">Triage alerts</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--aisha-bg);color:var(--aisha-fg)">3</div><div class="step-label">Partner calls</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--aisha-bg);color:var(--aisha-fg)">4</div><div class="step-label">Campaign review</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--aisha-bg);color:var(--aisha-fg)">5</div><div class="step-label">Internal mtgs</div></div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔑</span> Persistent Quick Action</div>
+          <div class="point-list">
+            <div class="point-item"><span class="point-icon">📊</span> <strong>View partner performance card</strong> — needs to quick-view any partner without leaving the dashboard</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-block">
+        <div class="footer-label">What impact.com Needs to Do for Aisha</div>
+        <div class="footer-text">Give her a unified daily scan view across all programs — no toggling, proactive alerts surfaced before she has to look. The dashboard should answer "what's wrong?" before she has to ask.</div>
+      </div>
+      <div class="footer-block">
+        <div class="footer-label">UI / Navigation Implications</div>
+        <div class="ui-impl-list">
+          <div class="ui-impl-item">Unified multi-program dashboard as the default home screen</div>
+          <div class="ui-impl-item">Smart anomaly alerts with severity-ranked priority</div>
+          <div class="ui-impl-item">Quick-view partner cards with progressive detail disclosure</div>
+          <div class="ui-impl-item">Calendar-aware surfaces that highlight upcoming check-ins</div>
+          <div class="ui-impl-item">Inline actions (issue bonus, send message) without page navigation</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PRIYA ── -->
+  <article class="persona-card" id="priya">
+    <div class="card-accent-bar" style="background:linear-gradient(90deg,var(--priya-accent),#3FCBC1)"></div>
+    <div class="card-header">
+      <div class="avatar-circle" style="background:var(--priya-bg)">👩🏽</div>
+      <div class="header-info">
+        <div class="persona-name">Priya Nguyen</div>
+        <div class="persona-title">Creator & Affiliate Partnerships Lead</div>
+        <div class="persona-brand-badge" style="background:var(--priya-bg);color:var(--priya-fg)">🐾 Chewy · Age 28</div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip"><span class="meta-val">62</span> Partners</div>
+        <div class="meta-chip"><span class="meta-val">80+</span> Creators</div>
+        <div class="meta-chip"><span class="meta-val">2</span> Programs</div>
+        <div class="meta-chip"><span class="meta-val">Always</span> Online</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-value">80+</div><div class="stat-label">Creator Roster</div></div>
+      <div class="stat-cell"><div class="stat-value">15-20</div><div class="stat-label">Recruits / Month</div></div>
+      <div class="stat-cell"><div class="stat-value">~$680K</div><div class="stat-label">Quarterly Revenue</div></div>
+      <div class="stat-cell"><div class="stat-value">Pet</div><div class="stat-label">Primary Vertical</div></div>
+      <div class="stat-cell"><div class="stat-value">TikTok</div><div class="stat-label">Top Channel</div></div>
+    </div>
+    <div class="card-body">
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">💬</span> In Her Own Words</div>
+          <div class="quote-block" style="border-left-color:var(--priya-accent)">"I shouldn't have to go to two different places just because one partner is an affiliate and another posts on TikTok. My job is the same."</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🧠</span> Context & Behavior</div>
+          <div class="context-text">Priya focuses heavily on the creator side — she manages a network of pet influencers and content creators for Chewy's affiliate program. She's always recruiting, always checking content performance, and is constantly looking for creators who are punching above their weight so she can lock them in with a better deal before a competitor does. She operates fast and needs the platform to keep up. Her biggest frustration is that the affiliate and creator sides feel like two separate products.</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">⚡</span> Jobs to be Done</div>
+          <table class="jtbd-table">
+            <thead><tr><th>Job</th><th>Trigger</th><th>What She Needs</th></tr></thead>
+            <tbody>
+              <tr><td class="job-name">Recruit new partners</td><td>Growth targets, pipeline gaps</td><td>Discovery surface filtered by vertical, audience, engagement, fit score</td></tr>
+              <tr><td class="job-name">Monitor creator content</td><td>Campaign live, content posting</td><td>Engagement metrics, conversion attribution by creator & piece of content</td></tr>
+              <tr><td class="job-name">Spot & lock in rising talent</td><td>Performance spike detected</td><td>Proactive alerts on overperforming creators with competitive offer tools</td></tr>
+              <tr><td class="job-name">Manage outreach pipeline</td><td>Invites sent, follow-ups due</td><td>CRM-like pipeline: sent → viewed → accepted → onboarded → active</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🚨</span> Pain Points</div>
+          <div class="point-list">
+            <div class="point-item"><div class="point-dot" style="background:var(--priya-accent)"></div>Affiliate and creator workflows feel like two separate products</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--priya-accent)"></div>No proactive partner recommendations — has to hunt manually through marketplace</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--priya-accent)"></div>Loses deals to competitors because discovery and offer processes are too slow</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--priya-accent)"></div>Context-switching between programs kills her momentum</div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🎯</span> Motivations</div>
+          <div class="tag-row">
+            <span class="tag" style="background:var(--priya-bg);color:var(--priya-fg)">Grow creator roster</span>
+            <span class="tag" style="background:var(--priya-bg);color:var(--priya-fg)">Max content ROI</span>
+            <span class="tag" style="background:var(--priya-bg);color:var(--priya-fg)">First to rising talent</span>
+            <span class="tag" style="background:var(--priya-bg);color:var(--priya-fg)">Beat competitors to the best creators</span>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔁</span> Daily Workflow</div>
+          <div class="workflow-timeline">
+            <div class="workflow-step"><div class="step-dot" style="background:var(--priya-bg);color:var(--priya-fg)">1</div><div class="step-label">Check pipeline</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--priya-bg);color:var(--priya-fg)">2</div><div class="step-label">Review content</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--priya-bg);color:var(--priya-fg)">3</div><div class="step-label">Scout talent</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--priya-bg);color:var(--priya-fg)">4</div><div class="step-label">Send offers</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--priya-bg);color:var(--priya-fg)">5</div><div class="step-label">Follow up</div></div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔑</span> Persistent Quick Action</div>
+          <div class="point-list">
+            <div class="point-item"><span class="point-icon">✉️</span> <strong>Send recruitment invite</strong> — one-click outreach with custom bonus offer from anywhere in the UI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-block">
+        <div class="footer-label">What impact.com Needs to Do for Priya</div>
+        <div class="footer-text">Merge affiliate and creator into one unified workflow. Surface proactive partner recommendations with fit scores so she can recruit before competitors do.</div>
+      </div>
+      <div class="footer-block">
+        <div class="footer-label">UI / Navigation Implications</div>
+        <div class="ui-impl-list">
+          <div class="ui-impl-item">Unified partner type view — no separate affiliate vs. creator sections</div>
+          <div class="ui-impl-item">AI-powered discovery with fit scoring and proactive suggestions</div>
+          <div class="ui-impl-item">Recruitment pipeline with CRM-like status tracking</div>
+          <div class="ui-impl-item">Competitive offer builder accessible inline during discovery</div>
+          <div class="ui-impl-item">Speed-optimized: every action should feel instant</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── MARCUS ── -->
+  <article class="persona-card" id="marcus">
+    <div class="card-accent-bar" style="background:linear-gradient(90deg,var(--marcus-accent),#B59CE6)"></div>
+    <div class="card-header">
+      <div class="avatar-circle" style="background:var(--marcus-bg)">👨🏽</div>
+      <div class="header-info">
+        <div class="persona-name">Marcus Delgado</div>
+        <div class="persona-title">Affiliate Program Manager</div>
+        <div class="persona-brand-badge" style="background:var(--marcus-bg);color:var(--marcus-fg)">💄 Fenty Beauty · Age 31</div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip"><span class="meta-val">94</span> Partners</div>
+        <div class="meta-chip"><span class="meta-val">20</span> VIP Partners</div>
+        <div class="meta-chip"><span class="meta-val">Weekly</span> Reviews</div>
+        <div class="meta-chip"><span class="meta-val">Bi-wkly</span> Check-ins</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-value">20</div><div class="stat-label">VIP Partners</div></div>
+      <div class="stat-cell"><div class="stat-value">10</div><div class="stat-label">Check-ins / Month</div></div>
+      <div class="stat-cell"><div class="stat-value">45 min</div><div class="stat-label">Prep Time / Call</div></div>
+      <div class="stat-cell"><div class="stat-value">Monday</div><div class="stat-label">Review Day</div></div>
+      <div class="stat-cell"><div class="stat-value">Beauty</div><div class="stat-label">Vertical</div></div>
+    </div>
+    <div class="card-body">
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">💬</span> In His Own Words</div>
+          <div class="quote-block" style="border-left-color:var(--marcus-accent)">"I spend 45 minutes pulling data before every partner call. By the time I'm ready, I'm already behind on everything else."</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🧠</span> Context & Behavior</div>
+          <div class="context-text">Marcus manages Fenty Beauty's affiliate program, with a mix of traditional publishers, beauty bloggers, and micro-influencer creators. He's meticulous about relationships — he tracks every partner's performance closely and makes sure high performers feel valued. He does weekly reviews every Monday and bi-weekly check-ins with his top 20 partners. He also coordinates closely with his CSM at Impact. His frustration is that preparing for a check-in takes way too long.</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">⚡</span> Jobs to be Done</div>
+          <table class="jtbd-table">
+            <thead><tr><th>Job</th><th>Trigger</th><th>What He Needs</th></tr></thead>
+            <tbody>
+              <tr><td class="job-name">Check-in prep</td><td>Bi-weekly calendar event</td><td>Auto-generated partner brief: performance, trends, open issues, talking points</td></tr>
+              <tr><td class="job-name">Weekly portfolio review</td><td>Monday morning</td><td>Ranked performance view, trend indicators, anomaly flags</td></tr>
+              <tr><td class="job-name">Nurture VIP partners</td><td>Performance milestone or risk signal</td><td>Proactive bonus recommendations, relationship health score</td></tr>
+              <tr><td class="job-name">Issue bonuses</td><td>Top performer identified</td><td>One-click bonus issuance from any partner context</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🚨</span> Pain Points</div>
+          <div class="point-list">
+            <div class="point-item"><div class="point-dot" style="background:var(--marcus-accent)"></div>Check-in prep is fully manual — pulls data from 4+ different screens</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--marcus-accent)"></div>No single partner performance brief he can walk into a call with</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--marcus-accent)"></div>Has to remember to issue bonuses — no proactive system prompts</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--marcus-accent)"></div>Notes from previous check-ins aren't integrated — lives in separate docs</div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🎯</span> Motivations</div>
+          <div class="tag-row">
+            <span class="tag" style="background:var(--marcus-bg);color:var(--marcus-fg)">Retain top partners</span>
+            <span class="tag" style="background:var(--marcus-bg);color:var(--marcus-fg)">Grow revenue</span>
+            <span class="tag" style="background:var(--marcus-bg);color:var(--marcus-fg)">Run tight check-ins</span>
+            <span class="tag" style="background:var(--marcus-bg);color:var(--marcus-fg)">Never miss rewarding a top performer</span>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔁</span> Weekly Workflow</div>
+          <div class="workflow-timeline">
+            <div class="workflow-step"><div class="step-dot" style="background:var(--marcus-bg);color:var(--marcus-fg)">1</div><div class="step-label">Mon review</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--marcus-bg);color:var(--marcus-fg)">2</div><div class="step-label">Prep briefs</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--marcus-bg);color:var(--marcus-fg)">3</div><div class="step-label">Partner calls</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--marcus-bg);color:var(--marcus-fg)">4</div><div class="step-label">Issue bonuses</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--marcus-bg);color:var(--marcus-fg)">5</div><div class="step-label">Log notes</div></div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔑</span> Persistent Quick Action</div>
+          <div class="point-list">
+            <div class="point-item"><span class="point-icon">📋</span> <strong>Pull check-in brief</strong> — one-click auto-generated partner summary for upcoming calls</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-block">
+        <div class="footer-label">What impact.com Needs to Do for Marcus</div>
+        <div class="footer-text">Auto-generate a partner check-in brief when a calendar event is detected. Surface bonus recommendations proactively so he never misses rewarding a top performer.</div>
+      </div>
+      <div class="footer-block">
+        <div class="footer-label">UI / Navigation Implications</div>
+        <div class="ui-impl-list">
+          <div class="ui-impl-item">Calendar-integrated check-in prep that auto-generates partner briefs</div>
+          <div class="ui-impl-item">Integrated note-taking with CRM-like partner history</div>
+          <div class="ui-impl-item">Proactive bonus recommendations surfaced as smart suggestions</div>
+          <div class="ui-impl-item">VIP partner tier with dedicated management surface</div>
+          <div class="ui-impl-item">One-click bonus issuance from any partner context</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── RACHEL ── -->
+  <article class="persona-card" id="rachel">
+    <div class="card-accent-bar" style="background:linear-gradient(90deg,var(--rachel-accent),#F5C842)"></div>
+    <div class="card-header">
+      <div class="avatar-circle" style="background:var(--rachel-bg)">👩🏻</div>
+      <div class="header-info">
+        <div class="persona-name">Rachel Park</div>
+        <div class="persona-title">Head of Creator Partnerships</div>
+        <div class="persona-brand-badge" style="background:var(--rachel-bg);color:var(--rachel-fg)">✨ Glossier · Age 36</div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip"><span class="meta-val">15</span> Team Size</div>
+        <div class="meta-chip"><span class="meta-val">400+</span> Partners</div>
+        <div class="meta-chip"><span class="meta-val">$12M</span> Annual Rev</div>
+        <div class="meta-chip"><span class="meta-val">Monthly</span> Reviews</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-value">$12M</div><div class="stat-label">Annual Affiliate Rev</div></div>
+      <div class="stat-cell"><div class="stat-value">15</div><div class="stat-label">Team Members</div></div>
+      <div class="stat-cell"><div class="stat-value">400+</div><div class="stat-label">Total Partners</div></div>
+      <div class="stat-cell"><div class="stat-value">Strategy</div><div class="stat-label">Primary Focus</div></div>
+      <div class="stat-cell"><div class="stat-value">Quarterly</div><div class="stat-label">Board Reports</div></div>
+    </div>
+    <div class="card-body">
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">💬</span> In Her Own Words</div>
+          <div class="quote-block" style="border-left-color:var(--rachel-accent)">"I don't need to see individual partner stats. I need to know: are we over-indexed on coupon partners? Is our creator mix healthy? Are we growing incrementally or just cannibalizing search?"</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🧠</span> Context & Behavior</div>
+          <div class="context-text">Rachel sits above the individual manager level. She doesn't manage partners day-to-day — she manages the managers and owns the program strategy. Her jobs are fundamentally different from Aisha, Priya, or Marcus: she's looking at portfolio-level performance, team productivity, partner mix health, and competitive positioning. She needs the platform to answer strategic questions, not operational ones.</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">⚡</span> Jobs to be Done</div>
+          <table class="jtbd-table">
+            <thead><tr><th>Job</th><th>Trigger</th><th>What She Needs</th></tr></thead>
+            <tbody>
+              <tr><td class="job-name">Assess program health</td><td>Monthly/quarterly review</td><td>Portfolio metrics by partner type, incrementality analysis, mix breakdown</td></tr>
+              <tr><td class="job-name">Evaluate team performance</td><td>Sprint planning, 1:1s</td><td>Manager activity: recruitment velocity, activation rates, check-in frequency</td></tr>
+              <tr><td class="job-name">Identify strategic gaps</td><td>Competitive shifts</td><td>Category/partner type coverage vs. competitors, market opportunity map</td></tr>
+              <tr><td class="job-name">Report to leadership</td><td>Board prep, all-hands</td><td>Export-ready dashboards, executive summaries, YoY trend charts</td></tr>
+              <tr><td class="job-name">Set program guardrails</td><td>Policy or compliance changes</td><td>Commission structure mgmt, terms templates, brand safety rules</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🚨</span> Pain Points</div>
+          <div class="point-list">
+            <div class="point-item"><div class="point-dot" style="background:var(--rachel-accent)"></div>No strategic view — platform gives tactical partner-level data, not portfolio intelligence</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--rachel-accent)"></div>Can't see her team's work — no manager activity dashboard; has to ask each person</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--rachel-accent)"></div>Partner type blindness — can't segment performance by creator vs. publisher vs. coupon</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--rachel-accent)"></div>No incrementality signal — can't tell if affiliate revenue is incremental or overlapping</div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🎯</span> Motivations</div>
+          <div class="tag-row">
+            <span class="tag" style="background:var(--rachel-bg);color:var(--rachel-fg)">Prove channel value to CMO</span>
+            <span class="tag" style="background:var(--rachel-bg);color:var(--rachel-fg)">Diversify partner mix</span>
+            <span class="tag" style="background:var(--rachel-bg);color:var(--rachel-fg)">Scale without complexity</span>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔁</span> Monthly Workflow</div>
+          <div class="workflow-timeline">
+            <div class="workflow-step"><div class="step-dot" style="background:var(--rachel-bg);color:var(--rachel-fg)">1</div><div class="step-label">Review metrics</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--rachel-bg);color:var(--rachel-fg)">2</div><div class="step-label">Team 1:1s</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--rachel-bg);color:var(--rachel-fg)">3</div><div class="step-label">Gap analysis</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--rachel-bg);color:var(--rachel-fg)">4</div><div class="step-label">Board report</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--rachel-bg);color:var(--rachel-fg)">5</div><div class="step-label">Strategy adj</div></div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔑</span> Persistent Quick Action</div>
+          <div class="point-list">
+            <div class="point-item"><span class="point-icon">📤</span> <strong>Export program report</strong> — one-click board-ready PDF/PPT with key metrics & trends</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-block">
+        <div class="footer-label">What impact.com Needs to Do for Rachel</div>
+        <div class="footer-text">Add a strategic layer above the manager dashboard — portfolio-level analytics, team activity visibility, partner mix health, and executive-ready exports. She needs a different navigation tier entirely.</div>
+      </div>
+      <div class="footer-block">
+        <div class="footer-label">UI / Navigation Implications</div>
+        <div class="ui-impl-list">
+          <div class="ui-impl-item">Program-level analytics — aggregated by partner type, category, campaign</div>
+          <div class="ui-impl-item">Team activity dashboard showing manager KPIs and activity feeds</div>
+          <div class="ui-impl-item">Partner mix visualization with composition trends over time</div>
+          <div class="ui-impl-item">One-click export for board-ready reports (PDF, PPT, CSV)</div>
+          <div class="ui-impl-item">Governance tools — commission structures, terms, brand safety rules</div>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- PARTNER SIDE                                                      -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<section class="section" id="partner-side">
+  <div class="section-header">
+    <div class="section-eyebrow" style="color:var(--jordan-fg)">Partner Side · Affiliates & Creators</div>
+    <div class="section-title">The People Who Promote the Products</div>
+    <div class="section-subtitle">These are the partners, publishers, creators, and commerce platforms on the other side of every partnership. They use the partner portal to discover brands, generate links, track performance, and get paid.</div>
+  </div>
+
+  <!-- ── JORDAN ── -->
+  <article class="persona-card" id="jordan">
+    <div class="card-accent-bar" style="background:linear-gradient(90deg,var(--jordan-accent),#F472B6)"></div>
+    <div class="card-header">
+      <div class="avatar-circle" style="background:var(--jordan-bg)">🧑</div>
+      <div class="header-info">
+        <div class="persona-name">Jordan Kim</div>
+        <div class="persona-title">Content Creator — YouTube + Newsletter</div>
+        <div class="persona-brand-badge" style="background:var(--jordan-bg);color:var(--jordan-fg)">💰 Personal Finance & Fintech · Age 26</div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip"><span class="meta-val">145K</span> YouTube</div>
+        <div class="meta-chip"><span class="meta-val">38K</span> Newsletter</div>
+        <div class="meta-chip"><span class="meta-val">12</span> Brand Programs</div>
+        <div class="meta-chip"><span class="meta-val">3</span> Networks</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-value">60%</div><div class="stat-label">Income from Affiliate</div></div>
+      <div class="stat-cell"><div class="stat-value">$8.40</div><div class="stat-label">Avg EPC</div></div>
+      <div class="stat-cell"><div class="stat-value">12</div><div class="stat-label">Active Brand Programs</div></div>
+      <div class="stat-cell"><div class="stat-value">3</div><div class="stat-label">Networks Used</div></div>
+      <div class="stat-cell"><div class="stat-value">Weekly</div><div class="stat-label">Content Cadence</div></div>
+    </div>
+    <div class="card-body">
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">💬</span> In Their Own Words</div>
+          <div class="quote-block" style="border-left-color:var(--jordan-accent)">"I spent 3 hours last week trying to figure out why my conversions dropped 40% on one brand. Turns out they shortened their attribution window and never told me. That's how you lose a partner."</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🧠</span> Context & Behavior</div>
+          <div class="context-text">Jordan creates deep-dive YouTube videos reviewing fintech products (credit cards, budgeting apps, investment platforms) and writes a weekly newsletter with curated recommendations. They earn primarily through affiliate commissions — about 60% of their income comes from performance-based partnerships. Jordan is analytical, tracks every click and conversion obsessively, and has strong opinions about which platforms are transparent and which aren't. They log into 3 different affiliate networks daily.</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">⚡</span> Jobs to be Done</div>
+          <table class="jtbd-table">
+            <thead><tr><th>Job</th><th>Trigger</th><th>What They Need</th></tr></thead>
+            <tbody>
+              <tr><td class="job-name">Find new brands</td><td>Content planning, audience requests</td><td>Discovery filtered by niche, commission rate, EPC, cookie window, brand rep</td></tr>
+              <tr><td class="job-name">Generate tracking links</td><td>New content creation</td><td>Instant deep link generation, UTM support, one-click copy</td></tr>
+              <tr><td class="job-name">Monitor real-time performance</td><td>Content goes live</td><td>Live dashboard: clicks, conversions, EPC, revenue by content & brand</td></tr>
+              <tr><td class="job-name">Get paid reliably</td><td>End of pay cycle</td><td>Clear payout timeline, status tracking (pending → approved → paid)</td></tr>
+              <tr><td class="job-name">Optimize content strategy</td><td>Weekly/monthly review</td><td>Historical trends, top content-to-brand combos, audience patterns</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🚨</span> Pain Points</div>
+          <div class="point-list">
+            <div class="point-item"><div class="point-dot" style="background:var(--jordan-accent)"></div>Attribution opacity — doesn't always know how conversions are counted or when rules change</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--jordan-accent)"></div>Multi-network fragmentation — logs into 3 different platforms daily just to check stats</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--jordan-accent)"></div>Delayed reporting — some brands report 48+ hours late, making optimization impossible</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--jordan-accent)"></div>Commission reversals with no explanation — wants an audit trail they can verify</div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🎯</span> Motivations</div>
+          <div class="tag-row">
+            <span class="tag" style="background:var(--jordan-bg);color:var(--jordan-fg)">Max revenue per content</span>
+            <span class="tag" style="background:var(--jordan-bg);color:var(--jordan-fg)">Long-term brand relationships</span>
+            <span class="tag" style="background:var(--jordan-bg);color:var(--jordan-fg)">Editorial integrity</span>
+            <span class="tag" style="background:var(--jordan-bg);color:var(--jordan-fg)">Data transparency</span>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔁</span> Daily Workflow</div>
+          <div class="workflow-timeline">
+            <div class="workflow-step"><div class="step-dot" style="background:var(--jordan-bg);color:var(--jordan-fg)">1</div><div class="step-label">Check stats</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--jordan-bg);color:var(--jordan-fg)">2</div><div class="step-label">Create content</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--jordan-bg);color:var(--jordan-fg)">3</div><div class="step-label">Generate links</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--jordan-bg);color:var(--jordan-fg)">4</div><div class="step-label">Publish</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--jordan-bg);color:var(--jordan-fg)">5</div><div class="step-label">Monitor conv.</div></div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔑</span> Persistent Quick Action</div>
+          <div class="point-list">
+            <div class="point-item"><span class="point-icon">🔗</span> <strong>Copy tracking link</strong> — instant link generation and copy from anywhere in the UI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-block">
+        <div class="footer-label">What impact.com Needs to Do for Jordan</div>
+        <div class="footer-text">Build a real-time command center that makes performance data trustworthy and transparent. Always-accessible link generator, click-level audit trail, and proactive notifications when program terms change.</div>
+      </div>
+      <div class="footer-block">
+        <div class="footer-label">UI / Navigation Implications</div>
+        <div class="ui-impl-list">
+          <div class="ui-impl-item">Performance overview with sparkline earnings (today, week, month)</div>
+          <div class="ui-impl-item">Content attribution — which links/content drive conversions</div>
+          <div class="ui-impl-item">Persistent link generator accessible from every screen</div>
+          <div class="ui-impl-item">Payments hub with transparent status and audit trail</div>
+          <div class="ui-impl-item">Brand relationship list with health indicators and terms visibility</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── SADE ── -->
+  <article class="persona-card" id="sade">
+    <div class="card-accent-bar" style="background:linear-gradient(90deg,var(--sade-accent),#D8B4FE)"></div>
+    <div class="card-header">
+      <div class="avatar-circle" style="background:var(--sade-bg)">👩🏿</div>
+      <div class="header-info">
+        <div class="persona-name">Sade Okafor</div>
+        <div class="persona-title">Social Influencer — Instagram + TikTok</div>
+        <div class="persona-brand-badge" style="background:var(--sade-bg);color:var(--sade-fg)">🌿 Clean Beauty & Wellness · Age 24</div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip"><span class="meta-val">320K</span> Instagram</div>
+        <div class="meta-chip"><span class="meta-val">890K</span> TikTok</div>
+        <div class="meta-chip"><span class="meta-val">6</span> Brand Partners</div>
+        <div class="meta-chip"><span class="meta-val">Mobile</span> First</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-value">890K</div><div class="stat-label">TikTok Followers</div></div>
+      <div class="stat-cell"><div class="stat-value">6</div><div class="stat-label">Active Partnerships</div></div>
+      <div class="stat-cell"><div class="stat-value">Hybrid</div><div class="stat-label">Flat Fee + Affiliate</div></div>
+      <div class="stat-cell"><div class="stat-value">30 sec</div><div class="stat-label">Max Stat Check Time</div></div>
+      <div class="stat-cell"><div class="stat-value">📱</div><div class="stat-label">Primary Device</div></div>
+    </div>
+    <div class="card-body">
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">💬</span> In Her Own Words</div>
+          <div class="quote-block" style="border-left-color:var(--sade-accent)">"I'm not going to sit at a desk and navigate a 15-tab dashboard. I need to check my earnings on the subway between shoots. If I can't do it in 30 seconds on my phone, I'm not doing it."</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🧠</span> Context & Behavior</div>
+          <div class="context-text">Sade is a beauty influencer who blends affiliate and sponsored content. She's mobile-first — she manages almost everything from her phone between shoots and editing sessions. She doesn't care about deep analytics dashboards; she cares about "did that post make money?" and "which brand should I prioritize next?" She's frustrated that platforms treat her like a "publisher" when her workflow is fundamentally different — she posts stories, reels, and TikToks, not articles with embedded links.</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">⚡</span> Jobs to be Done</div>
+          <table class="jtbd-table">
+            <thead><tr><th>Job</th><th>Trigger</th><th>What She Needs</th></tr></thead>
+            <tbody>
+              <tr><td class="job-name">Check post conversions</td><td>Just posted a story/reel</td><td>Quick mobile view: post → clicks → conversions → earnings</td></tr>
+              <tr><td class="job-name">Grab link / promo code</td><td>About to film, needs code NOW</td><td>Instant access, one-tap copy, no login friction</td></tr>
+              <tr><td class="job-name">Compare brand performance</td><td>Monthly content planning</td><td>Side-by-side: who pays best, converts best, is growing</td></tr>
+              <tr><td class="job-name">Track payments & invoices</td><td>End of month, tax time</td><td>Combined flat fee + commission, downloadable statements</td></tr>
+              <tr><td class="job-name">Respond to brand outreach</td><td>New collab offer arrives</td><td>In-app messaging with brand context, program details, rates</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🚨</span> Pain Points</div>
+          <div class="point-list">
+            <div class="point-item"><div class="point-dot" style="background:var(--sade-accent)"></div>Partner portals aren't mobile-optimized — built for desktop publishers, not phone-first creators</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--sade-accent)"></div>Link-in-bio friction — needs a separate tool because the platform doesn't integrate</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--sade-accent)"></div>Dashboards only show commission — not flat fees she negotiated separately</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--sade-accent)"></div>Platform tracks "clicks" but her content is stories and short-form video — attribution is messy</div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🎯</span> Motivations</div>
+          <div class="tag-row">
+            <span class="tag" style="background:var(--sade-bg);color:var(--sade-fg)">Grow into a business</span>
+            <span class="tag" style="background:var(--sade-bg);color:var(--sade-fg)">Work with fair brands</span>
+            <span class="tag" style="background:var(--sade-bg);color:var(--sade-fg)">Minimize admin time</span>
+            <span class="tag" style="background:var(--sade-bg);color:var(--sade-fg)">Focus on creating</span>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔁</span> Daily Workflow</div>
+          <div class="workflow-timeline">
+            <div class="workflow-step"><div class="step-dot" style="background:var(--sade-bg);color:var(--sade-fg)">1</div><div class="step-label">Grab code</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--sade-bg);color:var(--sade-fg)">2</div><div class="step-label">Shoot content</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--sade-bg);color:var(--sade-fg)">3</div><div class="step-label">Post</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--sade-bg);color:var(--sade-fg)">4</div><div class="step-label">Check stats</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--sade-bg);color:var(--sade-fg)">5</div><div class="step-label">Reply to DMs</div></div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔑</span> Persistent Quick Action</div>
+          <div class="point-list">
+            <div class="point-item"><span class="point-icon">📋</span> <strong>Copy promo code</strong> — single tap to copy active codes and links, always accessible</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-block">
+        <div class="footer-label">What impact.com Needs to Do for Sade</div>
+        <div class="footer-text">Build a truly mobile-first partner experience with glanceable earnings, instant promo code access, and unified flat fee + commission tracking. Stop treating influencers like publishers.</div>
+      </div>
+      <div class="footer-block">
+        <div class="footer-label">UI / Navigation Implications</div>
+        <div class="ui-impl-list">
+          <div class="ui-impl-item">Mobile-first: bottom nav, thumb-friendly, no hamburger menus</div>
+          <div class="ui-impl-item">Glanceable earnings card as the very first thing on the home screen</div>
+          <div class="ui-impl-item">Link/Code Vault — single tap to copy any active promo code or link</div>
+          <div class="ui-impl-item">Consolidated earnings — commission AND flat fees in one view</div>
+          <div class="ui-impl-item">Push notifications for brand invites, payments, and milestones</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── DAVID ── -->
+  <article class="persona-card" id="david">
+    <div class="card-accent-bar" style="background:linear-gradient(90deg,var(--david-accent),#4ADE80)"></div>
+    <div class="card-header">
+      <div class="avatar-circle" style="background:var(--david-bg)">👨🏻</div>
+      <div class="header-info">
+        <div class="persona-name">David Morales</div>
+        <div class="persona-title">Publisher — Consumer Electronics Review Site</div>
+        <div class="persona-brand-badge" style="background:var(--david-bg);color:var(--david-fg)">📱 Consumer Electronics · Age 39</div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip"><span class="meta-val">2.1M</span> Monthly Visits</div>
+        <div class="meta-chip"><span class="meta-val">45+</span> Brand Programs</div>
+        <div class="meta-chip"><span class="meta-val">5</span> Networks</div>
+        <div class="meta-chip"><span class="meta-val">6</span> Team Size</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-value">2.1M</div><div class="stat-label">Monthly Visits</div></div>
+      <div class="stat-cell"><div class="stat-value">45+</div><div class="stat-label">Brand Programs</div></div>
+      <div class="stat-cell"><div class="stat-value">100%</div><div class="stat-label">Affiliate Revenue</div></div>
+      <div class="stat-cell"><div class="stat-value">API</div><div class="stat-label">Integration Need</div></div>
+      <div class="stat-cell"><div class="stat-value">6</div><div class="stat-label">Editorial Team</div></div>
+    </div>
+    <div class="card-body">
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">💬</span> In His Own Words</div>
+          <div class="quote-block" style="border-left-color:var(--david-accent)">"I don't need another pretty dashboard. I need an API that lets me pull conversion data into my own BI stack, and a bulk link generator that doesn't make me click 45 times."</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🧠</span> Context & Behavior</div>
+          <div class="context-text">David runs a 6-person editorial team that produces "best of" lists, product comparisons, and deep-dive reviews for consumer electronics. His revenue model is 100% affiliate — every article contains tracking links. He operates like a media business: he thinks in terms of RPM, EPC, and conversion rate optimization. He needs the platform to feel like a business intelligence tool, not a social media app. He manages relationships with dozens of brands simultaneously and needs bulk operations, API access, and advanced reporting.</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">⚡</span> Jobs to be Done</div>
+          <table class="jtbd-table">
+            <thead><tr><th>Job</th><th>Trigger</th><th>What He Needs</th></tr></thead>
+            <tbody>
+              <tr><td class="job-name">Manage 45+ brands at scale</td><td>Daily operations</td><td>Portfolio view with health scores, commission tiers, and contract terms</td></tr>
+              <tr><td class="job-name">Generate links in bulk</td><td>Publishing articles</td><td>Bulk link generator with deep linking, product-level tracking, API access</td></tr>
+              <tr><td class="job-name">Revenue by content piece</td><td>Monthly business review</td><td>Revenue attribution down to the article/page level</td></tr>
+              <tr><td class="job-name">Negotiate better terms</td><td>Volume threshold reached</td><td>Visibility into tier status and ability to request rate increases</td></tr>
+              <tr><td class="job-name">Resolve discrepancies</td><td>Conversions don't match analytics</td><td>Click-level audit trail, conversion logs, dispute workflow</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🚨</span> Pain Points</div>
+          <div class="point-list">
+            <div class="point-item"><div class="point-dot" style="background:var(--david-accent)"></div>No bulk operations — has to manage links, creatives, and reporting one brand at a time</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--david-accent)"></div>API limitations — most portals have limited or no API access for automated reporting</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--david-accent)"></div>Cross-network reporting — can't see full business picture without manual data combining</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--david-accent)"></div>Stale creatives — brands update products/pricing and he never gets notified</div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🎯</span> Motivations</div>
+          <div class="tag-row">
+            <span class="tag" style="background:var(--david-bg);color:var(--david-fg)">Maximize RPM</span>
+            <span class="tag" style="background:var(--david-bg);color:var(--david-fg)">Reduce operational overhead</span>
+            <span class="tag" style="background:var(--david-bg);color:var(--david-fg)">Exclusive rates</span>
+            <span class="tag" style="background:var(--david-bg);color:var(--david-fg)">Automate everything</span>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔁</span> Daily Workflow</div>
+          <div class="workflow-timeline">
+            <div class="workflow-step"><div class="step-dot" style="background:var(--david-bg);color:var(--david-fg)">1</div><div class="step-label">Check RPM</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--david-bg);color:var(--david-fg)">2</div><div class="step-label">Bulk link gen</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--david-bg);color:var(--david-fg)">3</div><div class="step-label">Publish articles</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--david-bg);color:var(--david-fg)">4</div><div class="step-label">Pull reports</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--david-bg);color:var(--david-fg)">5</div><div class="step-label">Resolve issues</div></div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔑</span> Persistent Quick Action</div>
+          <div class="point-list">
+            <div class="point-item"><span class="point-icon">⚡</span> <strong>Bulk link generator</strong> — paste multiple product URLs, get all tracking links at once</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-block">
+        <div class="footer-label">What impact.com Needs to Do for David</div>
+        <div class="footer-text">Treat publishers like businesses, not individual users. Provide API-first tools, bulk operations, data-dense views, and cross-network reporting. The portal should feel like a BI tool, not a consumer app.</div>
+      </div>
+      <div class="footer-block">
+        <div class="footer-label">UI / Navigation Implications</div>
+        <div class="ui-impl-list">
+          <div class="ui-impl-item">Data-dense sortable tables — not card layouts; spreadsheet-like views</div>
+          <div class="ui-impl-item">Bulk actions — multi-select for links, status updates, brand comparisons</div>
+          <div class="ui-impl-item">API/Export — prominent access to API docs, CSV/Excel, webhooks</div>
+          <div class="ui-impl-item">Brand portfolio CRM — contract terms, rates, status at a glance</div>
+          <div class="ui-impl-item">Advanced filters — by network, category, date range, conversion status</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── ELENA ── -->
+  <article class="persona-card" id="elena">
+    <div class="card-accent-bar" style="background:linear-gradient(90deg,var(--elena-accent),#FB923C)"></div>
+    <div class="card-header">
+      <div class="avatar-circle" style="background:var(--elena-bg)">👩🏽</div>
+      <div class="header-info">
+        <div class="persona-name">Elena Vasquez</div>
+        <div class="persona-title">Director of Affiliate Partnerships — Cashback Platform</div>
+        <div class="persona-brand-badge" style="background:var(--elena-bg);color:var(--elena-fg)">💳 Multi-Category Loyalty App · Age 33</div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip"><span class="meta-val">4M+</span> App Users</div>
+        <div class="meta-chip"><span class="meta-val">200+</span> Brand Partners</div>
+        <div class="meta-chip"><span class="meta-val">API</span> Dependent</div>
+        <div class="meta-chip"><span class="meta-val">B2B</span> Partnership</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-value">4M+</div><div class="stat-label">End Users</div></div>
+      <div class="stat-cell"><div class="stat-value">200+</div><div class="stat-label">Brand Integrations</div></div>
+      <div class="stat-cell"><div class="stat-value">99.99%</div><div class="stat-label">Uptime Target</div></div>
+      <div class="stat-cell"><div class="stat-value">Retail</div><div class="stat-label">Top Category</div></div>
+      <div class="stat-cell"><div class="stat-value">Real-time</div><div class="stat-label">API Dependency</div></div>
+    </div>
+    <div class="card-body">
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">💬</span> In Her Own Words</div>
+          <div class="quote-block" style="border-left-color:var(--elena-accent)">"When your API goes down for 2 hours, I have 4 million users seeing broken offers and my support team drowning in tickets. That's not a bug — that's a business crisis."</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🧠</span> Context & Behavior</div>
+          <div class="context-text">Elena isn't an individual creator — she represents a commerce platform that acts as an affiliate partner. Her cashback app connects consumers to brands, and she earns affiliate commissions that she partially passes back to her users as cashback. She's a B2B partner who thinks in terms of integration, API reliability, data feeds, and margin. Her primary concern is operational: are tracking pixels firing? Are product feeds up to date? Are commissions calculated correctly?</div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">⚡</span> Jobs to be Done</div>
+          <table class="jtbd-table">
+            <thead><tr><th>Job</th><th>Trigger</th><th>What She Needs</th></tr></thead>
+            <tbody>
+              <tr><td class="job-name">Maintain integrations</td><td>Daily monitoring, alerts</td><td>API health dashboard, webhook logs, pixel status, error alerts</td></tr>
+              <tr><td class="job-name">Manage product feeds</td><td>Catalog changes</td><td>Automated feed ingestion, stale product detection, category mapping</td></tr>
+              <tr><td class="job-name">Reconcile commissions</td><td>End of month/quarter</td><td>Bulk reconciliation tools, discrepancy reports, dispute resolution</td></tr>
+              <tr><td class="job-name">Optimize offer placement</td><td>A/B testing, promos</td><td>Real-time conversion data by placement, brand, and category</td></tr>
+              <tr><td class="job-name">Onboard new brands</td><td>BD closes a deal</td><td>Streamlined API integration, sandbox testing, go-live checklist</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-column">
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🚨</span> Pain Points</div>
+          <div class="point-list">
+            <div class="point-item"><div class="point-dot" style="background:var(--elena-accent)"></div>API downtime directly impacts 4M+ end users and creates support ticket surges</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--elena-accent)"></div>Inconsistent or outdated product feed data creates customer complaints at scale</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--elena-accent)"></div>Most portals designed for individual publishers, not B2B integrations w/ millions of txns</div>
+            <div class="point-item"><div class="point-dot" style="background:var(--elena-accent)"></div>Manual commission reconciliation of thousands of transactions is unsustainable</div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🎯</span> Motivations</div>
+          <div class="tag-row">
+            <span class="tag" style="background:var(--elena-bg);color:var(--elena-fg)">Maximize margin per user</span>
+            <span class="tag" style="background:var(--elena-bg);color:var(--elena-fg)">99.99% uptime</span>
+            <span class="tag" style="background:var(--elena-bg);color:var(--elena-fg)">Exclusive brand offers</span>
+            <span class="tag" style="background:var(--elena-bg);color:var(--elena-fg)">Competitive cashback</span>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔁</span> Daily Workflow</div>
+          <div class="workflow-timeline">
+            <div class="workflow-step"><div class="step-dot" style="background:var(--elena-bg);color:var(--elena-fg)">1</div><div class="step-label">Check API health</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--elena-bg);color:var(--elena-fg)">2</div><div class="step-label">Feed freshness</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--elena-bg);color:var(--elena-fg)">3</div><div class="step-label">Monitor txns</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--elena-bg);color:var(--elena-fg)">4</div><div class="step-label">Reconcile</div></div>
+            <div class="workflow-step"><div class="step-dot" style="background:var(--elena-bg);color:var(--elena-fg)">5</div><div class="step-label">Onboard new</div></div>
+          </div>
+        </div>
+        <div class="block">
+          <div class="block-label"><span class="block-label-icon">🔑</span> Persistent Quick Action</div>
+          <div class="point-list">
+            <div class="point-item"><span class="point-icon">🔴</span> <strong>API health status</strong> — real-time integration health indicator visible from every screen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-block">
+        <div class="footer-label">What impact.com Needs to Do for Elena</div>
+        <div class="footer-text">Treat her like an enterprise integration partner, not a publisher. Provide API health dashboards, product feed management, bulk reconciliation tools, and a developer portal with sandbox testing.</div>
+      </div>
+      <div class="footer-block">
+        <div class="footer-label">UI / Navigation Implications</div>
+        <div class="ui-impl-list">
+          <div class="ui-impl-item">System health dashboard — API uptime, error rates, webhook logs prominent</div>
+          <div class="ui-impl-item">Feed management — product feed status, freshness indicators, mappings</div>
+          <div class="ui-impl-item">Bulk reconciliation — transaction-level views with filters, export, batch disputes</div>
+          <div class="ui-impl-item">Developer portal — API docs, sandbox, webhook config, integration status</div>
+          <div class="ui-impl-item">Dedicated support escalation — enterprise-grade SLAs, not just help articles</div>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- CROSS-PERSONA COMPARISON MATRIX                                  -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<section class="matrix-section" id="matrix">
+  <div class="matrix-header">
+    <div class="section-eyebrow" style="color:var(--accent)">Cross-Persona Analysis</div>
+    <div class="section-title">Comparison Matrix</div>
+    <div class="section-subtitle">All eight personas compared across key dimensions — the strategic overview for designing role-adaptive navigation and dashboard surfaces.</div>
+  </div>
+
+  <div class="matrix-grid">
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Persona</th>
+          <th>Side</th>
+          <th>Primary Job</th>
+          <th>#1 Pain Point</th>
+          <th>Key Metric</th>
+          <th>Login Cadence</th>
+          <th>Dashboard Surface</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="matrix-name"><span class="matrix-name-dot" style="background:var(--aisha-accent)"></span>Aisha Thompson</div></td>
+          <td><span class="matrix-side-label" style="background:var(--aisha-bg);color:var(--aisha-fg)">Brand</span></td>
+          <td>Daily portfolio scan across 5+ programs</td>
+          <td>Toggle problem — loses context switching programs</td>
+          <td class="matrix-cell-highlight">$2.4M quarterly</td>
+          <td>Daily, 7:30 AM</td>
+          <td>Unified multi-program dashboard</td>
+        </tr>
+        <tr>
+          <td><div class="matrix-name"><span class="matrix-name-dot" style="background:var(--priya-accent)"></span>Priya Nguyen</div></td>
+          <td><span class="matrix-side-label" style="background:var(--priya-bg);color:var(--priya-fg)">Brand</span></td>
+          <td>Recruit & lock in rising creators</td>
+          <td>Affiliate & creator feel like separate products</td>
+          <td class="matrix-cell-highlight">15-20 recruits/mo</td>
+          <td>Always on</td>
+          <td>Recruitment pipeline + discovery</td>
+        </tr>
+        <tr>
+          <td><div class="matrix-name"><span class="matrix-name-dot" style="background:var(--marcus-accent)"></span>Marcus Chen</div></td>
+          <td><span class="matrix-side-label" style="background:var(--marcus-bg);color:var(--marcus-fg)">Brand</span></td>
+          <td>Compliance audit & fraud detection</td>
+          <td>Compliance buried behind too many clicks</td>
+          <td class="matrix-cell-highlight">~$12M annual</td>
+          <td>3-4x / week</td>
+          <td>Compliance & fraud command center</td>
+        </tr>
+        <tr>
+          <td><div class="matrix-name"><span class="matrix-name-dot" style="background:var(--rachel-accent)"></span>Rachel Okafor</div></td>
+          <td><span class="matrix-side-label" style="background:var(--rachel-bg);color:var(--rachel-fg)">Brand</span></td>
+          <td>Strategic portfolio optimization</td>
+          <td>Executive reports require manual assembly</td>
+          <td class="matrix-cell-highlight">~$45M annual</td>
+          <td>2-3x / week</td>
+          <td>Strategic analytics & reporting</td>
+        </tr>
+        <tr>
+          <td><div class="matrix-name"><span class="matrix-name-dot" style="background:var(--jordan-accent)"></span>Jordan Kim</div></td>
+          <td><span class="matrix-side-label" style="background:var(--jordan-bg);color:var(--jordan-fg)">Partner</span></td>
+          <td>Monitor real-time performance & get paid</td>
+          <td>Attribution opacity — can't verify conversions</td>
+          <td class="matrix-cell-highlight">$8.40 avg EPC</td>
+          <td>Daily</td>
+          <td>Performance command center</td>
+        </tr>
+        <tr>
+          <td><div class="matrix-name"><span class="matrix-name-dot" style="background:var(--sade-accent)"></span>Sade Williams</div></td>
+          <td><span class="matrix-side-label" style="background:var(--sade-bg);color:var(--sade-fg)">Partner</span></td>
+          <td>Win & manage brand collaborations</td>
+          <td>Opaque application process with no feedback</td>
+          <td class="matrix-cell-highlight">$14K avg deal</td>
+          <td>3-4x / week</td>
+          <td>Brand collaboration hub</td>
+        </tr>
+        <tr>
+          <td><div class="matrix-name"><span class="matrix-name-dot" style="background:var(--david-accent)"></span>David Park</div></td>
+          <td><span class="matrix-side-label" style="background:var(--david-bg);color:var(--david-fg)">Partner</span></td>
+          <td>Optimize link performance at scale</td>
+          <td>Portal too consumer-y, not enough data density</td>
+          <td class="matrix-cell-highlight">2.3% conv rate</td>
+          <td>Daily</td>
+          <td>Data-dense analytics workbench</td>
+        </tr>
+        <tr>
+          <td><div class="matrix-name"><span class="matrix-name-dot" style="background:var(--elena-accent)"></span>Elena Vasquez</div></td>
+          <td><span class="matrix-side-label" style="background:var(--elena-bg);color:var(--elena-fg)">Partner</span></td>
+          <td>Maintain integrations & reconcile commissions</td>
+          <td>API downtime impacts 4M+ end users</td>
+          <td class="matrix-cell-highlight">99.99% uptime</td>
+          <td>Daily</td>
+          <td>System health + developer portal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- CROSS-CUTTING DESIGN PRINCIPLES                                  -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<section class="matrix-section" id="principles">
+  <div class="matrix-header">
+    <div class="section-eyebrow" style="color:var(--accent)">Design Implications</div>
+    <div class="section-title">Cross-Cutting Principles</div>
+    <div class="section-subtitle">Six design principles derived from the persona research that should guide every navigation and dashboard decision.</div>
+  </div>
+
+  <div class="principles-grid">
+    <div class="principle-card" style="--bar-color:var(--accent)">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent)"></div>
+      <div class="principle-number">PRINCIPLE 01</div>
+      <div class="principle-title">Role-Aware Navigation</div>
+      <div class="principle-desc">Navigation should adapt to the user's role and primary jobs — not expose every feature equally. A recruiter's nav is not a compliance officer's nav.</div>
+      <div class="principle-personas">
+        <span class="principle-persona-chip" style="background:var(--aisha-bg);color:var(--aisha-fg)">Aisha</span>
+        <span class="principle-persona-chip" style="background:var(--priya-bg);color:var(--priya-fg)">Priya</span>
+        <span class="principle-persona-chip" style="background:var(--marcus-bg);color:var(--marcus-fg)">Marcus</span>
+        <span class="principle-persona-chip" style="background:var(--rachel-bg);color:var(--rachel-fg)">Rachel</span>
+      </div>
+    </div>
+
+    <div class="principle-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--jordan-accent)"></div>
+      <div class="principle-number">PRINCIPLE 02</div>
+      <div class="principle-title">Trust Through Transparency</div>
+      <div class="principle-desc">Partners need to see behind the numbers. Attribution trails, payout timelines, and real-time data aren't features — they're trust signals.</div>
+      <div class="principle-personas">
+        <span class="principle-persona-chip" style="background:var(--jordan-bg);color:var(--jordan-fg)">Jordan</span>
+        <span class="principle-persona-chip" style="background:var(--sade-bg);color:var(--sade-fg)">Sade</span>
+        <span class="principle-persona-chip" style="background:var(--david-bg);color:var(--david-fg)">David</span>
+        <span class="principle-persona-chip" style="background:var(--elena-bg);color:var(--elena-fg)">Elena</span>
+      </div>
+    </div>
+
+    <div class="principle-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--priya-accent)"></div>
+      <div class="principle-number">PRINCIPLE 03</div>
+      <div class="principle-title">Persistent Quick Actions</div>
+      <div class="principle-desc">Every persona has 1-2 actions they do constantly. These must be accessible from anywhere — not buried in a workflow that requires 4+ clicks.</div>
+      <div class="principle-personas">
+        <span class="principle-persona-chip" style="background:var(--aisha-bg);color:var(--aisha-fg)">View partner card</span>
+        <span class="principle-persona-chip" style="background:var(--jordan-bg);color:var(--jordan-fg)">Copy tracking link</span>
+        <span class="principle-persona-chip" style="background:var(--elena-bg);color:var(--elena-fg)">API health status</span>
+      </div>
+    </div>
+
+    <div class="principle-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--rachel-accent)"></div>
+      <div class="principle-number">PRINCIPLE 04</div>
+      <div class="principle-title">Eliminate the Toggle Tax</div>
+      <div class="principle-desc">Multi-program brands lose context every time they switch. The default view must be portfolio-wide. Program drilling should be opt-in, not required.</div>
+      <div class="principle-personas">
+        <span class="principle-persona-chip" style="background:var(--aisha-bg);color:var(--aisha-fg)">Aisha</span>
+        <span class="principle-persona-chip" style="background:var(--rachel-bg);color:var(--rachel-fg)">Rachel</span>
+        <span class="principle-persona-chip" style="background:var(--marcus-bg);color:var(--marcus-fg)">Marcus</span>
+      </div>
+    </div>
+
+    <div class="principle-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--sade-accent)"></div>
+      <div class="principle-number">PRINCIPLE 05</div>
+      <div class="principle-title">Progressive Data Density</div>
+      <div class="principle-desc">Different users need different data densities. Cards for Sade, tables for David, executive summaries for Rachel. Same data, different presentations.</div>
+      <div class="principle-personas">
+        <span class="principle-persona-chip" style="background:var(--sade-bg);color:var(--sade-fg)">Sade — cards</span>
+        <span class="principle-persona-chip" style="background:var(--david-bg);color:var(--david-fg)">David — tables</span>
+        <span class="principle-persona-chip" style="background:var(--rachel-bg);color:var(--rachel-fg)">Rachel — exec</span>
+      </div>
+    </div>
+
+    <div class="principle-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--marcus-accent)"></div>
+      <div class="principle-number">PRINCIPLE 06</div>
+      <div class="principle-title">Proactive Over Reactive</div>
+      <div class="principle-desc">The system should surface issues before users hunt for them. Smart alerts, anomaly detection, and at-risk flags turn passive dashboards into active assistants.</div>
+      <div class="principle-personas">
+        <span class="principle-persona-chip" style="background:var(--aisha-bg);color:var(--aisha-fg)">Anomaly alerts</span>
+        <span class="principle-persona-chip" style="background:var(--marcus-bg);color:var(--marcus-fg)">Fraud flags</span>
+        <span class="principle-persona-chip" style="background:var(--elena-bg);color:var(--elena-fg)">API health</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BACK TO TOP ── -->
+<button class="back-to-top" id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<!-- ── FOOTER ── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">impact.com</div>
+    <div class="footer-tagline">Affiliate &amp; Creator Channel Personas — a research artifact for the Affiliate Creator Manager dashboard redesign. Eight personas, 32+ jobs-to-be-done, six design principles.</div>
+    <div class="footer-meta">Channel Research · June 2026 · Internal Design Reference</div>
+  </div>
+</footer>
+
+<!-- ── SCROLL-AWARE NAV HIGHLIGHTING + BACK TO TOP ── -->
+<script>
+  (function() {
+    const links = document.querySelectorAll('.nav-link');
+    const sections = [];
+    const partnerIds = new Set(['partner-side','jordan','sade','david','elena']);
+
+    links.forEach(link => {
+      const id = link.getAttribute('href')?.replace('#','');
+      if (id) {
+        const el = document.getElementById(id);
+        if (el) sections.push({ el, link, id });
+      }
+    });
+
+    const backToTop = document.getElementById('back-to-top');
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY + 120;
+        let current = sections[0];
+        for (const s of sections) {
+          if (s.el.offsetTop <= scrollY) current = s;
+        }
+        links.forEach(l => {
+          l.classList.remove('active');
+          l.classList.remove('active-partner');
+        });
+        if (current) {
+          if (partnerIds.has(current.id)) {
+            current.link.classList.add('active-partner');
+          } else {
+            current.link.classList.add('active');
+          }
+        }
+
+        // Back to top visibility
+        if (window.scrollY > 600) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Back to top click
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+</script>
+
+</body>
+</html>

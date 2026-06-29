@@ -32,6 +32,7 @@ import { InquiriesPage } from "./pages/InquiriesPage";
 import { TestActionsPage } from "./pages/TestActionsPage";
 import { ReportsLibraryPage } from "./pages/ReportsLibraryPage";
 import { DataLabPage } from "./pages/DataLabPage";
+import { ActionExplorerPage } from "./pages/ActionExplorerPage";
 import { ContentPage } from "./pages/ContentPage";
 import { TemplateTermsPage } from "./pages/TemplateTermsPage";
 import { CustomTermsPage } from "./pages/CustomTermsPage";
@@ -73,6 +74,7 @@ export const router = createHashRouter([
       { path: "reports/overview", Component: ReportsLibraryPage },
       { path: "reports/data-lab", Component: DataLabPage },
       { path: "reports/data-lab/builder", Component: ReportCanvasPage },
+      { path: "reports/action-explorer", Component: ActionExplorerPage },
       { path: "reports/partner-intelligence", Component: PartnerIntelligencePage },
       { path: "reports/morereports", Component: MoreReportsPage },
       { path: "transactions", Component: TransactionsPage },
