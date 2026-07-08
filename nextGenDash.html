@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Next-Gen Dash — Persona-Driven Nav Restructures</title>
+<!-- Google Fonts (matches the Brand UI design system) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ── DESIGN TOKENS — Impact.com design system ── */
+  :root {
+    --background: #FFFFFF;
+    --background-subdued: #F9FBFF;
+    --foreground: #25282F;
+    --muted: #F0F1F3;
+    --muted-foreground: #606672;
+    --accent: #0077DB;
+    --accent-hover: #006ECA;
+
+    --border-default: #E0E9F0;
+    --border-strong: #CACFD3;
+
+    --text-default: #25282F;
+    --text-subdued: #8A959D;
+    --text-disabled: #CACFD3;
+
+    --surface-hover: #EDF1F9;
+
+    /* Persona accent palettes — distinct but on-brand */
+    --aisha-bg: #D6EBFF;
+    --aisha-fg: #1D66DE;
+    --aisha-accent: #0077DB;
+    --aisha-accent-hover: #006ECA;
+
+    --priya-bg: #CFF7F0;
+    --priya-fg: #047857;
+    --priya-accent: #0EA5A4;
+    --priya-accent-hover: #0E7C7B;
+
+    --marcus-bg: #EDE4FF;
+    --marcus-fg: #4B3296;
+    --marcus-accent: #8A63D2;
+    --marcus-accent-hover: #6B47B0;
+
+    --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0px 1px 3px rgba(0, 0, 0, 0.08);
+
+    --radius-sm: 4px;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --radius-button: 9999px;
+
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--background-subdued);
+    color: var(--text-default);
+    padding: 48px 32px;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    max-width: 1100px;
+    margin: 0 auto 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--foreground);
+  }
+  .logo img {
+    height: 24px;
+    width: auto;
+    display: block;
+  }
+  .logo-dot { color: var(--accent); }
+  .back-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    background: var(--background);
+    transition: var(--transition-fast);
+  }
+  .back-link:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .page-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.4px;
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--text-subdued);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── GRID ── */
+  .personas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--background);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-default);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  /* ── CARD HEADER ── */
+  .card-top {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border-default);
+    position: relative;
+  }
+  .card-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .accent-aisha  { background: linear-gradient(90deg, var(--aisha-accent),  #4E9AE8); }
+  .accent-priya  { background: linear-gradient(90deg, var(--priya-accent),  #3FCBC1); }
+  .accent-marcus { background: linear-gradient(90deg, var(--marcus-accent), #B59CE6); }
+
+  .avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .avatar-aisha  { background: var(--aisha-bg); }
+  .avatar-priya  { background: var(--priya-bg); }
+  .avatar-marcus { background: var(--marcus-bg); }
+
+  .persona-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.2px;
+    margin-bottom: 3px;
+  }
+  .persona-title {
+    font-size: 12px;
+    color: var(--text-subdued);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .brand-aisha  { background: var(--aisha-bg);  color: var(--aisha-fg); }
+  .brand-priya  { background: var(--priya-bg);  color: var(--priya-fg); }
+  .brand-marcus { background: var(--marcus-bg); color: var(--marcus-fg); }
+
+  .meta-row {
+    display: flex;
+    gap: 18px;
+    margin-top: 16px;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.2px;
+  }
+  .meta-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-subdued);
+  }
+
+  /* ── CARD BODY ── */
+  .card-body {
+    padding: 20px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-subdued);
+    margin-bottom: 8px;
+  }
+
+  /* ── QUOTE ── */
+  .quote {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-default);
+    line-height: 1.6;
+    padding-left: 12px;
+    border-left: 3px solid var(--border-default);
+  }
+  .quote-aisha  { border-left-color: var(--aisha-accent); }
+  .quote-priya  { border-left-color: var(--priya-accent); }
+  .quote-marcus { border-left-color: var(--marcus-accent); }
+
+  /* ── JOBS ── */
+  .jobs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .job-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-default);
+    font-weight: 500;
+  }
+  .job-icon {
+    font-size: 13px;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* ── PAIN POINTS ── */
+  .pain-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pain-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-default);
+    line-height: 1.4;
+  }
+  .pain-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .dot-aisha  { background: var(--aisha-accent); }
+  .dot-priya  { background: var(--priya-accent); }
+  .dot-marcus { background: var(--marcus-accent); }
+
+  /* ── MOTIVATIONS ── */
+  .motivation-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-aisha  { background: var(--aisha-bg);  color: var(--aisha-fg); }
+  .tag-priya  { background: var(--priya-bg);  color: var(--priya-fg); }
+  .tag-marcus { background: var(--marcus-bg); color: var(--marcus-fg); }
+
+  /* ── CARD FOOTER ── */
+  .card-footer {
+    padding: 16px 24px;
+    background: var(--background-subdued);
+    border-top: 1px solid var(--border-default);
+  }
+  .footer-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-subdued);
+    margin-bottom: 6px;
+  }
+  .impact-need {
+    font-size: 12px;
+    color: var(--text-default);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 900px) {
+    .personas-grid { grid-template-columns: 1fr; }
+    .topbar { flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     NEXT-GEN DASH — persona blocks and nav-restructure variant cards.
+     Each persona block is a section: a compact summary row on top,
+     three variant cards side-by-side below (V1 / V2 / V3).
+     ════════════════════════════════════════════════════════════ */
+
+  .exploration {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .persona-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ── Persona summary row (thin, full-width) ── */
+  .persona-summary-row {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .persona-summary-row[data-persona="aisha"]  { border-left-color: var(--aisha-accent);  }
+  .persona-summary-row[data-persona="priya"]  { border-left-color: var(--priya-accent);  }
+  .persona-summary-row[data-persona="marcus"] { border-left-color: var(--marcus-accent); }
+
+  .psum-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .psum-avatar[data-persona="aisha"]  { background: var(--aisha-bg);  }
+  .psum-avatar[data-persona="priya"]  { background: var(--priya-bg);  }
+  .psum-avatar[data-persona="marcus"] { background: var(--marcus-bg); }
+
+  .psum-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .psum-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .psum-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.2px;
+  }
+  .psum-title { font-size: 12px; color: var(--text-subdued); }
+  .psum-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .psum-brand[data-persona="aisha"]  { background: var(--aisha-bg);  color: var(--aisha-fg);  }
+  .psum-brand[data-persona="priya"]  { background: var(--priya-bg);  color: var(--priya-fg);  }
+  .psum-brand[data-persona="marcus"] { background: var(--marcus-bg); color: var(--marcus-fg); }
+  .psum-quote {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-default);
+    line-height: 1.5;
+    padding-left: 10px;
+    border-left: 2px solid var(--border-default);
+  }
+  .psum-quote[data-persona="aisha"]  { border-left-color: var(--aisha-accent);  }
+  .psum-quote[data-persona="priya"]  { border-left-color: var(--priya-accent);  }
+  .psum-quote[data-persona="marcus"] { border-left-color: var(--marcus-accent); }
+  .psum-jobs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .psum-job {
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .psum-job[data-persona="aisha"]  { background: var(--aisha-bg);  color: var(--aisha-fg);  }
+  .psum-job[data-persona="priya"]  { background: var(--priya-bg);  color: var(--priya-fg);  }
+  .psum-job[data-persona="marcus"] { background: var(--marcus-bg); color: var(--marcus-fg); }
+
+  .psum-count {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-subdued);
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .psum-count-value {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.3px;
+  }
+
+  /* ── Variants grid (3 cards side-by-side) ── */
+  .variants-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* ── Variant card ── */
+  .variant-card {
+    background: var(--background);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 22px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .variant-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+  .variant-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .variant-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .variant-tag[data-persona="aisha"]  { background: var(--aisha-bg);  color: var(--aisha-fg);  }
+  .variant-tag[data-persona="priya"]  { background: var(--priya-bg);  color: var(--priya-fg);  }
+  .variant-tag[data-persona="marcus"] { background: var(--marcus-bg); color: var(--marcus-fg); }
+  .variant-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.15px;
+    line-height: 1.3;
+  }
+
+  .variant-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--text-subdued);
+    margin-bottom: 6px;
+  }
+
+  .variant-changes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .variant-changes li {
+    position: relative;
+    padding-left: 14px;
+    font-size: 12px;
+    color: var(--text-default);
+    line-height: 1.5;
+  }
+  .variant-changes li::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--text-subdued);
+  }
+  .variant-card[data-persona="aisha"]  .variant-changes li::before { background: var(--aisha-accent);  }
+  .variant-card[data-persona="priya"]  .variant-changes li::before { background: var(--priya-accent);  }
+  .variant-card[data-persona="marcus"] .variant-changes li::before { background: var(--marcus-accent); }
+
+  .variant-why {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-default);
+    line-height: 1.5;
+    background: var(--muted);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    border-left: 3px solid var(--border-strong);
+  }
+  .variant-card[data-persona="aisha"]  .variant-why { background: var(--aisha-bg);  border-left-color: var(--aisha-accent);  color: var(--aisha-fg);  }
+  .variant-card[data-persona="priya"]  .variant-why { background: var(--priya-bg);  border-left-color: var(--priya-accent);  color: var(--priya-fg);  }
+  .variant-card[data-persona="marcus"] .variant-why { background: var(--marcus-bg); border-left-color: var(--marcus-accent); color: var(--marcus-fg); }
+
+  /* ── Nav tree preview (styled indented list) ── */
+  .variant-nav-tree {
+    list-style: none;
+    background: var(--background-subdued);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .variant-nav-tree > li {
+    padding: 4px 0;
+    font-size: 12px;
+  }
+  .nav-l1 {
+    font-weight: 700;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-l1-icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
+  .nav-l1[data-hero="true"] {
+    background: var(--muted);
+    color: var(--accent);
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin: 2px 0;
+  }
+  .variant-card[data-persona="aisha"]  .nav-l1[data-hero="true"] { background: var(--aisha-bg);  color: var(--aisha-fg);  }
+  .variant-card[data-persona="priya"]  .nav-l1[data-hero="true"] { background: var(--priya-bg);  color: var(--priya-fg);  }
+  .variant-card[data-persona="marcus"] .nav-l1[data-hero="true"] { background: var(--marcus-bg); color: var(--marcus-fg); }
+
+  .variant-nav-tree ul {
+    list-style: none;
+    margin: 3px 0 3px 28px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .variant-nav-tree ul li {
+    font-size: 11.5px;
+    color: var(--muted-foreground);
+    padding: 2px 0;
+    line-height: 1.4;
+  }
+  .nav-note {
+    color: var(--text-subdued);
+    font-style: italic;
+    font-size: 10.5px;
+  }
+  .nav-badge {
+    display: inline-block;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 9999px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+  .nav-badge.new {
+    background: #E9F7EE;
+    color: #047857;
+  }
+  .nav-badge.demoted {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+  .nav-badge.merged {
+    background: #EDE4FF;
+    color: #4B3296;
+  }
+
+  /* Responsive: stack variant cards below 1000px */
+  @media (max-width: 1100px) {
+    .variants-grid { grid-template-columns: 1fr; }
+    .persona-summary-row { grid-template-columns: auto 1fr; }
+    .psum-count { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="logo" href="affiliate-creator-manager-personas.html" aria-label="impact.com personas"><img src="assets/impact-logo.svg" alt="impact.com" width="70" height="24"></a>
+  <a class="back-link" href="affiliate-creator-manager-personas.html">← Back to Personas</a>
+</div>
+
+<div class="page-header">
+  <div class="page-eyebrow">impact.com · Brand UI · Nav IA Exploration</div>
+  <div class="page-title">Next-Gen Dashboard — Nav Restructures</div>
+  <div class="page-subtitle">3 nav information-architecture explorations per persona · 9 total. Each restructure is shaped around one persona's daily job-to-be-done and paired with a designer note explaining what moved in the IA and why.</div>
+</div>
+
+<div class="personas-grid">
+
+  <!-- ── PERSONA 1: AISHA ── -->
+  <div class="card">
+    <div class="card-top">
+      <div class="card-accent accent-aisha"></div>
+      <div class="avatar-row">
+        <div class="avatar avatar-aisha">👩🏾</div>
+        <div>
+          <div class="persona-name">Aisha Thompson</div>
+          <div class="persona-title">Senior Affiliate &amp; Creator<br>Partnerships Manager</div>
+        </div>
+      </div>
+      <div class="brand-badge brand-aisha">🛒 Walmart — Age 34</div>
+      <div class="meta-row">
+        <div class="meta-item">
+          <div class="meta-value">148</div>
+          <div class="meta-label">Partners</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">34</div>
+          <div class="meta-label">Creators</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">5+</div>
+          <div class="meta-label">Programs</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">Daily</div>
+          <div class="meta-label">Login</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div>
+        <div class="section-label">In her own words</div>
+        <div class="quote quote-aisha">“I know something’s wrong before I even open the platform — I just can’t find where the problem is fast enough.”</div>
+      </div>
+
+      <div>
+        <div class="section-label">Primary Jobs</div>
+        <div class="jobs-list">
+          <div class="job-item"><span class="job-icon">⚡</span> Daily portfolio scan across all programs</div>
+          <div class="job-item"><span class="job-icon">📅</span> Partner check-in prep</div>
+          <div class="job-item"><span class="job-icon">🎬</span> Creator campaign monitoring</div>
+          <div class="job-item"><span class="job-icon">🔍</span> Identifying at-risk partners early</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Pain Points</div>
+        <div class="pain-list">
+          <div class="pain-item"><div class="pain-dot dot-aisha"></div>Has to toggle between programs — loses context every time</div>
+          <div class="pain-item"><div class="pain-dot dot-aisha"></div>Misses performance dips until they’re already problems</div>
+          <div class="pain-item"><div class="pain-dot dot-aisha"></div>No unified view across her affiliate + creator portfolio</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Motivations</div>
+        <div class="motivation-tags">
+          <span class="tag tag-aisha">Hit quarterly revenue</span>
+          <span class="tag tag-aisha">Retain top partners</span>
+          <span class="tag tag-aisha">Spot dips early</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="footer-label">What impact.com needs to do for Aisha</div>
+      <div class="impact-need">Give her a unified daily scan view across all programs — no toggling, proactive alerts surfaced before she has to look.</div>
+    </div>
+  </div>
+
+  <!-- ── PERSONA 2: PRIYA ── -->
+  <div class="card">
+    <div class="card-top">
+      <div class="card-accent accent-priya"></div>
+      <div class="avatar-row">
+        <div class="avatar avatar-priya">👩🏽</div>
+        <div>
+          <div class="persona-name">Priya Nguyen</div>
+          <div class="persona-title">Creator &amp; Affiliate<br>Partnerships Lead</div>
+        </div>
+      </div>
+      <div class="brand-badge brand-priya">🐾 Chewy — Age 28</div>
+      <div class="meta-row">
+        <div class="meta-item">
+          <div class="meta-value">62</div>
+          <div class="meta-label">Partners</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">80+</div>
+          <div class="meta-label">Creators</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">2</div>
+          <div class="meta-label">Programs</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">Always</div>
+          <div class="meta-label">Login</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div>
+        <div class="section-label">In her own words</div>
+        <div class="quote quote-priya">“I shouldn’t have to go to two different places just because one partner is an affiliate and another posts on TikTok. My job is the same.”</div>
+      </div>
+
+      <div>
+        <div class="section-label">Primary Jobs</div>
+        <div class="jobs-list">
+          <div class="job-item"><span class="job-icon">🔍</span> Recruit new affiliate &amp; creator partners</div>
+          <div class="job-item"><span class="job-icon">📈</span> Monitor creator content performance</div>
+          <div class="job-item"><span class="job-icon">🎁</span> Spot and lock in rising talent fast</div>
+          <div class="job-item"><span class="job-icon">✉️</span> Manage outreach and invite pipeline</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Pain Points</div>
+        <div class="pain-list">
+          <div class="pain-item"><div class="pain-dot dot-priya"></div>Affiliate and creator workflows feel like two separate products</div>
+          <div class="pain-item"><div class="pain-dot dot-priya"></div>No proactive partner recommendations — has to hunt manually</div>
+          <div class="pain-item"><div class="pain-dot dot-priya"></div>Loses deals to competitors because discovery is too slow</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Motivations</div>
+        <div class="motivation-tags">
+          <span class="tag tag-priya">Grow creator roster</span>
+          <span class="tag tag-priya">Max content ROI</span>
+          <span class="tag tag-priya">First to rising talent</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="footer-label">What impact.com needs to do for Priya</div>
+      <div class="impact-need">Merge affiliate and creator into one unified workflow. Surface proactive partner recommendations with fit scores so she can recruit before competitors do.</div>
+    </div>
+  </div>
+
+  <!-- ── PERSONA 3: MARCUS ── -->
+  <div class="card">
+    <div class="card-top">
+      <div class="card-accent accent-marcus"></div>
+      <div class="avatar-row">
+        <div class="avatar avatar-marcus">👨🏽</div>
+        <div>
+          <div class="persona-name">Marcus Delgado</div>
+          <div class="persona-title">Affiliate Program Manager</div>
+        </div>
+      </div>
+      <div class="brand-badge brand-marcus">💄 Fenty Beauty — Age 31</div>
+      <div class="meta-row">
+        <div class="meta-item">
+          <div class="meta-value">94</div>
+          <div class="meta-label">Partners</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">20</div>
+          <div class="meta-label">VIP Partners</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">Weekly</div>
+          <div class="meta-label">Review</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-value">Bi-wkly</div>
+          <div class="meta-label">Check-ins</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div>
+        <div class="section-label">In his own words</div>
+        <div class="quote quote-marcus">“I spend 45 minutes pulling data before every partner call. By the time I’m ready, I’m already behind on everything else.”</div>
+      </div>
+
+      <div>
+        <div class="section-label">Primary Jobs</div>
+        <div class="jobs-list">
+          <div class="job-item"><span class="job-icon">📅</span> Prepare for bi-weekly partner check-ins</div>
+          <div class="job-item"><span class="job-icon">📊</span> Weekly portfolio performance review (Mondays)</div>
+          <div class="job-item"><span class="job-icon">🤝</span> Nurture and retain top 20 VIP partners</div>
+          <div class="job-item"><span class="job-icon">🎁</span> Issue bonuses to high performers</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Pain Points</div>
+        <div class="pain-list">
+          <div class="pain-item"><div class="pain-dot dot-marcus"></div>Check-in prep is fully manual — pulls data from multiple screens</div>
+          <div class="pain-item"><div class="pain-dot dot-marcus"></div>No single partner performance brief he can walk into a call with</div>
+          <div class="pain-item"><div class="pain-dot dot-marcus"></div>Has to remember to issue bonuses — no proactive prompts</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Motivations</div>
+        <div class="motivation-tags">
+          <span class="tag tag-marcus">Retain top partners</span>
+          <span class="tag tag-marcus">Grow revenue</span>
+          <span class="tag tag-marcus">Run tight check-ins</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="footer-label">What impact.com needs to do for Marcus</div>
+      <div class="impact-need">Auto-generate a partner check-in brief when a calendar event is detected. Surface bonus recommendations proactively so he never misses rewarding a top performer.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     EXPLORATION — 3 nav restructures per persona (9 total)
+     ═══════════════════════════════════════════════════════════ -->
+
+<div class="page-header" style="margin-top: 56px; margin-bottom: 24px;">
+  <div class="page-eyebrow">Section 2 · Nav IA Exploration</div>
+  <div class="page-title" style="font-size: 22px;">9 Nav Restructures</div>
+  <div class="page-subtitle">Each persona reshapes the L1/L2 nav around their daily job-to-be-done. Every card carries a designer note on what moved in the IA and why.</div>
+</div>
+
+<div class="exploration">
+
+  <!-- ═════════════════ AISHA ═════════════════ -->
+  <div class="persona-block">
+    <div class="persona-summary-row" data-persona="aisha">
+      <div class="psum-avatar" data-persona="aisha">👩🏾</div>
+      <div class="psum-body">
+        <div class="psum-top">
+          <div class="psum-name">Aisha Thompson</div>
+          <span class="psum-brand" data-persona="aisha">🛒 Walmart</span>
+          <div class="psum-title">Senior Affiliate &amp; Creator Partnerships Manager</div>
+        </div>
+        <div class="psum-quote" data-persona="aisha">"I know something's wrong before I even open the platform — I just can't find where the problem is fast enough."</div>
+        <div class="psum-jobs">
+          <span class="psum-job" data-persona="aisha">Daily portfolio scan</span>
+          <span class="psum-job" data-persona="aisha">Check-in prep</span>
+          <span class="psum-job" data-persona="aisha">Creator campaign monitoring</span>
+          <span class="psum-job" data-persona="aisha">Spot at-risk partners early</span>
+        </div>
+      </div>
+      <div class="psum-count">
+        <span class="psum-count-value">148</span>
+        Partners · 5+ Programs
+      </div>
+    </div>
+
+    <div class="variants-grid">
+
+      <!-- Aisha V1 · Portfolio Radar -->
+      <div class="variant-card" data-persona="aisha">
+        <div class="variant-header">
+          <span class="variant-tag" data-persona="aisha">V1</span>
+          <div class="variant-title">Portfolio Radar<br><span style="font-weight:500;font-size:12px;color:var(--text-subdued);">Anomaly-first cross-program roll-up</span></div>
+        </div>
+
+        <div>
+          <div class="variant-section-label">What changed</div>
+          <ul class="variant-changes">
+            <li>Home replaced with a cross-program <strong>Program Pulse</strong> anomaly-triage inbox — no more per-program toggling</li>
+            <li>Partners <strong>segmented by health status</strong> (At Risk / Watch / Winners / Healthy) instead of by program</li>
+            <li>Performance defaults to <strong>cross-program compare</strong>; per-program is a filter, not a nav destination</li>
+            <li>Contracts &amp; Rates <strong>demoted</strong> to a mid-tier item (monthly cadence, not daily)</li>
+          </ul>
+        </div>
+
+        <div class="variant-why">
+          Aisha's #1 pain is toggle friction and missing dips. Every L1 answers a daily-scan question. Segmenting by health status makes the "who needs my eyes" answer show up on the first click.
+        </div>
+
+        <div>
+          <div class="variant-section-label">Proposed nav</div>
+          <ul class="variant-nav-tree">
+            <li><div class="nav-l1" data-hero="true"><span class="nav-l1-icon">📡</span> Program Pulse <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Anomalies today</li>
+                <li>Attention queue</li>
+                <li>Cross-program snapshot</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🤝</span> Partners</div>
+              <ul>
+                <li>At Risk <span class="nav-badge">4</span></li>
+                <li>Watch</li>
+                <li>Winners</li>
+                <li>Healthy</li>
+                <li>All Partners</li>
+                <li>Discover / Recruit</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📊</span> Performance</div>
+              <ul>
+                <li>Cross-program compare <span class="nav-badge new">default</span></li>
+                <li>By partner · by product · by channel</li>
+                <li>Exports &amp; scheduled</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎬</span> Creator Campaigns</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📜</span> Contracts &amp; Rates <span class="nav-badge demoted">demoted</span></div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💸</span> Finance</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🛡</span> Protect</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">⚙</span> Settings</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aisha V2 · Signals & Actions -->
+      <div class="variant-card" data-persona="aisha">
+        <div class="variant-header">
+          <span class="variant-tag" data-persona="aisha">V2</span>
+          <div class="variant-title">Signals &amp; Actions<br><span style="font-weight:500;font-size:12px;color:var(--text-subdued);">Split "notice" from "act"</span></div>
+        </div>
+
+        <div>
+          <div class="variant-section-label">What changed</div>
+          <ul class="variant-changes">
+            <li>Home splits into <strong>two rails</strong>: Live Signals (anomalies, dips, spikes) and My Queue (check-ins, bonuses, outreach)</li>
+            <li>Partners flat: <strong>Roster / At Risk / Winners</strong> — no folder hierarchy</li>
+            <li>Insights folds <strong>Optimize + Competitive Insights</strong> into one section (reduces L1 count)</li>
+            <li>Automations promoted so Aisha can wire up the queue side without leaving her landing surface</li>
+          </ul>
+        </div>
+
+        <div class="variant-why">
+          Aisha's day is triage. Separating what she needs to <em>notice</em> from what she needs to <em>act on</em> reduces cognitive load — she doesn't have to re-scan cards she's already triaged this morning.
+        </div>
+
+        <div>
+          <div class="variant-section-label">Proposed nav</div>
+          <ul class="variant-nav-tree">
+            <li><div class="nav-l1" data-hero="true"><span class="nav-l1-icon">🏠</span> Home</div>
+              <ul>
+                <li>Live Signals <span class="nav-note">← anomalies, dips, spikes</span></li>
+                <li>My Queue <span class="nav-note">← today's actions</span></li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🤝</span> Partners</div>
+              <ul>
+                <li>My Roster</li>
+                <li>At Risk <span class="nav-badge">4</span></li>
+                <li>Winners</li>
+                <li>Recruit / Discover</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🔬</span> Insights <span class="nav-badge merged">merged</span></div>
+              <ul>
+                <li>Performance</li>
+                <li>Attribution &amp; funnels</li>
+                <li>Competitive benchmarks</li>
+                <li>Data Lab</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎬</span> Campaigns</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">⚡</span> Automations <span class="nav-badge new">promoted</span></div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📜</span> Contracts</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💸</span> Finance</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🛡</span> Protect</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aisha V3 · Segments-First -->
+      <div class="variant-card" data-persona="aisha">
+        <div class="variant-header">
+          <span class="variant-tag" data-persona="aisha">V3</span>
+          <div class="variant-title">Segments-First<br><span style="font-weight:500;font-size:12px;color:var(--text-subdued);">Nav rooted in her portfolio slices</span></div>
+        </div>
+
+        <div>
+          <div class="variant-section-label">What changed</div>
+          <ul class="variant-changes">
+            <li>New L1 <strong>Segments</strong> is the primary noun — each category × program (grocery, electronics, fashion × affiliate/creator)</li>
+            <li>Every segment holds its <strong>own full stack inline</strong>: partners, performance, campaigns, contracts</li>
+            <li>Partners demoted; Discover still surfaces recruit tools but browsing shifts to Segments</li>
+            <li>Home = <strong>segment health grid</strong> — one row per segment, dots colored by anomaly severity</li>
+          </ul>
+        </div>
+
+        <div class="variant-why">
+          Aisha thinks in categories × programs, not in a flat partner list. Making Segments the L1 mirrors her mental model, so every nav interaction happens inside the slice she's already thinking about.
+        </div>
+
+        <div>
+          <div class="variant-section-label">Proposed nav</div>
+          <ul class="variant-nav-tree">
+            <li><div class="nav-l1" data-hero="true"><span class="nav-l1-icon">🏠</span> Home</div>
+              <ul>
+                <li>Segment health grid</li>
+                <li>Attention queue</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🧩</span> Segments <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Grocery · Affiliate</li>
+                <li>Grocery · Creator</li>
+                <li>Electronics · Affiliate</li>
+                <li>Fashion · Creator</li>
+                <li class="nav-note">…per-segment stack: partners, perf, campaigns, contracts</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🤝</span> Partners <span class="nav-badge demoted">demoted</span></div>
+              <ul>
+                <li>All Partners (flat directory)</li>
+                <li>Discover / Recruit</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📊</span> Performance</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📜</span> Contracts</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💸</span> Finance</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🛡</span> Protect</div></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═════════════════ PRIYA ═════════════════ -->
+  <div class="persona-block">
+    <div class="persona-summary-row" data-persona="priya">
+      <div class="psum-avatar" data-persona="priya">👩🏽</div>
+      <div class="psum-body">
+        <div class="psum-top">
+          <div class="psum-name">Priya Nguyen</div>
+          <span class="psum-brand" data-persona="priya">🐾 Chewy</span>
+          <div class="psum-title">Creator &amp; Affiliate Partnerships Lead</div>
+        </div>
+        <div class="psum-quote" data-persona="priya">"I shouldn't have to go to two different places just because one partner is an affiliate and another posts on TikTok. My job is the same."</div>
+        <div class="psum-jobs">
+          <span class="psum-job" data-persona="priya">Recruit new partners</span>
+          <span class="psum-job" data-persona="priya">Monitor creator content</span>
+          <span class="psum-job" data-persona="priya">Lock in rising talent fast</span>
+          <span class="psum-job" data-persona="priya">Outreach pipeline</span>
+        </div>
+      </div>
+      <div class="psum-count">
+        <span class="psum-count-value">142</span>
+        Partners · 2 Programs
+      </div>
+    </div>
+
+    <div class="variants-grid">
+
+      <!-- Priya V1 · Discovery Loop -->
+      <div class="variant-card" data-persona="priya">
+        <div class="variant-header">
+          <span class="variant-tag" data-persona="priya">V1</span>
+          <div class="variant-title">Discovery Loop<br><span style="font-weight:500;font-size:12px;color:var(--text-subdued);">Recruiting is the daily loop</span></div>
+        </div>
+
+        <div>
+          <div class="variant-section-label">What changed</div>
+          <ul class="variant-changes">
+            <li>New <strong>Recruit</strong> L1 merges Marketplace + Creator Search + Applications + Outreach Queue + Proposals — one place for the whole recruit workflow</li>
+            <li>New <strong>Content Performance</strong> L1 tracks Chewy content across every creator (was buried in Reports)</li>
+            <li>Partners simplified — just the active roster; discovery lives in Recruit now</li>
+            <li>Home surfaces "who's rising in your category this week"</li>
+          </ul>
+        </div>
+
+        <div class="variant-why">
+          Recruiting is Priya's daily work, but currently split across Engage + Discover. Merging into a single L1 kills the context switch. Content Performance rises because that's what she optimizes creators against.
+        </div>
+
+        <div>
+          <div class="variant-section-label">Proposed nav</div>
+          <ul class="variant-nav-tree">
+            <li><div class="nav-l1"><span class="nav-l1-icon">🏠</span> Home <span class="nav-note">← rising talent signals</span></div></li>
+            <li><div class="nav-l1" data-hero="true"><span class="nav-l1-icon">🔍</span> Recruit <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Marketplace</li>
+                <li>Creator Search</li>
+                <li>Applications <span class="nav-badge">12</span></li>
+                <li>Outreach Queue <span class="nav-badge">9</span></li>
+                <li>Proposals Sent</li>
+                <li>Prospects</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🤝</span> Partners</div>
+              <ul>
+                <li>Active Roster</li>
+                <li>Groups &amp; contacts</li>
+                <li>Messages</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎬</span> Content Performance <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Top posts</li>
+                <li>By creator</li>
+                <li>Content review queue</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📊</span> Reports</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💸</span> Finance</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🛡</span> Protect</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Priya V2 · Unified Partner (No Silo) -->
+      <div class="variant-card" data-persona="priya">
+        <div class="variant-header">
+          <span class="variant-tag" data-persona="priya">V2</span>
+          <div class="variant-title">Unified Partner<br><span style="font-weight:500;font-size:12px;color:var(--text-subdued);">No affiliate / creator silo</span></div>
+        </div>
+
+        <div>
+          <div class="variant-section-label">What changed</div>
+          <ul class="variant-changes">
+            <li>The <strong>affiliate/creator distinction is erased</strong> — a partner is a partner</li>
+            <li>Single <strong>Partners</strong> L1 with filters: type, fit score, engagement velocity, channel</li>
+            <li>New <strong>Talent Pipeline</strong> L1 = a kanban (Spotted → Invited → In Talks → Onboarded → Live)</li>
+            <li>Content unified — one L1 for both partner types (was 2 separate sections)</li>
+          </ul>
+        </div>
+
+        <div class="variant-why">
+          Priya's biggest pain is "one job, two products." Removing the affiliate vs creator IA distinction removes the cognitive tax at the nav level — filters replace navigation for the type dimension.
+        </div>
+
+        <div>
+          <div class="variant-section-label">Proposed nav</div>
+          <ul class="variant-nav-tree">
+            <li><div class="nav-l1"><span class="nav-l1-icon">🏠</span> Home</div></li>
+            <li><div class="nav-l1" data-hero="true"><span class="nav-l1-icon">🤝</span> Partners <span class="nav-badge merged">unified</span></div>
+              <ul>
+                <li>All Partners <span class="nav-note">(filter by type)</span></li>
+                <li>Segments &amp; groups</li>
+                <li>Contacts &amp; messages</li>
+                <li>Discover / Marketplace</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎯</span> Talent Pipeline <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Spotted · Invited · In Talks</li>
+                <li>Onboarded · Live</li>
+                <li>Applications inbox</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎬</span> Content <span class="nav-badge merged">unified</span></div>
+              <ul>
+                <li>All content (posts, ads, deals, codes)</li>
+                <li>Review queue</li>
+                <li>Product catalogs</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📊</span> Performance</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📜</span> Contracts</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💸</span> Finance</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🛡</span> Protect</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Priya V3 · Radar-First -->
+      <div class="variant-card" data-persona="priya">
+        <div class="variant-header">
+          <span class="variant-tag" data-persona="priya">V3</span>
+          <div class="variant-title">Radar-First<br><span style="font-weight:500;font-size:12px;color:var(--text-subdued);">Proactive scouting is the primary loop</span></div>
+        </div>
+
+        <div>
+          <div class="variant-section-label">What changed</div>
+          <ul class="variant-changes">
+            <li>New <strong>Radar</strong> L1 hero = AI-scouted rising talent + competitor moves + viral posts in her category</li>
+            <li>Pipeline (kanban) elevated as its own L1 — the outreach workflow post-scouting</li>
+            <li>My Roster becomes the "onboarded and live" view — the post-recruit lifecycle</li>
+            <li>Analytics / Finance / Protect all pushed down</li>
+          </ul>
+        </div>
+
+        <div class="variant-why">
+          Priya's quote is "lock talent in before competitors do." Making Radar the primary landing surface treats scouting as the mission-critical loop — the platform proactively feeds her signals instead of waiting for her to search.
+        </div>
+
+        <div>
+          <div class="variant-section-label">Proposed nav</div>
+          <ul class="variant-nav-tree">
+            <li><div class="nav-l1" data-hero="true"><span class="nav-l1-icon">📡</span> Radar <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Rising talent today</li>
+                <li>Competitor moves</li>
+                <li>Viral posts (your category)</li>
+                <li>Watchlist</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎯</span> Pipeline <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Kanban: Spotted → Invited → Onboarded</li>
+                <li>Outreach drafts</li>
+                <li>Applications</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🤝</span> My Roster</div>
+              <ul>
+                <li>Live partners</li>
+                <li>Groups · segments · messages</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎬</span> Content</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📊</span> Analytics</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📜</span> Contracts</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💸</span> Finance</div></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═════════════════ MARCUS ═════════════════ -->
+  <div class="persona-block">
+    <div class="persona-summary-row" data-persona="marcus">
+      <div class="psum-avatar" data-persona="marcus">👨🏽</div>
+      <div class="psum-body">
+        <div class="psum-top">
+          <div class="psum-name">Marcus Delgado</div>
+          <span class="psum-brand" data-persona="marcus">💄 Fenty Beauty</span>
+          <div class="psum-title">Affiliate Program Manager</div>
+        </div>
+        <div class="psum-quote" data-persona="marcus">"I spend 45 minutes pulling data before every partner call. By the time I'm ready, I'm already behind on everything else."</div>
+        <div class="psum-jobs">
+          <span class="psum-job" data-persona="marcus">Bi-weekly VIP check-ins</span>
+          <span class="psum-job" data-persona="marcus">Weekly portfolio review</span>
+          <span class="psum-job" data-persona="marcus">Retain top 20 VIPs</span>
+          <span class="psum-job" data-persona="marcus">Issue bonuses</span>
+        </div>
+      </div>
+      <div class="psum-count">
+        <span class="psum-count-value">94</span>
+        Partners · 20 VIPs
+      </div>
+    </div>
+
+    <div class="variants-grid">
+
+      <!-- Marcus V1 · Relationship-First -->
+      <div class="variant-card" data-persona="marcus">
+        <div class="variant-header">
+          <span class="variant-tag" data-persona="marcus">V1</span>
+          <div class="variant-title">Relationship-First<br><span style="font-weight:500;font-size:12px;color:var(--text-subdued);">The partner is the primary noun</span></div>
+        </div>
+
+        <div>
+          <div class="variant-section-label">What changed</div>
+          <ul class="variant-changes">
+            <li>New <strong>My VIPs</strong> L1 — top-20 portrait grid; each partner has a full 360° workspace (perf + notes + contracts + bonuses inline)</li>
+            <li>Home = <strong>today's check-ins + anniversaries + contract renewals</strong> — his weekly ritual, front and center</li>
+            <li>Contracts &amp; Rates elevated as a sub-item <em>inside</em> My VIPs (renewals are a VIP-level concern for him)</li>
+            <li>Reports demoted — data lives inside partner workspaces, not as a destination</li>
+          </ul>
+        </div>
+
+        <div class="variant-why">
+          Marcus's work is fundamentally relational. Making the partner the primary noun (not the function) means every task he does happens inside a partner's context — the mental model matches the nav.
+        </div>
+
+        <div>
+          <div class="variant-section-label">Proposed nav</div>
+          <ul class="variant-nav-tree">
+            <li><div class="nav-l1" data-hero="true"><span class="nav-l1-icon">🏠</span> Home</div>
+              <ul>
+                <li>Today's check-ins</li>
+                <li>Anniversaries this week</li>
+                <li>Renewals coming up</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💎</span> My VIPs <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Top 20 portrait grid</li>
+                <li>Per-partner 360° workspace</li>
+                <li>Contracts &amp; renewals</li>
+                <li>Bonuses issued / due</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🤝</span> All Partners</div>
+              <ul>
+                <li>Roster · segments · messages</li>
+                <li>Discover / Recruit</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎬</span> Content &amp; Deals</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📊</span> Reports <span class="nav-badge demoted">demoted</span></div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💸</span> Finance</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🛡</span> Protect</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Marcus V2 · Calendar-First -->
+      <div class="variant-card" data-persona="marcus">
+        <div class="variant-header">
+          <span class="variant-tag" data-persona="marcus">V2</span>
+          <div class="variant-title">Calendar-First<br><span style="font-weight:500;font-size:12px;color:var(--text-subdued);">Nav is a time lens</span></div>
+        </div>
+
+        <div>
+          <div class="variant-section-label">What changed</div>
+          <ul class="variant-changes">
+            <li>New <strong>Today</strong> L1 — today's check-ins, briefs to prep, bonuses due</li>
+            <li>New <strong>This Week</strong> L1 — the week's VIP touches, upcoming reviews</li>
+            <li>New <strong>Coming Up</strong> L1 — anniversaries, contract renewals, quarterly milestones</li>
+            <li>Partners demoted to secondary browse mode; every partner deep-links back into the calendar</li>
+          </ul>
+        </div>
+
+        <div class="variant-why">
+          Marcus's mental model is his calendar (bi-weekly check-ins, weekly Monday review, quarterly VIP renewals). Making the nav time-first means opening the app equals opening his week.
+        </div>
+
+        <div>
+          <div class="variant-section-label">Proposed nav</div>
+          <ul class="variant-nav-tree">
+            <li><div class="nav-l1" data-hero="true"><span class="nav-l1-icon">📅</span> Today <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Check-ins today</li>
+                <li>Briefs ready to review</li>
+                <li>Bonuses to issue</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🗓</span> This Week <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>VIP touches</li>
+                <li>Portfolio review (Monday)</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">⏳</span> Coming Up <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Anniversaries</li>
+                <li>Contract renewals</li>
+                <li>Quarterly reviews</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🤝</span> Partners <span class="nav-badge demoted">browse mode</span></div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📊</span> Reports</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📜</span> Contracts</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💸</span> Finance</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Marcus V3 · Brief-Centric -->
+      <div class="variant-card" data-persona="marcus">
+        <div class="variant-header">
+          <span class="variant-tag" data-persona="marcus">V3</span>
+          <div class="variant-title">Brief-Centric<br><span style="font-weight:500;font-size:12px;color:var(--text-subdued);">The brief IS the product</span></div>
+        </div>
+
+        <div>
+          <div class="variant-section-label">What changed</div>
+          <ul class="variant-changes">
+            <li>New <strong>Briefs</strong> L1 — today's meeting brief pinned; any partner's brief one click away</li>
+            <li>Partners = flat directory; clicking a partner opens their <strong>brief</strong>, not a raw profile</li>
+            <li><strong>Bonuses &amp; Contracts</strong> elevated as retention-action L1 (paired with briefs)</li>
+            <li>Analytics is embedded inside briefs — no more spreadsheet-escape (data appears where it's used)</li>
+          </ul>
+        </div>
+
+        <div class="variant-why">
+          Marcus spends 45 minutes prepping each brief manually. Elevating the brief to a first-class nav artifact reflects that the brief IS his product — the whole app should orbit around producing and using briefs.
+        </div>
+
+        <div>
+          <div class="variant-section-label">Proposed nav</div>
+          <ul class="variant-nav-tree">
+            <li><div class="nav-l1" data-hero="true"><span class="nav-l1-icon">📋</span> Briefs <span class="nav-badge new">NEW L1</span></div>
+              <ul>
+                <li>Today's meeting brief 📌</li>
+                <li>This week's briefs</li>
+                <li>Any partner brief (search)</li>
+                <li>Brief templates</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🤝</span> Partners</div>
+              <ul>
+                <li>Directory · click opens brief</li>
+                <li>Segments · groups · messages</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎁</span> Bonuses &amp; Contracts <span class="nav-badge new">retention L1</span></div>
+              <ul>
+                <li>Bonuses issued / due</li>
+                <li>Contract renewals</li>
+                <li>Rate change planner</li>
+              </ul>
+            </li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🎬</span> Content</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">📊</span> Analytics <span class="nav-note">embedded in briefs</span></div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">💸</span> Finance</div></li>
+            <li><div class="nav-l1"><span class="nav-l1-icon">🛡</span> Protect</div></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
