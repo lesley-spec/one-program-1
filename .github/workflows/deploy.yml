@@ -46,6 +46,7 @@ jobs:
           cp dashboard2.html dist/ || true
           cp nextGenDash.html dist/ || true
           cp persona-nav-prototypes.html dist/ || true
+          cp personas.html dist/ || true
           # Shared static assets the wireframes reference (logo, etc.).
           # Vite's build also writes to dist/assets/ with hashed filenames,
           # so this merge is collision-free.
