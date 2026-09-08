@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import {
+  AI_NARRATIVE_PIN,
   getPinnedNavReports,
   PINNED_NAV_EVENT,
   type PinnedNavReport,
@@ -28,6 +29,7 @@ interface PrimaryItem {
   secondary?: SecondaryItem[];
 }
 
+const PARTNER_DASHBOARD_PATH = AI_NARRATIVE_PIN.path;
 const AI_GENERATED_KEY = "reports-ai-generated";
 
 const baseNavStructure: PrimaryItem[] = [
@@ -171,7 +173,6 @@ function buildNavStructure(pinned: PinnedNavReport[]): PrimaryItem[] {
     const overviewIdx = secondary.findIndex((s) => s.navKey === "reports-overview");
     const insertAt = overviewIdx >= 0 ? overviewIdx + 1 : 0;
 
-    /* Only show Partner Dashboard under AI Generated when pinned — otherwise More Reports only */
     if (uniquePinned.length > 0) {
       secondary.splice(insertAt, 0, {
         navKey: AI_GENERATED_KEY,
@@ -183,6 +184,12 @@ function buildNavStructure(pinned: PinnedNavReport[]): PrimaryItem[] {
           path: p.path,
           indent: true,
         })),
+      });
+    } else {
+      secondary.splice(insertAt, 0, {
+        navKey: "reports-partner-dashboard",
+        label: "Partner Dashboard",
+        path: PARTNER_DASHBOARD_PATH,
       });
     }
 
