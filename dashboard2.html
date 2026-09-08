@@ -122,6 +122,88 @@
     --info-text: var(--info-default);
   }
 
+  /* ── DARK THEME (matches React AppShell / index.html) ── */
+  html.dark {
+    --background: #121212;
+    --background-subdued: #1A1A1A;
+    --foreground: #F5F5F5;
+    --muted: #2A2A2A;
+    --muted-foreground: #A7A7A7;
+    --accent: #1E82DC;
+    --accent-hover: #006ECA;
+    --accent-pressed: #005AAA;
+
+    --border-default: #3C414B;
+    --border-strong: #6E737D;
+
+    --text-default: #F5F5F5;
+    --text-subdued: #A7A7A7;
+    --text-disabled: #6E737D;
+    --text-interactive: #64A0FF;
+
+    --surface-default: #1E1E1E;
+    --surface-subdued: #1A1A1A;
+    --surface-hover: #2A2A2A;
+
+    --sidebar: #121212;
+    --sidebar-panel: #1E1E1E;
+    --sidebar-accent: #283C5A;
+    --sidebar-accent-foreground: #64A0FF;
+    --sidebar-foreground: #FFFFFF;
+
+    --button-primary: #006ECA;
+    --button-primary-hover: #1E82DC;
+
+    --positive: #4ADE80;
+    --positive-bg: #143C28;
+    --negative: #F87171;
+    --negative-bg: #461414;
+    --caution: #FBBF24;
+    --caution-bg: #3C280A;
+    --info-default: #64A0FF;
+    --info-bg: #283C5A;
+
+    --ai-background: #281E3C;
+    --ai-foreground: #C8B4FF;
+    --ai-border: #645096;
+    --ai-accent: #A078E6;
+
+    --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0px 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0px 4px 6px rgba(0, 0, 0, 0.45);
+    --shadow-xl: 0px 20px 25px rgba(0, 0, 0, 0.55);
+
+    --d2-topnav-bg: #323742;
+    --d2-topnav-fg: #F5F7FA;
+    --d2-sidebar: #323742;
+    --d2-sidebar-panel: #1E1E1E;
+    --d2-sidebar-fg: #F5F5F5;
+    --d2-sidebar-accent: #283C5A;
+    --d2-sidebar-accent-fg: #64A0FF;
+    --d2-icon-rail-bg: #323742;
+    --d2-icon-rail-fg: #C8CDD6;
+    --d2-icon-rail-active-bg: #283C5A;
+    --d2-icon-rail-active-fg: #64A0FF;
+    --d2-finance-bg: #3C414B;
+    --d2-muted-fg: #A7A7A7;
+  }
+
+  html.dark .d2-brand-pill,
+  html.dark .d2-persona-select {
+    background: #2A2A2A;
+    color: #F5F5F5;
+    border-color: #3C414B;
+  }
+  html.dark .d2-brand-name { color: #F5F5F5; }
+  html.dark .d2-brand-sub { color: #A7A7A7; }
+  html.dark .d2-icon-btn:hover { background: rgba(255, 255, 255, 0.08); }
+  html.dark .d2-primary:hover,
+  html.dark .d2-secondary:hover,
+  html.dark .d2-rail-item:hover { background: rgba(255, 255, 255, 0.06); }
+  html.dark .d2-theme-toggle { color: #F5F7FA; }
+  html.dark .d2-theme-toggle .icon-sun { display: block; }
+  html.dark .d2-theme-toggle .icon-moon { display: none; }
+
   /* ── GLOBAL RESET ── */
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -5126,8 +5208,10 @@
      continue to fire in v4-v8.
      ════════════════════════════════════════════════════════════ */
 
-  /* Design tokens from src/styles/theme.css (React app) */
+  /* Design tokens aligned to React AppShell light theme (index.html default) */
   :root {
+    --d2-topnav-bg: #EDF1F9;
+    --d2-topnav-fg: #25282F;
     --d2-sidebar: #EDF1F9;
     --d2-sidebar-panel: #F9FBFF;
     --d2-sidebar-fg: #25282F;
@@ -5143,9 +5227,9 @@
     --d2-muted-fg: #606672;
   }
 
-  /* ── Top bar ── */
+  /* ── Top bar (matches AppShell) ── */
   .d2-topnav {
-    background: var(--d2-sidebar);
+    background: var(--d2-topnav-bg) !important;
     border-bottom: 1px solid #DFE5EE;
     padding: 0 16px;
     gap: 16px;
@@ -5176,13 +5260,14 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    overflow: hidden;
   }
+  .d2-brand-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .d2-brand-text { display: flex; flex-direction: column; gap: 0; line-height: 1; }
   .d2-brand-name { font-size: 14px; font-weight: 600; color: var(--d2-sidebar-fg); }
   .d2-brand-sub  { font-size: 10px; line-height: 13px; color: var(--d2-muted-fg); margin-top: 1px; }
   .d2-brand-caret { color: var(--d2-sidebar-fg); opacity: 0.6; flex-shrink: 0; }
 
-  /* Persona switcher restyle for the light topbar */
   .d2-persona-container {
     margin-left: 0;
     display: flex;
@@ -5192,7 +5277,7 @@
   }
   .d2-persona-link {
     background: transparent;
-    color: var(--d2-sidebar-fg);
+    color: var(--d2-topnav-fg);
     font-size: 12px;
     font-weight: 600;
     padding: 6px 12px;
@@ -5217,7 +5302,6 @@
   }
   .d2-persona-select:hover { border-color: var(--d2-sidebar-accent-fg); }
 
-  /* Right-side actions cluster */
   .d2-topnav-actions {
     margin-left: auto;
     display: flex;
@@ -5230,7 +5314,7 @@
     border-radius: 50%;
     background: transparent;
     border: none;
-    color: var(--d2-sidebar-fg);
+    color: var(--d2-topnav-fg);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -5244,7 +5328,7 @@
     top: 8px; right: 8px;
     width: 8px; height: 8px;
     background: var(--d2-badge-count);
-    border: 2px solid var(--d2-sidebar);
+    border: 2px solid var(--d2-topnav-bg);
     border-radius: 50%;
   }
 
@@ -5281,9 +5365,8 @@
   }
   .d2-avatar:hover { opacity: 0.85; background: var(--d2-avatar-bg); }
 
-  /* ── Sidebar shell: icon rail + LeftNav panel side-by-side ── */
+  /* ── Sidebar: icon rail + LeftNav panel (matches AppShell) ── */
   .d2-sidebar {
-    /* Override the wireframe .sidebar defaults so we can host both columns */
     width: 316px !important;
     padding: 0 !important;
     background: var(--d2-sidebar) !important;
@@ -5293,7 +5376,6 @@
     gap: 0 !important;
   }
 
-  /* 64px product icon rail (left column of the sidebar) */
   .d2-icon-rail {
     width: 64px;
     flex-shrink: 0;
@@ -5424,17 +5506,41 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 16px;
-    height: 16px;
-    background: var(--d2-badge-count);
-    color: #FFFFFF;
-    font-size: 10px;
-    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
     padding: 0 5px;
     border-radius: 9999px;
-    margin-left: auto;
-    flex-shrink: 0;
+    background: var(--d2-badge-count, #BF1044);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
   }
+
+  .d2-nav-group { display: flex; flex-direction: column; gap: 2px; }
+  .d2-nav-children {
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .d2-nav-group.open > .d2-nav-children { display: flex; }
+  .d2-nav-group:not(.open) > .d2-primary .d2-primary-caret { transform: none; }
+  .d2-nav-group.open > .d2-primary .d2-primary-caret { content: none; }
+
+  .d2-theme-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--d2-topnav-fg, #25282F);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .d2-theme-toggle:hover { background: rgba(0, 0, 0, 0.04); }
+  .d2-theme-toggle .icon-sun { display: none; }
+  .d2-theme-toggle .icon-moon { display: block; }
 
   /* Adjust layout container so the wider sidebar fits nicely */
   body:not(.variant-v4):not(.variant-v5):not(.variant-v6):not(.variant-v7):not(.variant-v8) .layout {
@@ -5653,8 +5759,7 @@
 <!-- ── TOAST CONTAINER ── -->
 <div class="toast-container" id="toast-container"></div>
 
-<!-- ── TOP NAVIGATION ── -->
-<!-- ── D2 TOP BAR — mirrors the React AppShell chrome ── -->
+<!-- ── TOP NAVIGATION — mirrors React AppShell (index.html) ── -->
 <nav class="topnav d2-topnav">
 
   <!-- Brand / account pill (left) -->
@@ -5732,53 +5837,71 @@
       <svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
 
+    <button
+      type="button"
+      class="d2-theme-toggle"
+      id="d2-theme-toggle"
+      onclick="toggleD2Theme()"
+      aria-label="Toggle light and dark theme"
+      title="Toggle theme"
+    >
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M21 14.3A8.5 8.5 0 0 1 9.7 3a7 7 0 1 0 11.3 11.3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+
     <div class="avatar d2-avatar" id="nav-avatar" onclick="openRoleConfirmModal()">AT</div>
   </div>
 </nav>
 
 <div class="layout">
 
-  <!-- ── D2 SIDEBAR — mirrors the React AppShell (64px icon rail + 252px LeftNav panel) ── -->
+  <!-- ── SIDEBAR — mirrors React AppShell (64px icon rail + 252px LeftNav) ── -->
   <aside class="sidebar d2-sidebar">
 
-    <!-- 64px product icon rail (Engage / Discover / Optimize / Protect / Insights) -->
     <div class="d2-icon-rail">
-      <button class="d2-rail-item active" onclick="showToast('Engage...', 'info')" title="Engage">
+      <button class="d2-rail-item active" onclick="selectD2Rail(this, 'Engage', '/dashboard/digest')" title="Engage">
         <span class="d2-rail-icon">🤝</span>
         <span class="d2-rail-label">Engage</span>
       </button>
-      <button class="d2-rail-item" onclick="showToast('Discover...', 'info')" title="Discover">
+      <button class="d2-rail-item" onclick="selectD2Rail(this, 'Discover', '/partners')" title="Discover">
         <span class="d2-rail-icon">🔎</span>
         <span class="d2-rail-label">Discover</span>
       </button>
-      <button class="d2-rail-item" onclick="showToast('Optimize...', 'info')" title="Optimize">
+      <button class="d2-rail-item" onclick="selectD2Rail(this, 'Optimize', '/reports/overview')" title="Optimize">
         <span class="d2-rail-icon">📈</span>
         <span class="d2-rail-label">Optimize</span>
       </button>
-      <button class="d2-rail-item" onclick="showToast('Protect...', 'info')" title="Protect">
+      <button class="d2-rail-item" onclick="selectD2Rail(this, 'Protect', '/contracts')" title="Protect">
         <span class="d2-rail-icon">🛡</span>
         <span class="d2-rail-label">Protect</span>
       </button>
-      <button class="d2-rail-item" onclick="showToast('Insights...', 'info')" title="Insights">
+      <button class="d2-rail-item" onclick="selectD2Rail(this, 'Insights', '/reports/partner-intelligence')" title="Insights">
         <span class="d2-rail-icon">💡</span>
         <span class="d2-rail-label">Insights</span>
       </button>
     </div>
 
-    <!-- 252px LeftNav panel -->
     <nav class="d2-leftnav">
 
-      <!-- Briefing & Dashboards (expanded by default) -->
-      <div class="d2-primary open" onclick="showToast('Briefing & Dashboards...', 'info')">
-        <span class="d2-primary-label">Briefing &amp; Dashboards</span>
-        <span class="d2-primary-caret d2-primary-caret-open">▾</span>
+      <div class="d2-nav-group open" data-group="briefing">
+        <div class="d2-primary open" onclick="toggleD2NavGroup(this)">
+          <span class="d2-primary-label">Briefing &amp; Dashboards</span>
+          <span class="d2-primary-caret">▾</span>
+        </div>
+        <div class="d2-nav-children">
+          <div class="d2-secondary active" id="nav-dashboard" onclick="selectD2Nav(this, 'Daily Briefing', '/dashboard/digest')">Daily Briefing</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Recruiting Radar', '/dashboard/radar')">Recruiting Radar</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Campaign Command', '/dashboard/command')">Campaign Command</div>
+          <div class="d2-secondary" style="font-weight:600;color:var(--d2-sidebar-accent-fg);" onclick="selectD2Nav(this, 'Focus Mode', 'affiliate-creator-manager-wireframe.html')">Focus Mode</div>
+        </div>
       </div>
-      <div class="d2-secondary" onclick="showToast('Daily Briefing...', 'info')">Daily Briefing</div>
-      <div class="d2-secondary" onclick="showToast('Recruiting Radar...', 'info')">Recruiting Radar</div>
-      <div class="d2-secondary" onclick="showToast('Campaign Command...', 'info')">Campaign Command</div>
 
-      <!-- Focus Jobs — PRESERVED nav-job-* IDs so v1ApplyFocusMode()'s
-           focus-highlight ring and switchPersona()'s badges still work. -->
+      <!-- Focus Jobs — stay on this dashboard and scroll to the matching panel -->
       <div class="d2-section-label">My Focus Jobs</div>
       <div class="d2-secondary" id="nav-job-checkin" onclick="focusJob('checkin')">
         <span class="d2-secondary-icon">📅</span>
@@ -5799,31 +5922,74 @@
         <span class="d2-secondary-label">Creator Campaigns</span>
       </div>
 
-      <!-- Partners (collapsed) -->
-      <div class="d2-primary" onclick="showToast('Partners section...', 'info')">
-        <span class="d2-primary-label">Partners</span>
-        <span class="d2-primary-caret">▸</span>
+      <div class="d2-nav-group" data-group="partners">
+        <div class="d2-primary" onclick="toggleD2NavGroup(this)">
+          <span class="d2-primary-label">Partners</span>
+          <span class="d2-primary-caret">▸</span>
+        </div>
+        <div class="d2-nav-children">
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Partners', '/partners')">Partners</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Groups', '/partners/groups')">Groups</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Contacts', '/partners/contacts')">Contacts</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Messages', '/partners/messages')">Messages</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Applications', '/partners/applications')">Applications<span class="d2-badge">1</span></div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Proposals Sent', '/partners/proposals-sent')">Proposals Sent<span class="d2-badge">1</span></div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Surveys', '/partners/surveys')">Surveys</div>
+        </div>
       </div>
 
-      <!-- Campaign Manager (collapsed) -->
-      <div class="d2-primary" onclick="showToast('Campaign Manager...', 'info')">
-        <span class="d2-primary-label">Campaign Manager</span>
-        <span class="d2-primary-caret">▸</span>
+      <div class="d2-nav-group" data-group="campaigns">
+        <div class="d2-primary" onclick="toggleD2NavGroup(this)">
+          <span class="d2-primary-label">Campaign Manager</span>
+          <span class="d2-primary-caret">▸</span>
+        </div>
+        <div class="d2-nav-children">
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Campaigns', '/campaigns')">Campaigns</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Ad Groups', '/campaigns/ad-groups')">Ad Groups</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Creatives', '/campaigns/creatives')">Creatives</div>
+        </div>
       </div>
 
-      <!-- Analytics (collapsed) -->
-      <div class="d2-primary" onclick="showToast('Analytics...', 'info')">
-        <span class="d2-primary-label">Analytics</span>
-        <span class="d2-primary-caret">▸</span>
+      <div class="d2-nav-group" data-group="analytics">
+        <div class="d2-primary" onclick="toggleD2NavGroup(this)">
+          <span class="d2-primary-label">Analytics</span>
+          <span class="d2-primary-caret">▸</span>
+        </div>
+        <div class="d2-nav-children">
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Overview', '/reports/overview')">Overview</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'AI Narrative Report', '/reports/ai-narrative')">AI Narrative Report</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Partner Intelligence', '/reports/partner-intelligence')">Partner Intelligence</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Data Lab', '/reports/data-lab')">Data Lab</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Action Explorer', '/reports/action-explorer')">Action Explorer</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Program Performance', '/reports/performance')">Program Performance</div>
+          <div class="d2-secondary" style="padding-left:48px;" onclick="selectD2Nav(this, 'By Partner', '/reports/performance/by-partner')">By Partner</div>
+          <div class="d2-secondary" style="padding-left:48px;" onclick="selectD2Nav(this, 'By Day', '/reports/performance/by-day')">By Day</div>
+          <div class="d2-secondary" style="padding-left:48px;" onclick="selectD2Nav(this, 'By Ad', '/reports/performance/by-ad')">By Ad</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Trends', '/reports/trends')">Trends</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Custom', '/reports/custom')">Custom</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'More Reports', '/reports/morereports')">More Reports</div>
+        </div>
       </div>
 
-      <!-- Active Programs — PRESERVED sidebar-prog-* IDs used by switchPersona() -->
+      <div class="d2-nav-group" data-group="transactions">
+        <div class="d2-primary" onclick="toggleD2NavGroup(this)">
+          <span class="d2-primary-label">Transactions</span>
+          <span class="d2-primary-caret">▸</span>
+        </div>
+        <div class="d2-nav-children">
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Actions', '/transactions/actions')">Actions</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Pending Payouts', '/transactions/pending-payouts')">Pending Payouts</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Inquiries', '/transactions/inquiries')">Inquiries</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Test actions', '/transactions/test-actions')">Test actions</div>
+        </div>
+      </div>
+
       <div class="d2-section-label">Active Programs</div>
-      <div class="d2-secondary" id="sidebar-prog-aff" onclick="showToast('Walmart Affiliates...', 'info')">
+      <div class="d2-secondary" id="sidebar-prog-aff" onclick="selectD2Nav(this, 'Walmart Affiliates', '/partners')">
         <span class="d2-secondary-icon">🏷</span>
         <span class="d2-secondary-label">Walmart Affiliates</span>
       </div>
-      <div class="d2-secondary" id="sidebar-prog-cre" onclick="showToast('Walmart Creators...', 'info')">
+      <div class="d2-secondary" id="sidebar-prog-cre" onclick="selectD2Nav(this, 'Walmart Creators', '/partners')">
         <span class="d2-secondary-icon">📦</span>
         <span class="d2-secondary-label">Walmart Creators</span>
       </div>
@@ -5832,15 +5998,19 @@
         <span class="d2-secondary-label">Add Program</span>
       </div>
 
-      <!-- Content -->
-      <div class="d2-primary" onclick="showToast('Content...', 'info')">
-        <span class="d2-primary-label">Content</span>
-      </div>
+      <div class="d2-secondary" onclick="selectD2Nav(this, 'Content', '/content')">Content</div>
 
-      <!-- Contracts -->
-      <div class="d2-primary" onclick="showToast('Contracts...', 'info')">
-        <span class="d2-primary-label">Contracts</span>
-        <span class="d2-primary-caret">▸</span>
+      <div class="d2-nav-group" data-group="contracts">
+        <div class="d2-primary" onclick="toggleD2NavGroup(this)">
+          <span class="d2-primary-label">Contracts</span>
+          <span class="d2-primary-caret">▸</span>
+        </div>
+        <div class="d2-nav-children">
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Template Terms', '/contracts/template-terms')">Template Terms</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Custom Terms', '/contracts/custom-terms')">Custom Terms</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Contracts', '/contracts')">Contracts</div>
+          <div class="d2-secondary" onclick="selectD2Nav(this, 'Changes', '/contracts/changes')">Changes<span class="d2-badge">3</span></div>
+        </div>
       </div>
 
     </nav>
@@ -7739,14 +7909,20 @@
     document.getElementById('page-title').innerText = personaData.greeting;
     document.getElementById('page-subtitle').innerText = personaData.subtitle;
 
-    // Sidebar items
-    document.getElementById('sidebar-prog-aff').innerHTML = `<span class="sidebar-icon">🏷</span> ${personaData.programAffiliate}`;
-    document.getElementById('sidebar-prog-cre').innerHTML = `<span class="sidebar-icon">📦</span> ${personaData.programCreator}`;
+    // Sidebar program labels (preserve d2 secondary structure)
+    const affEl = document.getElementById('sidebar-prog-aff');
+    const creEl = document.getElementById('sidebar-prog-cre');
+    if (affEl) {
+      affEl.innerHTML = `<span class="d2-secondary-icon">🏷</span><span class="d2-secondary-label">${personaData.programAffiliate}</span>`;
+    }
+    if (creEl) {
+      creEl.innerHTML = `<span class="d2-secondary-icon">📦</span><span class="d2-secondary-label">${personaData.programCreator}</span>`;
+    }
 
     // Highlight the primary Focus Job for the persona in the sidebar
-    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active', 'focus-highlight'));
-    const firstItem = document.querySelector('.sidebar .sidebar-item');
-    if (firstItem) firstItem.classList.add('active'); // dashboard active
+    clearD2NavHighlights();
+    const dashItem = document.getElementById('nav-dashboard');
+    if (dashItem) dashItem.classList.add('active');
     
     const priorityJobEl = document.getElementById(`nav-job-${personaData.sidebarFocus}`);
     if (priorityJobEl) {
@@ -8013,7 +8189,8 @@
     if (deltaEl) deltaEl.innerHTML = kpi.deltaHtml || '';
 
     // 4) Sidebar focus highlight — moves the ring to the matching nav-job-* item.
-    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('focus-highlight'));
+    clearD2NavHighlights({ keepActive: true });
+    document.querySelectorAll('.sidebar-item, .d2-secondary').forEach(el => el.classList.remove('focus-highlight'));
     if (mode.sidebarFocus) {
       const sideEl = document.getElementById(`nav-job-${mode.sidebarFocus}`);
       if (sideEl) sideEl.classList.add('focus-highlight');
@@ -8591,9 +8768,9 @@
 
   // Focus a specific Job in the layout (visual highlight)
   function focusJob(jobKey) {
-    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+    clearD2NavHighlights();
     const item = document.getElementById(`nav-job-${jobKey}`);
-    if (item) item.classList.add('active');
+    if (item) item.classList.add('active', 'focus-highlight');
     
     // Smooth scroll down to corresponding panel
     let targetCardId = '';
@@ -8609,8 +8786,70 @@
       setTimeout(() => {
         targetEl.style.transform = '';
       }, 1000);
+    } else {
+      showToast(`Opened ${jobKey} focus`, 'info');
     }
   }
+
+  function clearD2NavHighlights(opts = {}) {
+    document.querySelectorAll('.sidebar-item, .d2-secondary').forEach(el => {
+      el.classList.remove('focus-highlight');
+      if (!opts.keepActive) el.classList.remove('active');
+    });
+  }
+
+  function toggleD2NavGroup(primaryEl) {
+    const group = primaryEl.closest('.d2-nav-group');
+    if (!group) return;
+    const willOpen = !group.classList.contains('open');
+    group.classList.toggle('open', willOpen);
+    primaryEl.classList.toggle('open', willOpen);
+    const caret = primaryEl.querySelector('.d2-primary-caret');
+    if (caret) caret.textContent = willOpen ? '▾' : '▸';
+  }
+
+  function selectD2Nav(el, label, path) {
+    clearD2NavHighlights();
+    if (el) el.classList.add('active');
+    navigateD2Screen(path, label);
+  }
+
+  function selectD2Rail(btn, label, path) {
+    document.querySelectorAll('.d2-rail-item').forEach(el => el.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    navigateD2Screen(path, label);
+  }
+
+  /** Open the real Brand UI screen (React SPA) or a static HTML prototype. */
+  function navigateD2Screen(path, label) {
+    if (!path) {
+      showToast(`Opened ${label || 'screen'}`, 'info');
+      return;
+    }
+    // Static HTML pages in this folder
+    if (/\.html(?:$|[?#])/.test(path)) {
+      window.location.href = path;
+      return;
+    }
+    // React app routes live on index.html hash router
+    const route = path.startsWith('/') ? path : `/${path}`;
+    window.location.href = `./index.html#${route}`;
+  }
+
+  function toggleD2Theme() {
+    const root = document.documentElement;
+    const nextDark = !root.classList.contains('dark');
+    root.classList.toggle('dark', nextDark);
+    try { localStorage.setItem('d2-theme', nextDark ? 'dark' : 'light'); } catch (e) {}
+    showToast(nextDark ? 'Dark theme' : 'Light theme', 'info');
+  }
+
+  (function initD2Theme() {
+    try {
+      const saved = localStorage.getItem('d2-theme');
+      if (saved === 'dark') document.documentElement.classList.add('dark');
+    } catch (e) {}
+  })();
 
   // Render context banner based on persona
   // Inline SVG icon set for the styleguide alert banner tones.

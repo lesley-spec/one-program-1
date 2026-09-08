@@ -81,11 +81,14 @@ export function AppShell({ leftNav, children }: AppShellProps) {
   let activeProduct = "engage";
   if (location.pathname.startsWith("/partners")) {
     activeProduct = "discover";
-  } else if (location.pathname.startsWith("/reports") || location.pathname.startsWith("/transactions") || location.pathname.startsWith("/finance")) {
+  } else if (location.pathname.startsWith("/transactions") || location.pathname.startsWith("/finance")) {
     activeProduct = "optimize";
   } else if (location.pathname.startsWith("/contracts")) {
     activeProduct = "protect";
-  } else if (location.pathname.includes("radar") || location.pathname.includes("partner-intelligence")) {
+  } else if (
+    !location.pathname.startsWith("/reports") &&
+    (location.pathname.includes("radar") || location.pathname.includes("partner-intelligence"))
+  ) {
     activeProduct = "insights";
   }
 

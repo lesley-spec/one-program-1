@@ -45,6 +45,7 @@ import { MoreReportsPage } from "./pages/MoreReportsPage";
 import { DashboardDigestPage } from "./pages/DashboardDigestPage";
 import { DashboardRadarPage } from "./pages/DashboardRadarPage";
 import { DashboardCommandPage } from "./pages/DashboardCommandPage";
+import { AiNarrativeReportPage } from "./pages/AiNarrativeReportPage";
 
 export const router = createHashRouter([
   {
@@ -52,6 +53,7 @@ export const router = createHashRouter([
     Component: RootLayout,
     children: [
       { index: true, Component: DashboardPage },
+      { path: "reports/ai-narrative", Component: AiNarrativeReportPage },
       { path: "dashboard/digest", Component: DashboardDigestPage },
       { path: "dashboard/radar", Component: DashboardRadarPage },
       { path: "dashboard/command", Component: DashboardCommandPage },
