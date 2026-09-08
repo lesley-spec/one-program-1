@@ -1,10 +1,10 @@
 import { useState, useMemo, useRef, useEffect } from "react";
+import { useNavigate } from "react-router";
 import {
   Search,
   Heart,
   MoreHorizontal,
   Eye,
-  Pin,
   FolderPlus,
   Save,
   Clock,
@@ -12,9 +12,16 @@ import {
   CheckCircle2,
   Circle,
   LayoutGrid,
+  Sparkles,
 } from "lucide-react";
 import svgPaths from "../../imports/svg-m48z0ftoro";
 import { ManageCategoriesSlideout } from "./ManageCategoriesSlideout";
+import {
+  AI_NARRATIVE_PIN,
+  isNavReportPinned,
+  PINNED_NAV_EVENT,
+  toggleNavReportPin,
+} from "../pinnedNavReports";
 
 /* ═══════════════════════════════════════════════════════════
    Types & Data
@@ -27,10 +34,25 @@ interface Report {
   category: string;
   pinned: boolean;
   favorited: boolean;
+  /** When set, View navigates here */
+  path?: string;
+  /** When true, Pin toggles the shared sidenav pin (Partner Dashboard) */
+  navPin?: boolean;
 }
 
+const PARTNER_DASHBOARD_REPORT_ID = AI_NARRATIVE_PIN.id;
+
 const REPORTS: Report[] = [
-  { id: "1", name: "Performance by Partner", description: "Shows listing of each action at the individual SKU level.", category: "My Own Category", pinned: false, favorited: true },
+  {
+    id: PARTNER_DASHBOARD_REPORT_ID,
+    name: "Partner Dashboard",
+    description: "AI-generated Brand performance story with editable prompt and regenerate.",
+    category: "AI Generated",
+    pinned: false,
+    favorited: true,
+    path: AI_NARRATIVE_PIN.path,
+    navPin: true,
+  },
   { id: "2", name: "Action Listing by Clearing Date", description: "Displays data for each individual action that has been credited...", category: "My Own Category", pinned: false, favorited: false },
   { id: "3", name: "Action Risk Listing", description: "-", category: "My Own Category", pinned: false, favorited: false },
   { id: "4", name: "Aalap's Report", description: "Weekly Dashboard", category: "Performance", pinned: false, favorited: false },
@@ -44,14 +66,14 @@ const REPORTS: Report[] = [
 ];
 
 const FAVORITED_REPORTS = [
+  { id: "f0", name: "Partner Dashboard", category: "AI Generated" },
   { id: "f1", name: "Performance by Partner", category: "Performance" },
   { id: "f2", name: "Les Perf Dash", category: "Performance" },
   { id: "f3", name: "Albert Finance Dashboard", category: "Performance" },
   { id: "f4", name: "Benchmark Report", category: "Performance" },
-  { id: "f5", name: "Benchmark Report", category: "Performance" },
 ];
 
-const CATEGORIES = ["My Own Category", "Performance", "Built", "Listing"];
+const CATEGORIES = ["AI Generated", "My Own Category", "Performance", "Built", "Listing"];
 
 /* ═══════════════════════════════════════════════════════════
    Context Menu
@@ -60,11 +82,17 @@ const CATEGORIES = ["My Own Category", "Performance", "Built", "Listing"];
 function ContextMenu({
   x,
   y,
+  report,
   onClose,
+  onView,
+  onPinToNav,
 }: {
   x: number;
   y: number;
+  report: Report;
   onClose: () => void;
+  onView: () => void;
+  onPinToNav: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -76,13 +104,19 @@ function ContextMenu({
     return () => document.removeEventListener("mousedown", handleClick);
   }, [onClose]);
 
+  const pinLabel = report.navPin
+    ? report.pinned
+      ? "Unpin from sidenav"
+      : "Pin to sidenav"
+    : "Pin to nav";
+
   const items = [
-    { icon: Eye, label: "View" },
-    { icon: Heart, label: "Favorite" },
-    { icon: Navigation, label: "Pin to nav" },
-    { icon: FolderPlus, label: "Add to category" },
-    { icon: Save, label: "Saves" },
-    { icon: Clock, label: "Schedules" },
+    { icon: Eye, label: "View", onClick: onView },
+    { icon: Heart, label: "Favorite", onClick: onClose },
+    { icon: Navigation, label: pinLabel, onClick: onPinToNav },
+    { icon: FolderPlus, label: "Add to category", onClick: onClose },
+    { icon: Save, label: "Saves", onClick: onClose },
+    { icon: Clock, label: "Schedules", onClick: onClose },
   ];
 
   return (
@@ -102,13 +136,17 @@ function ContextMenu({
       {items.map((item) => (
         <button
           key={item.label}
+          type="button"
           className="w-full flex items-center gap-[10px] px-[14px] py-[8px] font-['Sarabun',sans-serif] text-[14px] leading-[18px] cursor-pointer transition-colors hover:opacity-80"
           style={{
             color: "var(--foreground)",
             fontWeight: "var(--font-weight-normal)",
             background: "transparent",
           }}
-          onClick={onClose}
+          onClick={() => {
+            item.onClick();
+            onClose();
+          }}
         >
           <item.icon size={14} style={{ color: "var(--muted-foreground)" }} />
           {item.label}
@@ -144,11 +182,16 @@ function HeartFilledIcon({ className }: { className?: string }) {
    ═══════════════════════════════════════════════════════════ */
 
 export function MoreReports() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
-  const [reports, setReports] = useState(REPORTS);
+  const [reports, setReports] = useState(() =>
+    REPORTS.map((r) =>
+      r.navPin ? { ...r, pinned: isNavReportPinned(AI_NARRATIVE_PIN.id) } : r,
+    ),
+  );
   const [showManageCategories, setShowManageCategories] = useState(false);
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -167,6 +210,22 @@ export function MoreReports() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  /* Keep Partner Dashboard pin in sync with sidenav pin store */
+  useEffect(() => {
+    const sync = () => {
+      const pinned = isNavReportPinned(AI_NARRATIVE_PIN.id);
+      setReports((prev) =>
+        prev.map((r) => (r.navPin ? { ...r, pinned } : r)),
+      );
+    };
+    window.addEventListener(PINNED_NAV_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(PINNED_NAV_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
   const filteredReports = useMemo(() => {
     return reports.filter((r) => {
       const matchSearch =
@@ -180,17 +239,39 @@ export function MoreReports() {
     });
   }, [reports, searchQuery, selectedCategories]);
 
-  const togglePin = (id: string) => {
+  const handleView = (report: Report) => {
+    if (report.path) {
+      navigate(report.path);
+      return;
+    }
+  };
+
+  const handleGenerate = (report: Report) => {
+    if (report.path) {
+      navigate(`${report.path}?generate=1`);
+      return;
+    }
+  };
+
+  const handlePin = (report: Report) => {
+    if (report.navPin) {
+      toggleNavReportPin(AI_NARRATIVE_PIN);
+      return;
+    }
     setReports((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, pinned: !r.pinned } : r))
+      prev.map((r) => (r.id === report.id ? { ...r, pinned: !r.pinned } : r)),
     );
   };
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat],
     );
   };
+
+  const contextReport = contextMenu
+    ? reports.find((r) => r.id === contextMenu.reportId) ?? null
+    : null;
 
   return (
     <div className="flex flex-col gap-[20px] w-full">
@@ -474,15 +555,17 @@ export function MoreReports() {
           >
             {/* Name */}
             <div className="flex items-center px-[8px] overflow-hidden">
-              <p
-                className="font-['Sarabun',sans-serif] text-[12px] leading-[15px] overflow-hidden text-ellipsis whitespace-nowrap"
+              <button
+                type="button"
+                className="font-['Sarabun',sans-serif] text-[12px] leading-[15px] overflow-hidden text-ellipsis whitespace-nowrap text-left cursor-pointer bg-transparent border-0 p-0"
                 style={{
                   color: "var(--foreground)",
                   fontWeight: "var(--font-weight-medium)",
                 }}
+                onClick={() => handleView(report)}
               >
                 {report.name}
-              </p>
+              </button>
             </div>
 
             {/* Description */}
@@ -513,49 +596,69 @@ export function MoreReports() {
             </div>
 
             {/* Pinned + Actions */}
-            <div className="flex items-center gap-[6px] px-[8px] justify-end">
-              {/* Row action buttons visible on hover */}
-              <div className="hidden group-hover:flex items-center gap-[4px]">
+            <div className="flex items-center gap-[6px] px-[8px] justify-end relative min-h-[40px]">
+              {/* Row hover actions — View / Generate / Pin / more */}
+              <div className="hidden group-hover:flex items-center gap-[8px]">
                 <button
-                  className="h-[28px] px-[12px] rounded-[var(--radius-button)] flex items-center justify-center cursor-pointer font-['Sarabun',sans-serif] text-[12px] leading-[15px]"
+                  type="button"
+                  className="h-[32px] min-w-[65px] px-[16px] rounded-[var(--radius-button,9999px)] flex items-center justify-center cursor-pointer font-['Sarabun',sans-serif] text-[14px] leading-[18px] border-0"
                   style={{
-                    background: "var(--button-primary)",
-                    color: "var(--button-primary-foreground)",
-                    fontWeight: "var(--font-weight-medium)",
+                    background: "var(--button-primary, #1D66DE)",
+                    color: "var(--button-primary-foreground, #fff)",
+                    fontWeight: 600,
                   }}
+                  onClick={() => handleView(report)}
                 >
                   View
                 </button>
                 <button
-                  className="h-[28px] px-[8px] rounded-[var(--radius-button)] flex items-center justify-center cursor-pointer font-['Sarabun',sans-serif] text-[12px]"
+                  type="button"
+                  className="h-[32px] min-w-[65px] px-[16px] rounded-[var(--radius-button,9999px)] flex items-center justify-center gap-[8px] cursor-pointer font-['Sarabun',sans-serif] text-[14px] leading-[18px]"
                   style={{
-                    background: "transparent",
+                    background: "var(--muted)",
+                    border: "1px solid var(--muted)",
+                    color: "var(--foreground)",
+                    fontWeight: 600,
+                  }}
+                  onClick={() => handleGenerate(report)}
+                >
+                  <Sparkles size={16} />
+                  Generate
+                </button>
+                {report.navPin && (
+                  <button
+                    type="button"
+                    className="h-[32px] min-w-[65px] px-[16px] rounded-[var(--radius-button,9999px)] flex items-center justify-center gap-[8px] cursor-pointer font-['Sarabun',sans-serif] text-[14px] leading-[18px]"
+                    style={{
+                      background: "var(--muted)",
+                      border: "1px solid var(--muted)",
+                      color: "var(--foreground)",
+                      fontWeight: 600,
+                    }}
+                    onClick={() => handlePin(report)}
+                  >
+                    <Navigation size={16} />
+                    {report.pinned ? "Unpin" : "Pin"}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="size-[32px] rounded-[var(--radius-button,9999px)] flex items-center justify-center cursor-pointer"
+                  style={{
+                    background: "var(--muted)",
+                    border: "1px solid var(--muted)",
                     color: "var(--foreground)",
                   }}
-                  onClick={() => togglePin(report.id)}
-                >
-                  Pin
-                </button>
-                <button
-                  className="size-[28px] rounded-[var(--radius-button)] flex items-center justify-center cursor-pointer"
-                  style={{ background: "transparent", color: "var(--foreground)" }}
-                  onClick={() => togglePin(report.id)}
-                >
-                  <Heart size={14} />
-                </button>
-                <button
-                  className="size-[28px] rounded-[var(--radius-button)] flex items-center justify-center cursor-pointer"
-                  style={{ background: "transparent", color: "var(--foreground)" }}
                   onClick={(e) => {
                     const rect = e.currentTarget.getBoundingClientRect();
                     setContextMenu({
-                      x: rect.right,
-                      y: rect.bottom,
+                      x: Math.min(rect.right - 160, window.innerWidth - 180),
+                      y: rect.bottom + 4,
                       reportId: report.id,
                     });
                   }}
                 >
-                  <MoreHorizontal size={14} />
+                  <MoreHorizontal size={16} />
                 </button>
               </div>
               {/* Pin indicator when not hovering */}
@@ -578,11 +681,14 @@ export function MoreReports() {
       </div>
 
       {/* Context Menu */}
-      {contextMenu && (
+      {contextMenu && contextReport && (
         <ContextMenu
           x={contextMenu.x}
           y={contextMenu.y}
+          report={contextReport}
           onClose={() => setContextMenu(null)}
+          onView={() => handleView(contextReport)}
+          onPinToNav={() => handlePin(contextReport)}
         />
       )}
 
