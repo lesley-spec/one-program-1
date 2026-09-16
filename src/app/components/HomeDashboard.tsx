@@ -1,9 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router";
 import {
   AreaChart,
   Area,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -59,6 +58,15 @@ const METRICS = [
 
 /* ── To Do items ── */
 const TODO_ITEMS = [
+  {
+    id: "tq",
+    icon: "document" as const,
+    text: "Review tracking quality — 3 checks need attention",
+    badge: "Action needed",
+    action: "Open report",
+    dismiss: true,
+    to: "/tracking-quality",
+  },
   {
     id: "1",
     icon: "progress" as const,
@@ -189,22 +197,25 @@ function DocumentIcon() {
   );
 }
 
-function LineChartIcon() {
-  return (
-    <svg className="size-[16px]" viewBox="0 0 16 16" fill="none">
-      <path d={svgPaths.p275e4300} fill="var(--accent)" />
-      <path d={svgPaths.pa301c00} fill="var(--accent)" />
-      <path clipRule="evenodd" d={svgPaths.p17f4c200} fill="var(--accent)" fillRule="evenodd" />
-    </svg>
-  );
-}
+/** Figma Program Health area fill (Reporting chart) */
+const CHART_AREA_FILL = "#56B5FF";
 
-function BarChartIcon() {
+function AiInsightsIcon() {
   return (
-    <svg className="size-[16px]" viewBox="0 0 16 16.1778" fill="none">
-      <path clipRule="evenodd" d={svgPaths.p155b0380} fill="var(--muted-foreground)" fillRule="evenodd" />
-      <path clipRule="evenodd" d={svgPaths.p14920300} fill="var(--muted-foreground)" fillRule="evenodd" />
-      <path clipRule="evenodd" d={svgPaths.p17859a00} fill="var(--muted-foreground)" fillRule="evenodd" />
+    <svg
+      className="size-[16px] shrink-0"
+      viewBox="0 0 16 16.2502"
+      fill="none"
+      aria-hidden
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M14.7167 7.56226C14.5864 8.63797 14.0726 9.537 13.6103 10.1853C13.3698 10.5224 12.9016 10.6006 12.5644 10.3601C12.2275 10.1195 12.1492 9.65133 12.3896 9.31421C12.6445 8.95668 12.8749 8.56268 13.0341 8.14233C13.641 8.05944 14.2094 7.85816 14.7167 7.56226Z" fill="currentColor" />
+      <path d="M8.49994 0.298585C8.72227 0.298585 8.93942 0.318322 9.15131 0.354249C8.73832 0.769287 8.40377 1.26259 8.17279 1.8103C5.51436 1.98243 3.25025 4.22779 3.24994 6.81616C3.24994 7.74734 3.50972 8.61732 3.96185 9.36011C4.17712 9.71377 4.06531 10.1749 3.71185 10.3904C3.35804 10.6058 2.89598 10.4932 2.6806 10.1394C2.09005 9.16906 1.74994 8.03077 1.74994 6.81616C1.75026 3.22376 4.94617 0.298585 8.49994 0.298585Z" fill="currentColor" />
+      <path d="M8.25 8.34363C7.46913 8.34363 6.79947 7.94888 6.26953 7.39246C5.98398 7.09259 5.99523 6.61758 6.29492 6.33192C6.5948 6.04637 7.0698 6.05762 7.35547 6.35731C7.7059 6.72532 8.0088 6.84363 8.25 6.84363C8.4912 6.84363 8.7941 6.72533 9.14453 6.35731C9.4302 6.05762 9.9052 6.04637 10.2051 6.33192C10.5048 6.61758 10.516 7.09259 10.2305 7.39246C9.70053 7.94888 9.03087 8.34363 8.25 8.34363Z" fill="currentColor" />
+      <path d="M11.0016 10.4374C11.0967 10.4374 11.2009 10.437 11.2897 10.4423C11.3572 10.4463 11.4507 10.4546 11.5543 10.4823L11.6618 10.5175L11.818 10.5917C12.1165 10.7617 12.3262 11.0543 12.3922 11.3905L12.4127 11.5624L12.4118 11.6737C12.4053 11.7807 12.3844 11.8719 12.3668 11.9374C12.3438 12.0233 12.3101 12.1221 12.2799 12.2128C12.1707 12.5416 12.0795 12.8329 11.9245 13.078C11.6245 13.5519 11.1542 13.8932 10.61 14.0292C10.3284 14.0995 10.0233 14.0936 9.67836 14.0936H6.82094C6.47595 14.0936 6.17088 14.0995 5.8893 14.0292C5.34506 13.8932 4.87479 13.5519 4.57484 13.078C4.4198 12.8329 4.32857 12.5416 4.21938 12.2128C4.18925 12.1221 4.15551 12.0233 4.13246 11.9374C4.10908 11.8502 4.07919 11.7173 4.08656 11.5624L4.10707 11.3905C4.18407 10.9983 4.45654 10.6658 4.83754 10.5175L4.94496 10.4823C5.04856 10.4546 5.14208 10.4463 5.20961 10.4423C5.29839 10.437 5.40256 10.4374 5.4977 10.4374H11.0016ZM5.71059 11.9374C5.79101 12.1739 5.81556 12.2328 5.84242 12.2753C5.93678 12.4244 6.08418 12.5308 6.25356 12.5731C6.31272 12.5879 6.39471 12.5936 6.82094 12.5936H9.67836C10.1046 12.5936 10.1866 12.5879 10.2457 12.5731C10.4151 12.5308 10.5625 12.4244 10.6569 12.2753C10.6837 12.2328 10.7083 12.1739 10.7887 11.9374H5.71059Z" fill="currentColor" />
+      <path d="M8.10244 3.85857C9.79999 3.85857 11.8585 1.7805 11.8585 0.102441C11.8585 -0.0341461 12.1414 -0.0341461 12.1414 0.102441C12.1414 1.72195 14.3072 3.85857 15.8975 3.85857C16.0342 3.85857 16.0342 4.14152 15.8975 4.14152C14.3268 4.14152 12.1414 6.44389 12.1414 7.89752C12.1414 8.03416 11.8585 8.03416 11.8585 7.89752C11.8585 6.44389 9.83901 4.14152 8.10244 4.14152C7.96585 4.14152 7.96585 3.85857 8.10244 3.85857Z" fill="currentColor" />
+      <path d="M11.1416 13.4914L11.0488 13.9563C10.9582 14.4097 10.887 14.8106 10.6992 15.1418C10.4313 15.6142 9.99722 15.9698 9.48145 16.1399C9.2102 16.2293 8.91344 16.2472 8.58691 16.2502H7.91309C7.58656 16.2472 7.2898 16.2293 7.01855 16.1399C6.50278 15.9698 6.0687 15.6142 5.80078 15.1418C5.61295 14.8106 5.54185 14.4097 5.45117 13.9563L5.3584 13.4914L6.8291 13.1965L6.92188 13.6614C7.03433 14.2237 7.06565 14.3313 7.10547 14.4016C7.18968 14.5501 7.32616 14.6626 7.48828 14.7161C7.56503 14.7413 7.67652 14.7502 8.25 14.7502C8.82348 14.7502 8.93497 14.7413 9.01172 14.7161C9.17384 14.6626 9.31032 14.5501 9.39453 14.4016C9.43434 14.3313 9.46567 14.2237 9.57812 13.6614L9.6709 13.1965L11.1416 13.4914Z" fill="currentColor" />
+      <path d="M7.49977 10.828V7.59363C7.49977 7.17942 7.83579 6.84363 8.25 6.84363C8.66421 6.84363 8.99977 7.17942 8.99977 7.59363V10.828C8.99977 11.2422 8.66398 11.578 8.24977 11.578C7.83555 11.578 7.49977 11.2422 7.49977 10.828Z" fill="currentColor" />
     </svg>
   );
 }
@@ -232,7 +243,6 @@ function SecondaryBtn({ children }: { children: React.ReactNode }) {
 
 export function HomeDashboard() {
   const [activeMetric, setActiveMetric] = useState("Clicks");
-  const [chartType, setChartType] = useState<"line" | "bar">("line");
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange>({ from: new Date("2025-01-01"), to: new Date("2025-01-07") });
 
@@ -317,7 +327,25 @@ export function HomeDashboard() {
                         Dismiss
                       </button>
                     )}
-                    <SecondaryBtn>{item.action}</SecondaryBtn>
+                    {"to" in item && item.to ? (
+                      <Link
+                        to={item.to}
+                        className="h-[32px] px-[16px] font-['Sarabun',sans-serif] cursor-pointer transition-colors shrink-0 flex items-center justify-center no-underline"
+                        style={{
+                          borderRadius: "var(--radius-button)",
+                          fontSize: "var(--text-base)",
+                          fontWeight: "var(--font-weight-medium)",
+                          background: "var(--muted)",
+                          color: "var(--foreground)",
+                          border: "1px solid var(--muted)",
+                          minWidth: "65px",
+                        }}
+                      >
+                        {item.action}
+                      </Link>
+                    ) : (
+                      <SecondaryBtn>{item.action}</SecondaryBtn>
+                    )}
                   </div>
                 </div>
               </div>
@@ -340,16 +368,13 @@ export function HomeDashboard() {
           </div>
         </div>
 
-        {/* ── Program Health ── */}
+        {/* ── Program Health (Figma 9487:50121) ── */}
         <div
           className="bg-card w-full flex flex-col"
-          style={{ borderRadius: "var(--radius)", border: "1px solid var(--border)" }}
+          style={{ borderRadius: "var(--radius)", border: "1px solid var(--border-default, var(--border))" }}
         >
-          {/* Header */}
-          <div
-            className="flex items-center justify-between p-[16px]"
-            style={{ borderBottom: "1px solid var(--border)" }}
-          >
+          {/* Header: title + Explore with AI */}
+          <div className="flex items-center justify-between p-[16px]" style={{ borderBottom: "1px solid var(--border-default, var(--border))" }}>
             <span
               className="font-['Sarabun',sans-serif] text-foreground"
               style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-weight-medium)", lineHeight: "23px" }}
@@ -357,220 +382,166 @@ export function HomeDashboard() {
               Program Health
             </span>
             <button
-              className="font-['Sarabun',sans-serif] cursor-pointer"
+              type="button"
+              className="inline-flex items-center justify-center gap-[8px] h-[32px] px-[16px] cursor-pointer shrink-0"
               style={{
+                borderRadius: "var(--radius-button)",
+                fontFamily: FONT,
                 fontSize: "var(--text-base)",
                 fontWeight: "var(--font-weight-medium)",
-                color: "var(--foreground)",
-                background: "none",
+                lineHeight: "18px",
+                color: "var(--text-default, var(--foreground))",
+                background: "transparent",
                 border: "none",
+                minWidth: "65px",
               }}
-              onClick={() => setEditModalOpen(true)}
             >
-              Edit
+              <AiInsightsIcon />
+              Explore with AI
             </button>
           </div>
 
-          {/* Chart section */}
-          <div className="p-[20px] flex flex-col gap-[8px]">
-            {/* Controls row */}
-            <div className="flex items-center justify-between w-full">
-              {/* Date range */}
-              <DateRangeCalendar
-                value={dateRange}
-                onChange={setDateRange}
-              >
-                <span
-                  className="font-['Sarabun',sans-serif] text-foreground"
-                  style={{ fontSize: "var(--text-base)", fontWeight: "var(--font-weight-normal)", lineHeight: "18px" }}
+          {/* Body */}
+          <div className="px-[20px] pb-[20px] flex flex-col gap-[8px]">
+            {/* Controls: date range + Edit */}
+            <div className="flex items-center justify-between w-full pt-[8px]">
+              <DateRangeCalendar value={dateRange} onChange={setDateRange}>
+                <div
+                  className="flex items-center gap-[8px] h-[32px] px-[12px] overflow-hidden"
+                  style={{
+                    borderRadius: "var(--radius)",
+                    border: "1px solid var(--border-interactive, var(--border))",
+                    minWidth: "219px",
+                  }}
                 >
-                  {format(dateRange.from, "MMM dd, yyyy")} - {format(dateRange.to, "MMM dd, yyyy")}
-                </span>
-                <svg className="size-[12px]" viewBox="0 0 12 12" fill="none">
-                  <path
-                    clipRule="evenodd"
-                    d={svgPaths.p17277d00}
-                    fill="var(--foreground)"
-                    fillRule="evenodd"
-                  />
-                </svg>
+                  <span
+                    className="font-['Sarabun',sans-serif] text-foreground whitespace-nowrap"
+                    style={{ fontSize: "var(--text-base)", fontWeight: "var(--font-weight-normal)", lineHeight: "18px" }}
+                  >
+                    {format(dateRange.from, "MMM dd, yyyy")} - {format(dateRange.to, "MMM dd, yyyy")}
+                  </span>
+                  <svg className="size-[12px] shrink-0" viewBox="0 0 12 12" fill="none" aria-hidden>
+                    <path
+                      clipRule="evenodd"
+                      d={svgPaths.p17277d00}
+                      fill="var(--icon-default, var(--muted-foreground))"
+                      fillRule="evenodd"
+                    />
+                  </svg>
+                </div>
               </DateRangeCalendar>
 
-              {/* Chart type toggle */}
-              <div
-                className="flex h-[32px] overflow-hidden"
-                style={{ borderRadius: "var(--radius)", border: "1px solid var(--border)" }}
+              <button
+                type="button"
+                className="font-['Sarabun',sans-serif] cursor-pointer h-[30px] px-[10px] min-w-[65px]"
+                style={{
+                  fontSize: "var(--text-base)",
+                  fontWeight: "var(--font-weight-medium)",
+                  lineHeight: "18px",
+                  color: "var(--text-default, var(--foreground))",
+                  background: "transparent",
+                  border: "none",
+                  borderRadius: "var(--radius)",
+                }}
+                onClick={() => setEditModalOpen(true)}
               >
-                <button
-                  className="flex items-center justify-center size-[32px] cursor-pointer"
-                  style={{
-                    background: chartType === "line" ? "var(--muted)" : "var(--card)",
-                    border: "none",
-                  }}
-                  onClick={() => setChartType("line")}
-                >
-                  <LineChartIcon />
-                </button>
-                <div className="w-px" style={{ background: "var(--border)" }} />
-                <button
-                  className="flex items-center justify-center size-[32px] cursor-pointer"
-                  style={{
-                    background: chartType === "bar" ? "var(--muted)" : "var(--card)",
-                    border: "none",
-                  }}
-                  onClick={() => setChartType("bar")}
-                >
-                  <BarChartIcon />
-                </button>
-              </div>
+                Edit
+              </button>
             </div>
 
-            {/* Chart */}
+            {/* Chart — solid area fill per Figma */}
             <div className="w-full">
-              <ResponsiveContainer width="100%" height={220}>
-                {chartType === "line" ? (
-                  <AreaChart data={CHART_DATA} margin={{ top: 8, right: 0, left: -10, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="var(--accent)" stopOpacity={0.02} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid
-                      strokeDasharray="0"
-                      stroke="var(--muted)"
-                      horizontal={true}
-                      vertical={false}
-                    />
-                    <XAxis
-                      dataKey="day"
-                      tick={{
-                        fill: "var(--muted-foreground)",
-                        fontFamily: FONT,
-                        fontSize: 12,
-                      }}
-                      axisLine={false}
-                      tickLine={false}
-                      interval="preserveStartEnd"
-                    />
-                    <YAxis
-                      tick={{
-                        fill: "var(--muted-foreground)",
-                        fontFamily: FONT,
-                        fontSize: 11,
-                      }}
-                      axisLine={false}
-                      tickLine={false}
-                      tickFormatter={(v: number) => {
-                        const prefix = METRIC_PREFIX[activeMetric] ?? "";
-                        const suffix = METRIC_SUFFIX[activeMetric] ?? "";
-                        if (v >= 1000) return `${prefix}${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}K${suffix}`;
-                        return `${prefix}${v}${suffix}`;
-                      }}
-                    />
-                    <Tooltip
-                      contentStyle={CHART_TOOLTIP_STYLE}
-                      labelStyle={{ color: "var(--foreground)", fontWeight: "var(--font-weight-medium)" }}
-                      formatter={(value: number) => {
-                        const prefix = METRIC_PREFIX[activeMetric] ?? "";
-                        const suffix = METRIC_SUFFIX[activeMetric] ?? "";
-                        return [`${prefix}${value.toLocaleString()}${suffix}`, activeMetric];
-                      }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey={activeMetric}
-                      stroke="var(--accent)"
-                      strokeWidth={2}
-                      fill="url(#colorMetric)"
-                      dot={false}
-                      activeDot={{ r: 4, fill: "var(--accent)", stroke: "var(--card)", strokeWidth: 2 }}
-                    />
-                  </AreaChart>
-                ) : (
-                  <BarChart data={CHART_DATA} margin={{ top: 8, right: 0, left: -10, bottom: 0 }}>
-                    <CartesianGrid
-                      strokeDasharray="0"
-                      stroke="var(--muted)"
-                      horizontal={true}
-                      vertical={false}
-                    />
-                    <XAxis
-                      dataKey="day"
-                      tick={{
-                        fill: "var(--muted-foreground)",
-                        fontFamily: FONT,
-                        fontSize: 12,
-                      }}
-                      axisLine={false}
-                      tickLine={false}
-                      interval="preserveStartEnd"
-                    />
-                    <YAxis
-                      tick={{
-                        fill: "var(--muted-foreground)",
-                        fontFamily: FONT,
-                        fontSize: 11,
-                      }}
-                      axisLine={false}
-                      tickLine={false}
-                      tickFormatter={(v: number) => {
-                        const prefix = METRIC_PREFIX[activeMetric] ?? "";
-                        const suffix = METRIC_SUFFIX[activeMetric] ?? "";
-                        if (v >= 1000) return `${prefix}${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}K${suffix}`;
-                        return `${prefix}${v}${suffix}`;
-                      }}
-                    />
-                    <Tooltip
-                      contentStyle={CHART_TOOLTIP_STYLE}
-                      labelStyle={{ color: "var(--foreground)", fontWeight: "var(--font-weight-medium)" }}
-                      formatter={(value: number) => {
-                        const prefix = METRIC_PREFIX[activeMetric] ?? "";
-                        const suffix = METRIC_SUFFIX[activeMetric] ?? "";
-                        return [`${prefix}${value.toLocaleString()}${suffix}`, activeMetric];
-                      }}
-                    />
-                    <Bar
-                      dataKey={activeMetric}
-                      fill="var(--accent)"
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                )}
+              <ResponsiveContainer width="100%" height={218}>
+                <AreaChart data={CHART_DATA} margin={{ top: 8, right: 8, left: -10, bottom: 0 }}>
+                  <CartesianGrid
+                    strokeDasharray="0"
+                    stroke="var(--border-default, var(--border))"
+                    horizontal
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="day"
+                    tick={{
+                      fill: "var(--text-subdued, var(--muted-foreground))",
+                      fontFamily: FONT,
+                      fontSize: 12,
+                    }}
+                    axisLine={false}
+                    tickLine={false}
+                    interval="preserveStartEnd"
+                  />
+                  <YAxis
+                    domain={[0, 5000]}
+                    ticks={[0, 2500, 5000]}
+                    tick={{
+                      fill: "var(--text-subdued, var(--muted-foreground))",
+                      fontFamily: FONT,
+                      fontSize: 11,
+                    }}
+                    axisLine={false}
+                    tickLine={false}
+                    tickFormatter={(v: number) => {
+                      if (v >= 1000) return `${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}K`;
+                      return `${v}`;
+                    }}
+                  />
+                  <Tooltip
+                    contentStyle={CHART_TOOLTIP_STYLE}
+                    labelStyle={{ color: "var(--foreground)", fontWeight: "var(--font-weight-medium)" }}
+                    formatter={(value: number) => {
+                      const prefix = METRIC_PREFIX[activeMetric] ?? "";
+                      const suffix = METRIC_SUFFIX[activeMetric] ?? "";
+                      return [`${prefix}${value.toLocaleString()}${suffix}`, activeMetric];
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey={activeMetric}
+                    stroke="none"
+                    fill={CHART_AREA_FILL}
+                    fillOpacity={1}
+                    dot={false}
+                    activeDot={{ r: 4, fill: CHART_AREA_FILL, stroke: "var(--card)", strokeWidth: 2 }}
+                  />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
 
-            {/* KPI Metrics row */}
+            {/* KPI metrics — selected uses background-dimmed */}
             <div className="flex w-full" style={{ height: "88px" }}>
-              {METRICS.map((m) => (
-                <button
-                  key={m.label}
-                  className="flex-1 flex flex-col items-center justify-center gap-[6px] p-[10px] cursor-pointer transition-colors"
-                  style={{
-                    borderRadius: activeMetric === m.label ? "var(--radius)" : "0",
-                    background: activeMetric === m.label ? "var(--muted)" : "transparent",
-                    border: "none",
-                  }}
-                  onClick={() => setActiveMetric(m.label)}
-                >
-                  <span
-                    className="font-['Sarabun',sans-serif] text-foreground overflow-hidden text-ellipsis"
-                    style={{ fontSize: "var(--text-base)", fontWeight: "var(--font-weight-medium)", lineHeight: "18px" }}
-                  >
-                    {m.label}
-                  </span>
-                  <span
-                    className="font-['Sarabun',sans-serif] text-foreground"
+              {METRICS.map((m) => {
+                const selected = activeMetric === m.label;
+                return (
+                  <button
+                    key={m.label}
+                    type="button"
+                    className="flex-1 flex flex-col items-center justify-center gap-[6px] p-[10px] cursor-pointer transition-colors"
                     style={{
-                      fontSize: "var(--text-base)",
-                      fontWeight: activeMetric === m.label ? 700 : "var(--font-weight-normal)",
-                      lineHeight: "20px",
+                      borderRadius: selected ? "var(--radius)" : "0",
+                      background: selected ? "var(--background-dimmed)" : "transparent",
+                      border: "none",
                     }}
+                    onClick={() => setActiveMetric(m.label)}
                   >
-                    {m.value}
-                  </span>
-                </button>
-              ))}
+                    <span
+                      className="font-['Sarabun',sans-serif] text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
+                      style={{ fontSize: "var(--text-base)", fontWeight: "var(--font-weight-medium)", lineHeight: "18px" }}
+                    >
+                      {m.label}
+                    </span>
+                    <span
+                      className="font-['Sarabun',sans-serif] text-foreground"
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: 700,
+                        lineHeight: "20px",
+                      }}
+                    >
+                      {m.value}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
