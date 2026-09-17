@@ -139,6 +139,94 @@ function ScoreHero({
   );
 }
 
+/** V4 Alex — 30-day check history (monitor + act) */
+function CheckHistory() {
+  const days = Array.from({ length: 30 }, (_, i) => i);
+  const rows: {
+    name: string;
+    meta: string;
+    pattern: (i: number) => "ok" | "warn" | "bad";
+  }[] = [
+    {
+      name: "Conversion ratio below threshold",
+      meta: "11/30 pass · improved",
+      pattern: (i) => (i < 12 ? "bad" : i < 19 ? "warn" : "ok"),
+    },
+    {
+      name: "LP quality score: 58%",
+      meta: "4/30 pass · improving",
+      pattern: (i) => (i < 20 ? "bad" : i < 26 ? "warn" : "ok"),
+    },
+    {
+      name: "Impact tag on landing pages",
+      meta: "30/30 pass · stable",
+      pattern: () => "ok",
+    },
+  ];
+  const color = {
+    ok: "var(--success-border)",
+    warn: "var(--warning-border)",
+    bad: "var(--error-border)",
+  };
+  return (
+    <div className="flex flex-col gap-[16px] p-[24px]" style={cardStyle}>
+      <div className="flex flex-wrap items-end justify-between gap-[12px]">
+        <div>
+          <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--text-default)" }}>
+            Check history
+          </h2>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)", marginTop: 4 }}>
+            Last 30 days · 1 block per daily scan
+          </p>
+        </div>
+        <div className="flex items-center gap-[16px]" style={{ fontSize: "var(--text-sm)" }}>
+          <span className="flex items-center gap-[6px]">
+            <span className="size-[10px] rounded-full" style={{ background: color.ok }} /> Healthy
+          </span>
+          <span className="flex items-center gap-[6px]">
+            <span className="size-[10px] rounded-full" style={{ background: color.warn }} /> Watch
+          </span>
+          <span className="flex items-center gap-[6px]">
+            <span className="size-[10px] rounded-full" style={{ background: color.bad }} /> Action
+            Needed
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-col gap-[12px]">
+        {rows.map((row) => (
+          <div key={row.name} className="flex flex-col gap-[6px]">
+            <div className="flex flex-wrap items-baseline justify-between gap-[8px]">
+              <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--text-default)" }}>
+                {row.name}
+              </span>
+              <span style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)" }}>{row.meta}</span>
+            </div>
+            <div className="flex gap-[2px]">
+              {days.map((d) => (
+                <div
+                  key={d}
+                  className="flex-1 h-[12px] rounded-[2px]"
+                  style={{ background: color[row.pattern(d)] }}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div
+        className="flex justify-between"
+        style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)" }}
+      >
+        <span>4 Aug</span>
+        <span>11 Aug</span>
+        <span>18 Aug</span>
+        <span>25 Aug</span>
+        <span>2 Sep</span>
+      </div>
+    </div>
+  );
+}
+
 function HeatmapHero() {
   const days = Array.from({ length: 30 }, (_, i) => i);
   const rows = [
@@ -254,6 +342,12 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
       intro:
         "See what’s clear, what needs action, and what to change — same facts CS and Scoring use.",
     },
+    v4: {
+      title: "Tracking quality",
+      subtitle: `Last checked ${BPA.lastChecked} · ${BPA.freshness} · One screen to monitor and act`,
+      intro:
+        "Monitor health over time and act on what matters today — impact-led next steps, not a full audit. Clear checks stay quiet; Action needed leads.",
+    },
     everything: {
       title: "Tracking quality · Full contract",
       subtitle: `All WEB evaluators + setup attributes · Last checked ${BPA.lastChecked}`,
@@ -298,10 +392,14 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
           <ScoreHero
             intro={meta.intro}
             chartTitle={
-              variant === "everything" ? "Score over the last 30 days" : "Score over time"
+              variant === "v4" || variant === "everything"
+                ? "Score over the last 30 days"
+                : "Score over time"
             }
           />
         )}
+
+        {variant === "v4" && <CheckHistory />}
 
         {variant !== "fix-queue" && (
           <div className="flex gap-[8px]">
@@ -385,12 +483,19 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
                   <p style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)" }}>
                     {variant === "everything"
                       ? "Must-tier WEB checks + eligibility. Nothing deferred to a later slice."
-                      : "These essentials set the foundation for reliable tracking."}
+                      : variant === "v4"
+                        ? "Fix these first. Each card shows status, why it matters, and how to get help in Ask Impact."
+                        : "These essentials set the foundation for reliable tracking."}
                   </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px]">
                   {foundations.map((c) => (
-                    <CheckCard key={c.id} check={c} onOpen={openCheck} />
+                    <CheckCard
+                      key={c.id}
+                      check={c}
+                      onOpen={openCheck}
+                      cta={variant === "v4" ? "Chat with Ask Impact →" : undefined}
+                    />
                   ))}
                 </div>
               </section>
@@ -408,7 +513,9 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
                     <p style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)" }}>
                       {variant === "everything"
                         ? "All excellence evaluators including Tracking domain match, Consent Mode, and storage confirmation gates."
-                        : "Once foundations are solid, complete these to strengthen your setup."}
+                        : variant === "v4"
+                          ? "Raise standing once foundations are clear. Open Ask Impact from any card for how-to-meet guidance."
+                          : "Once foundations are solid, complete these to strengthen your setup."}
                     </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px]">
@@ -416,7 +523,12 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
                       ? excellence.filter((c) => c.status !== "clear")
                       : excellence
                     ).map((c) => (
-                      <CheckCard key={c.id} check={c} onOpen={openCheck} />
+                      <CheckCard
+                        key={c.id}
+                        check={c}
+                        onOpen={openCheck}
+                        cta={variant === "v4" ? "Chat with Ask Impact →" : undefined}
+                      />
                     ))}
                   </div>
                 </section>
@@ -473,6 +585,10 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
       {activeCheck && <Slideout check={activeCheck} onClose={closeCheck} />}
     </div>
   );
+}
+
+export function TrackingQualityV4Page() {
+  return <TrackingQualityPage variant="v4" />;
 }
 
 export function TrackingQualityEverythingPage() {

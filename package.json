@@ -3,9 +3,11 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "homepage": "https://lesley-spec.github.io/tracking-quality",
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "deploy": "npm run build && npx gh-pages -d dist --repo https://github.com/lesley-spec/tracking-quality.git --branch gh-pages"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

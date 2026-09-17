@@ -457,7 +457,7 @@ export function Slideout({
   );
 }
 
-export type TqVariant = "v3" | "everything" | "pulse" | "fix-queue";
+export type TqVariant = "v3" | "v4" | "everything" | "pulse" | "fix-queue";
 
 export const VARIANT_META: {
   id: TqVariant;
@@ -466,6 +466,7 @@ export const VARIANT_META: {
   short: string;
 }[] = [
   { id: "v3", path: "/tracking-quality", label: "V3 · Scorecard", short: "V3" },
+  { id: "v4", path: "/tracking-quality/v4", label: "V4 · Monitor + act", short: "V4" },
   {
     id: "everything",
     path: "/tracking-quality/everything",
