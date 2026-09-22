@@ -46,7 +46,7 @@ import { DashboardDigestPage } from "./pages/DashboardDigestPage";
 import { DashboardRadarPage } from "./pages/DashboardRadarPage";
 import { DashboardCommandPage } from "./pages/DashboardCommandPage";
 import { AiNarrativeReportPage } from "./pages/AiNarrativeReportPage";
-import { TrackingQualityPage, TrackingQualityV4Page, TrackingQualityEverythingPage, TrackingQualityPulsePage, TrackingQualityFixQueuePage } from "./pages/TrackingQualityPage";
+import { TrackingQualityPage, TrackingQualityV3Page, TrackingQualityV4Page, TrackingQualityEverythingPage, TrackingQualityPulsePage, TrackingQualityFixQueuePage } from "./pages/TrackingQualityPage";
 
 export const router = createHashRouter([
   {
@@ -55,6 +55,7 @@ export const router = createHashRouter([
     children: [
       { index: true, Component: DashboardPage },
       { path: "tracking-quality", Component: TrackingQualityPage },
+      { path: "tracking-quality/v3", Component: TrackingQualityV3Page },
       { path: "tracking-quality/v4", Component: TrackingQualityV4Page },
       { path: "tracking-quality/everything", Component: TrackingQualityEverythingPage },
       { path: "tracking-quality/pulse", Component: TrackingQualityPulsePage },

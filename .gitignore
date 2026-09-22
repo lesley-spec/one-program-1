@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+*.pid
+.brand-prototype-dev.log
+.brand-prototype-dev.pid
+.datalab-ai-publish/
+.figma/
+.vite/

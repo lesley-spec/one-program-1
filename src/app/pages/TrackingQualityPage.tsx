@@ -4,14 +4,19 @@ import {
   APP_CHECKS,
   BPA,
   CHECKS,
+  MVP_FOCUS,
+  MVP_ON_TRACK,
   PROGRAM_INFO,
   type CheckId,
   type TrafficTab,
   checksForTab,
 } from "./tracking-quality/data";
 import {
+  AskImpactPanel,
   CheckCard,
+  CriteriaActionCard,
   FONT,
+  OnTrackTable,
   PageChrome,
   PrimaryButton,
   ScoreRing,
@@ -23,18 +28,81 @@ import {
   type TqVariant,
 } from "./tracking-quality/shared";
 
-const SCORE_SERIES = [42, 45, 48, 50, 52, 55, 54, 56, 57, 58, 58, 58];
+const SCORE_SERIES = [42, 45, 48, 50, 52, 55, 54, 56, 57, 50, 50, 50];
 
-const FIX_PRIORITY: { id: CheckId; label: string }[] = [
-  { id: "comprehensive_conversion_tracking", label: "P1 · Highest recovery" },
-  { id: "server_side_conversions", label: "P2 · Purchase reliability" },
-  { id: "custom_first_party_identifier_implemented", label: "P3 · Identity coverage" },
-  { id: "consent_mode_implemented", label: "P4 · Confirm when ready" },
+const FIX_PRIORITY: { id: CheckId; label: string; detail: string }[] = [
+  {
+    id: "comprehensive_conversion_tracking",
+    label: "P1 · Highest recovery",
+    detail:
+      "Actions per conversion are running high. Aim for a ratio below 0.6. Fixing this could recover ~40–55 attributed conversions. Chat with Ask Impact →",
+  },
+  {
+    id: "server_side_conversions",
+    label: "P2 · Purchase reliability",
+    detail:
+      "Send Purchase via API or batch — pixel-only still posts on some trackers. Chat with Ask Impact →",
+  },
+  {
+    id: "custom_first_party_identifier_implemented",
+    label: "P3 · Identity coverage",
+    detail:
+      "Custom profile ID fill rate 61% (need ≥90%). Storage confirmation still required for pass. Chat with Ask Impact →",
+  },
+  {
+    id: "consent_mode_implemented",
+    label: "P4 · Confirm when ready",
+    detail:
+      "Confirm Consent Mode is configured if you sell in EEA/UK/CH. Chat with Ask Impact →",
+  },
 ];
 
-function TrackingInfoRail() {
+const LATER_DETAILS: Partial<Record<CheckId, string>> = {
+  landing_page_tracking:
+    "Landing-page tag is on 3.2% of clicks — above the 1% target. No change needed.",
+  verified_landing_page_tracking_quality:
+    "Building data — need ≥1,000 clicks before scoring quality.",
+  cross_device_supported:
+    "Clear at 34% conversion identity (≥20%). Has login still unknown for page-half review.",
+  tracking_domain_match:
+    "Custom tracking domain aligns with your landing page. As-of 12 Jun 2026.",
+};
+
+function TrackingInfoRail({
+  tab,
+  onTab,
+}: {
+  tab: TrafficTab;
+  onTab: (t: TrafficTab) => void;
+}) {
   return (
     <aside className="flex flex-col gap-[4px] p-[16px] h-fit" style={cardStyle}>
+      <div className="flex gap-[8px] mb-[8px]">
+        {(["web", "app"] as TrafficTab[]).map((t) => {
+          const active = tab === t;
+          return (
+            <button
+              key={t}
+              type="button"
+              onClick={() => onTab(t)}
+              className="h-[32px] px-[12px] cursor-pointer capitalize"
+              style={{
+                borderRadius: "var(--radius-button)",
+                border: active
+                  ? "1px solid var(--button-primary)"
+                  : "1px solid var(--border-default)",
+                background: active ? "var(--button-primary)" : "var(--background-on-surface)",
+                color: active ? "var(--button-primary-foreground)" : "var(--text-default)",
+                fontFamily: FONT,
+                fontWeight: "var(--font-weight-medium)",
+                fontSize: "var(--text-sm)",
+              }}
+            >
+              {t}
+            </button>
+          );
+        })}
+      </div>
       <h2
         style={{
           fontSize: "var(--text-lg)",
@@ -69,12 +137,65 @@ function TrackingInfoRail() {
   );
 }
 
+function MvpScoreHero() {
+  return (
+    <div className="flex flex-col lg:flex-row gap-[24px] p-[24px] items-center" style={cardStyle}>
+      <div className="flex items-center gap-[20px] flex-1">
+        <ScoreRing value={BPA.score} size={88} label="" />
+        <div className="flex flex-col gap-[8px] min-w-0">
+          <div className="flex flex-wrap items-center gap-[8px]">
+            <h2
+              style={{
+                fontSize: "var(--text-lg)",
+                fontWeight: 700,
+                color: "var(--text-default)",
+              }}
+            >
+              Tracking quality
+            </h2>
+            <span
+              className="inline-flex items-center h-[24px] px-[8px]"
+              style={{
+                borderRadius: 4,
+                fontFamily: FONT,
+                fontSize: "var(--text-sm)",
+                fontWeight: "var(--font-weight-medium)",
+                background: "var(--warning-bg)",
+                color: "var(--warning-default)",
+              }}
+            >
+              Needs Improvement
+            </span>
+          </div>
+          <p style={{ fontSize: 14, fontWeight: 600, color: "var(--text-default)", margin: 0 }}>
+            P1 · Comprehensive conversion tracking
+          </p>
+          <p style={{ fontSize: 14, color: "var(--text-subdued)", margin: 0, maxWidth: 520 }}>
+            Purchase + Lead gen above partnership bar (84%, 99%). Remove conditional rules → unlocks
+            Good Tracking Foundations.
+          </p>
+        </div>
+      </div>
+      <div
+        className="flex gap-[16px] text-[12px]"
+        style={{ color: "var(--text-subdued)" }}
+      >
+        <span>▲ 0–49</span>
+        <span>■ 50–89</span>
+        <span>● 90–100</span>
+      </div>
+    </div>
+  );
+}
+
 function ScoreHero({
   intro,
   chartTitle = "Score over time",
+  scoreBadge = "action_needed",
 }: {
   intro: string;
   chartTitle?: string;
+  scoreBadge?: "action_needed" | "needs_improvement";
 }) {
   return (
     <div className="flex flex-col lg:flex-row gap-[24px] p-[24px]" style={cardStyle}>
@@ -89,7 +210,24 @@ function ScoreHero({
           >
             Tracking quality score
           </h2>
-          <StatusBadge status="action_needed" />
+          {scoreBadge === "needs_improvement" ? (
+            <span
+              className="inline-flex items-center h-[24px] px-[8px] shrink-0"
+              style={{
+                borderRadius: 4,
+                fontFamily: FONT,
+                fontSize: "var(--text-sm)",
+                fontWeight: "var(--font-weight-medium)",
+                lineHeight: "15px",
+                background: "var(--warning-bg)",
+                color: "var(--warning-default)",
+              }}
+            >
+              Needs improvement
+            </span>
+          ) : (
+            <StatusBadge status="action_needed" />
+          )}
         </div>
         <p style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)", maxWidth: 440 }}>
           {intro}
@@ -285,7 +423,7 @@ function HeatmapHero() {
   );
 }
 
-export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant }) {
+export function TrackingQualityPage({ variant = "mvp" }: { variant?: TqVariant }) {
   const [params, setParams] = useSearchParams();
   const tab = (params.get("tab") === "app" ? "app" : "web") as TrafficTab;
   const openId = params.get("check") as CheckId | null;
@@ -305,11 +443,34 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
     return FIX_PRIORITY.map((p) => {
       const check = web.find((c) => c.id === p.id);
       return check ? { ...p, check } : null;
-    }).filter(Boolean) as { id: CheckId; label: string; check: (typeof CHECKS)[number] }[];
+    }).filter(Boolean) as {
+      id: CheckId;
+      label: string;
+      detail: string;
+      check: (typeof CHECKS)[number];
+    }[];
   }, []);
 
   const laterQueue = useMemo(
     () => CHECKS.filter((c) => c.traffic.includes("web") && !FIX_PRIORITY.some((p) => p.id === c.id)),
+    [],
+  );
+
+  const mvpFocus = useMemo(() => {
+    const web = CHECKS.filter((c) => c.traffic.includes("web"));
+    return MVP_FOCUS.map((p) => {
+      const check = web.find((c) => c.id === p.id);
+      return check ? { ...p, check } : null;
+    }).filter(Boolean) as {
+      id: CheckId;
+      priorityLabel: string;
+      detail: string;
+      check: (typeof CHECKS)[number];
+    }[];
+  }, []);
+
+  const mvpOnTrack = useMemo(
+    () => CHECKS.filter((c) => MVP_ON_TRACK.includes(c.id)),
     [],
   );
 
@@ -336,6 +497,12 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
   }
 
   const titles: Record<TqVariant, { title: string; subtitle: string; intro: string }> = {
+    mvp: {
+      title: "Tracking quality",
+      subtitle: `Score out of 100 · Last checked ${BPA.lastChecked} · ${BPA.freshness}`,
+      intro:
+        "Priority fixes first. Clear checks stay collapsed — open a card for why, what to change, and Ask Impact.",
+    },
     v3: {
       title: "Tracking quality",
       subtitle: `Score out of 100 · Last checked ${BPA.lastChecked} · ${BPA.freshness}`,
@@ -386,22 +553,25 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
           <SecondaryButton>Download Assessment</SecondaryButton>
         </PageChrome>
 
-        {variant === "pulse" ? (
+        {variant === "mvp" ? (
+          <MvpScoreHero />
+        ) : variant === "pulse" ? (
           <HeatmapHero />
         ) : (
           <ScoreHero
             intro={meta.intro}
             chartTitle={
-              variant === "v4" || variant === "everything"
+              variant === "v4" || variant === "everything" || variant === "fix-queue"
                 ? "Score over the last 30 days"
                 : "Score over time"
             }
+            scoreBadge={variant === "fix-queue" ? "needs_improvement" : "action_needed"}
           />
         )}
 
         {variant === "v4" && <CheckHistory />}
 
-        {variant !== "fix-queue" && (
+        {variant !== "fix-queue" && variant !== "mvp" && (
           <div className="flex gap-[8px]">
             {(["web", "app"] as TrafficTab[]).map((t) => {
               const active = tab === t;
@@ -430,30 +600,69 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
           </div>
         )}
 
-        {variant === "fix-queue" ? (
+        {variant === "mvp" ? (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-[24px]">
             <div className="flex flex-col gap-[24px]">
-              <section className="flex flex-col gap-[12px]">
-                <div>
+              <section className="flex flex-col gap-[16px]">
+                <div className="flex flex-col gap-[4px]">
+                  <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700 }}>
+                    Focus on these first
+                  </h2>
+                  <p style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)" }}>
+                    Priority Action needed only. Open a card for why, what to change, and Ask Impact.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-[16px]">
+                  {mvpFocus.map(({ check, priorityLabel, detail }) => (
+                    <CriteriaActionCard
+                      key={check.id}
+                      check={check}
+                      onOpen={openCheck}
+                      priorityLabel={priorityLabel}
+                      detail={detail}
+                    />
+                  ))}
+                </div>
+              </section>
+              <section className="flex flex-col gap-[16px]">
+                <div className="flex flex-col gap-[4px]">
+                  <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700 }}>On track</h2>
+                  <p style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)" }}>
+                    Clear / Building data / Worth confirming — review when foundations clear.
+                  </p>
+                </div>
+                <OnTrackTable checks={mvpOnTrack} onOpen={openCheck} />
+              </section>
+            </div>
+            <div className="flex flex-col gap-[16px]">
+              <TrackingInfoRail tab={tab} onTab={setTab} />
+              <AskImpactPanel />
+            </div>
+          </div>
+        ) : variant === "fix-queue" ? (
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-[24px]">
+            <div className="flex flex-col gap-[24px]">
+              <section className="flex flex-col gap-[16px]">
+                <div className="flex flex-col gap-[4px]">
                   <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700 }}>Do this week</h2>
                   <p style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)" }}>
                     Priority Action needed only. Impact estimate on each card.
                   </p>
                 </div>
-                <div className="grid grid-cols-1 gap-[12px]">
-                  {actionNeeded.map(({ check, label }) => (
-                    <CheckCard
+                <div className="flex flex-col gap-[16px]">
+                  {actionNeeded.map(({ check, label, detail }) => (
+                    <CriteriaActionCard
                       key={check.id}
                       check={check}
                       onOpen={openCheck}
                       priorityLabel={label}
-                      cta="Chat with Ask Impact →"
+                      detail={detail}
                     />
                   ))}
                 </div>
               </section>
-              <section className="flex flex-col gap-[12px]">
-                <div>
+              <section className="flex flex-col gap-[16px]">
+                <div className="flex flex-col gap-[4px]">
                   <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700 }}>
                     Later · when foundations clear
                   </h2>
@@ -461,14 +670,19 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
                     Clear / Building data items stay here until you finish the queue.
                   </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px]">
+                <div className="flex flex-col gap-[16px]">
                   {laterQueue.map((c) => (
-                    <CheckCard key={c.id} check={c} onOpen={openCheck} />
+                    <CriteriaActionCard
+                      key={c.id}
+                      check={c}
+                      onOpen={openCheck}
+                      detail={LATER_DETAILS[c.id]}
+                    />
                   ))}
                 </div>
               </section>
             </div>
-            <TrackingInfoRail />
+            <TrackingInfoRail tab={tab} onTab={setTab} />
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-[24px]">
@@ -571,7 +785,7 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
                 </section>
               )}
             </div>
-            <TrackingInfoRail />
+            <TrackingInfoRail tab={tab} onTab={setTab} />
           </div>
         )}
 
@@ -585,6 +799,10 @@ export function TrackingQualityPage({ variant = "v3" }: { variant?: TqVariant })
       {activeCheck && <Slideout check={activeCheck} onClose={closeCheck} />}
     </div>
   );
+}
+
+export function TrackingQualityV3Page() {
+  return <TrackingQualityPage variant="v3" />;
 }
 
 export function TrackingQualityV4Page() {

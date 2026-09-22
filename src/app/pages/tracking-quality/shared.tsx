@@ -1,3 +1,11 @@
+import {
+  CheckCircle2,
+  ChevronRight,
+  Clock3,
+  FileText,
+  FileWarning,
+  HelpCircle,
+} from "lucide-react";
 import { Link, useLocation } from "react-router";
 import type { CheckDetail, CheckId, DisplayStatus } from "./data";
 import { STATUS_LABEL } from "./data";
@@ -261,6 +269,240 @@ export function CheckCard({
   );
 }
 
+function criteriaIcon(status: DisplayStatus) {
+  const props = { size: 24, strokeWidth: 1.75, "aria-hidden": true as const };
+  switch (status) {
+    case "action_needed":
+      return <FileWarning {...props} style={{ color: "var(--error-default)" }} />;
+    case "worth_confirming":
+      return <HelpCircle {...props} style={{ color: "var(--warning-default)" }} />;
+    case "building_data":
+      return <Clock3 {...props} style={{ color: "var(--info-default)" }} />;
+    case "clear":
+      return <CheckCircle2 {...props} style={{ color: "var(--success-default)" }} />;
+    default:
+      return <FileText {...props} style={{ color: "var(--text-subdued)" }} />;
+  }
+}
+
+/** Horizontal criteria row — matches Ship / Fix queue Figma cards */
+export function CriteriaActionCard({
+  check,
+  onOpen,
+  priorityLabel,
+  detail,
+  unlockLabel,
+}: {
+  check: CheckDetail;
+  onOpen: (id: CheckId) => void;
+  priorityLabel?: string;
+  /** Override summary (e.g. impact copy + Ask Impact CTA) */
+  detail?: string;
+  unlockLabel?: string;
+}) {
+  const body = detail ?? check.summary;
+  const emphasize = check.status === "action_needed";
+  const unlock = unlockLabel ?? check.unlockLabel;
+
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(check.id)}
+      className="text-left w-full cursor-pointer flex items-center justify-between gap-[16px] p-[24px]"
+      style={cardStyle}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = "var(--background-hover)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = "var(--background-on-surface)";
+      }}
+    >
+      <div className="flex items-center gap-[20px] min-w-0 flex-1">
+        <div
+          className="size-[48px] shrink-0 flex items-center justify-center"
+          style={{
+            borderRadius: "var(--radius)",
+            background: "var(--background-subdued)",
+          }}
+        >
+          {criteriaIcon(check.status)}
+        </div>
+        <div className="flex flex-col gap-[4px] min-w-0">
+          {priorityLabel ? (
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                lineHeight: "16px",
+                color: "var(--text-interactive)",
+              }}
+            >
+              {priorityLabel}
+            </span>
+          ) : null}
+          <span
+            style={{
+              fontSize: 16,
+              fontWeight: 600,
+              lineHeight: "20px",
+              color: "var(--text-default)",
+            }}
+          >
+            {check.title}
+          </span>
+          <p
+            style={{
+              fontSize: 14,
+              lineHeight: "18px",
+              color: emphasize ? "var(--error-default)" : "var(--text-subdued)",
+              margin: 0,
+            }}
+          >
+            {body}
+          </p>
+          {unlock ? (
+            <span
+              className="inline-flex w-fit mt-[4px] h-[22px] px-[8px] items-center"
+              style={{
+                borderRadius: 4,
+                fontSize: 12,
+                fontWeight: 600,
+                background: "var(--info-bg)",
+                color: "var(--info-default)",
+              }}
+            >
+              {unlock}
+            </span>
+          ) : null}
+        </div>
+      </div>
+      <div className="flex items-center gap-[16px] shrink-0">
+        <StatusBadge status={check.status} />
+        <ChevronRight size={12} strokeWidth={2} style={{ color: "var(--text-default)" }} />
+      </div>
+    </button>
+  );
+}
+
+export function OnTrackTable({
+  checks,
+  onOpen,
+}: {
+  checks: CheckDetail[];
+  onOpen: (id: CheckId) => void;
+}) {
+  return (
+    <div className="w-full overflow-x-auto" style={cardStyle}>
+      <table className="w-full border-collapse" style={{ fontFamily: FONT }}>
+        <thead>
+          <tr style={{ borderBottom: "1px solid var(--border-default)" }}>
+            {["Issue", "Description", "Last updated", "Status"].map((h) => (
+              <th
+                key={h}
+                className="text-left px-[16px] py-[12px]"
+                style={{
+                  fontSize: "var(--text-sm)",
+                  fontWeight: "var(--font-weight-medium)",
+                  color: "var(--text-subdued)",
+                }}
+              >
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {checks.map((c) => (
+            <tr
+              key={c.id}
+              className="cursor-pointer"
+              style={{ borderBottom: "1px solid var(--border-default)" }}
+              onClick={() => onOpen(c.id)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--background-hover)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+              }}
+            >
+              <td className="px-[16px] py-[14px]" style={{ fontSize: 12, fontWeight: 600 }}>
+                {c.title}
+              </td>
+              <td
+                className="px-[16px] py-[14px]"
+                style={{ fontSize: 12, color: "var(--text-subdued)", maxWidth: 360 }}
+              >
+                {c.summary}
+              </td>
+              <td className="px-[16px] py-[14px]" style={{ fontSize: 12, color: "var(--text-subdued)" }}>
+                {c.lastUpdated ?? "—"}
+              </td>
+              <td className="px-[16px] py-[14px]">
+                <StatusBadge status={c.status} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export function AskImpactPanel({ compact = false }: { compact?: boolean }) {
+  const prompts = [
+    "Why is this important?",
+    "How hard is this to do?",
+    "Who do I need from my team?",
+  ];
+  return (
+    <div
+      className="flex flex-col gap-[12px] p-[16px]"
+      style={{
+        ...cardStyle,
+        background: "var(--background-on-surface)",
+      }}
+    >
+      <div>
+        <h2 style={{ fontSize: compact ? 14 : "var(--text-lg)", fontWeight: 700 }}>Ask Impact</h2>
+        <p style={{ fontSize: "var(--text-sm)", color: "var(--text-subdued)", marginTop: 4 }}>
+          Tracking quality context is pre-loaded. Pick a prompt or type your own.
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-[8px]">
+        {prompts.map((p) => (
+          <button
+            key={p}
+            type="button"
+            className="h-[32px] px-[12px] cursor-pointer"
+            style={{
+              borderRadius: 16,
+              border: "1px solid var(--border-accent, var(--button-primary))",
+              background: "var(--info-bg)",
+              color: "var(--text-interactive)",
+              fontFamily: FONT,
+              fontSize: 12,
+              fontWeight: 600,
+            }}
+          >
+            {p}
+          </button>
+        ))}
+      </div>
+      <div
+        className="flex items-center h-[40px] px-[12px]"
+        style={{
+          borderRadius: "var(--radius-button)",
+          border: "1px solid var(--border-default)",
+          color: "var(--text-subdued)",
+          fontSize: "var(--text-sm)",
+        }}
+      >
+        Ask me anything…
+      </div>
+    </div>
+  );
+}
+
 export function Slideout({
   check,
   onClose,
@@ -457,7 +699,7 @@ export function Slideout({
   );
 }
 
-export type TqVariant = "v3" | "v4" | "everything" | "pulse" | "fix-queue";
+export type TqVariant = "mvp" | "v3" | "v4" | "everything" | "pulse" | "fix-queue";
 
 export const VARIANT_META: {
   id: TqVariant;
@@ -465,7 +707,8 @@ export const VARIANT_META: {
   label: string;
   short: string;
 }[] = [
-  { id: "v3", path: "/tracking-quality", label: "V3 · Scorecard", short: "V3" },
+  { id: "mvp", path: "/tracking-quality", label: "Main · MVP", short: "Main" },
+  { id: "v3", path: "/tracking-quality/v3", label: "V3 · Scorecard", short: "V3" },
   { id: "v4", path: "/tracking-quality/v4", label: "V4 · Monitor + act", short: "V4" },
   {
     id: "everything",
